@@ -1596,7 +1596,7 @@ const VIG=[
   const PATH=new T.CatmullRomCurve3([SPAWN.clone(),new T.Vector3(-18,0,10),new T.Vector3(-8,0,2),STOP.clone().setZ(1),new T.Vector3(12,0,-2),new T.Vector3(22,0,6),PORTAL.clone()]);
   const PSP=PATH.getSpacedPoints(160);
   const nearPath=(x,z,d)=>PSP.some(p=>Math.hypot(p.x-x,p.z-z)<d);
-  const spot=(minD=5)=>{for(let k=0;k<60;k++){const x=rr(-46,46),z=rr(-34,30);if(nearPath(x,z,minD))continue;if(Math.hypot(x-STOP.x,z-STOP.z)<9||Math.hypot(x-PORTAL.x,z-PORTAL.z)<7||Math.hypot(x-SPAWN.x,z-SPAWN.z)<5)continue;return[x,z]}return[rr(-46,46),-30]};
+  const spot=(minD=5)=>{for(let k=0;k<60;k++){const x=rr(-46,46),z=rr(-34,30);if(nearPath(x,z,minD))continue;if(typeof BL!=='undefined'&&BL.some(b=>Math.hypot(b[0]-x,b[1]-z)<b[2]+1.2))continue;if(Math.hypot(x-STOP.x,z-STOP.z)<9||Math.hypot(x-PORTAL.x,z-PORTAL.z)<7||Math.hypot(x-SPAWN.x,z-SPAWN.z)<5)continue;return[x,z]}return[rr(-46,46),-30]};
   let world=null,occ=[],cur=-1,frameTex=null,rings=[],spinners=[],portalMat=null,motes=null,smoke=[],snakeHead=null;
   const SH={uniforms:{t:{value:0},c1:{value:lin('#7b3fb0')},c2:{value:lin('#e0b85a')}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
    fragmentShader:'uniform float t;uniform vec3 c1;uniform vec3 c2;varying vec2 vUv;void main(){vec2 p=vUv-.5;float r=length(p)*2.;float a=atan(p.y,p.x);float s=sin(a*5.+r*16.-t*3.2)*.5+.5;float glow=smoothstep(1.,0.,r);vec3 col=mix(c1,c2,s)*(.55+glow)+vec3(1.)*pow(glow,5.)*.9;gl_FragColor=vec4(col,smoothstep(1.,.82,r)*.95);}',transparent:true,side:T.DoubleSide,depthWrite:false};
@@ -1654,6 +1654,86 @@ const VIG=[
     [1,-1].forEach(s=>{pos.push(p.x+n.x*w*s,.035,p.z+n.z*w*s);uv.push(s>0?0:1,L/(w*2))});if(i)idx.push(2*i-2,2*i-1,2*i,2*i-1,2*i+1,2*i)});
    const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();
    return mesh(g,pmat(id,1,1,{roughness:.95,polygonOffset:true,polygonOffsetFactor:-2}),0,0,0,false)};
+  /* ---------- edificios detallados: cajas con texturas a escala real, molduras, tejados y vanos ---------- */
+  const fitUV=(g,w,h,d,ts)=>{const uv=g.attributes.uv,D=[[d,h],[d,h],[w,d],[w,d],[w,h],[w,h]];for(let f=0;f<6;f++)for(let k=0;k<4;k++){const i=f*4+k;uv.setXY(i,uv.getX(i)*D[f][0]/ts,uv.getY(i)*D[f][1]/ts)}return g};
+  const tb=(w,h,d,m,x,y,z,ts)=>mesh(fitUV(new T.BoxGeometry(w,h,d),w,h,d,ts||3),m,x,y,z);
+  const MC={},tm=(id,o,rgb)=>{const k=id+JSON.stringify(o||{})+rgb;if(MC[k])return MC[k];const m=pmat(id,1,1,o);if(rgb)m.color.setRGB(rgb[0],rgb[1],rgb[2]);return MC[k]=m};
+  let WOOD=null;const woodTex=()=>WOOD||(WOOD=tex(cnv(256,256,(g,w,h)=>{g.fillStyle='#ddd5c6';g.fillRect(0,0,w,h);for(let x=0;x<w;x+=32){g.fillStyle='rgba(50,32,16,.4)';g.fillRect(x,0,2,h);
+    for(let k=0;k<24;k++){g.strokeStyle='rgba(95,62,32,'+(.07+rn()*.13)+')';g.lineWidth=1;g.beginPath();const xx=x+3+rn()*27;g.moveTo(xx,0);g.bezierCurveTo(xx+rr(-3,3),h*.3,xx+rr(-3,3),h*.7,xx+rr(-2,2),h);g.stroke()}}}),1,1));
+  const wm=c=>{const m=new T.MeshStandardMaterial({map:woodTex(),roughness:.72});m.color.set(c).convertSRGBToLinear();return m};
+  const signTex=(txt,bg,fg,font)=>tex(cnv(512,128,(g,w,h)=>{g.fillStyle=bg;g.fillRect(0,0,w,h);g.strokeStyle=fg;g.lineWidth=5;g.strokeRect(12,12,w-24,h-24);g.fillStyle=fg;g.font=font;g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2+3)}),1,1);
+  const planeM=(w,h,m,x,y,z)=>{const o=new T.Mesh(new T.PlaneGeometry(w,h),m);o.position.set(x,y,z);o.receiveShadow=true;return o};
+  const BL=[];const bspot=(d,r)=>{for(let k=0;k<50;k++){const[x,z]=spot(d);if(BL.every(b=>Math.hypot(b[0]-x,b[1]-z)>b[2]+r)){BL.push([x,z,r]);return[x,z]}}const p=spot(d);BL.push([p[0],p[1],r]);return p};
+  const face=(g,x,z)=>{g.position.set(x,0,z);let q=PSP[0],bd=1e9;PSP.forEach(p=>{const dd=(p.x-x)**2+(p.z-z)**2;if(dd<bd){bd=dd;q=p}});g.rotation.y=Math.atan2(q.x-x,q.z-z);return g};
+  const gable=(w,d,rise,m)=>{const s=new T.Shape();s.moveTo(-d/2,0);s.lineTo(d/2,0);s.lineTo(0,rise);s.lineTo(-d/2,0);const g=new T.ExtrudeGeometry(s,{depth:w,bevelEnabled:false});g.translate(0,0,-w/2);g.rotateY(Math.PI/2);
+    const uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/2.5,uv.getY(i)/2.5);return mesh(g,m)};
+  const DARKGLASS=()=>new T.MeshPhysicalMaterial({color:0x48606b,metalness:.25,roughness:.06,clearcoat:1,envMapIntensity:1.5});
+
+  /* casa colonial de botica: muros encalados, zócalo, pilastras, cornisa, tejado de barro con aleros y canecillos,
+     portón de madera y ventanas con balaustres torneados */
+  const colonial=(W,x,z,o)=>{const g=face(new T.Group(),x,z),w=o.w,d=5.2,h=4.4,wall=tm('white_plaster_02',{roughness:.95},o.wall),base=M(o.base,{roughness:.85}),dark=wm('#3c2616'),shut=wm(o.wood),iron=M(0x1d1d1d,{metalness:.6,roughness:.5}),roof=tm('clay_roof_tiles',{roughness:.85});
+    g.add(tb(w,h,d,wall,0,h/2,0,2.5));g.add(tb(w+.08,.8,d+.08,base,0,.4,0));g.add(tb(w+.34,.3,d+.34,wall,0,h+.15,0,2.5));
+    [-1,1].forEach(sx=>[-1,1].forEach(sz=>g.add(tb(.42,h,.42,wall,sx*(w/2-.08),h/2,sz*(d/2-.08),2.5))));
+    const p=.5,ov=.85,run=d/2+ov,rise=(d/2)*Math.tan(p),yr=h+.3+rise,L=run/Math.cos(p)+.1;
+    [-1,1].forEach(s=>{const r=tb(w+1.5,.16,L,roof,0,yr-run/2*Math.tan(p)+.08,s*run/2,2);r.rotation.x=s*p;g.add(r)});
+    const rc=mesh(new T.CylinderGeometry(.16,.16,w+1.5,10),roof,0,yr+.12,0);rc.rotation.z=Math.PI/2;g.add(rc);
+    [-1,1].forEach(s=>{const gb=gable(.3,d,rise,wall);gb.position.set(s*(w/2-.15),h+.3,0);g.add(gb)});
+    [-1,1].forEach(s=>{for(let k=-w/2+.35;k<=w/2-.3;k+=.62){const c=tb(.12,.14,ov+.15,dark,k,h+.22,s*(d/2+ov/2),1);g.add(c)}});
+    const fz=d/2;g.add(tb(1.95,3.2,.16,dark,0,1.6,fz+.04,1));[-1,1].forEach(s=>{const lf=tb(.76,2.95,.1,shut,s*.39,1.5,fz+.1,1.5);g.add(lf);[.8,2.1].forEach(y=>g.add(tb(.56,.9,.04,shut,s*.39,y,fz+.16,1.5)))});
+    g.add(tb(2.3,.28,.24,wall,0,3.38,fz+.1,2.5));
+    const wx=w>=8?[-w/2+1.55,w/2-1.55]:[-w/2+1.4,w/2-1.4];
+    wx.forEach(x0=>{g.add(tb(1.5,2.2,.14,dark,x0,2.15,fz+.05,1));g.add(tb(1.22,1.92,.06,shut,x0,2.15,fz+.09,1.5));
+     for(let k=0;k<8;k++){const b=mesh(new T.CylinderGeometry(.03,.03,1.9,6),dark,x0-.53+k*.152,2.15,fz+.2);g.add(b)}
+     [1.18,3.12].forEach(y=>g.add(tb(1.45,.1,.16,dark,x0,y,fz+.2,1)));g.add(tb(1.7,.12,.42,wall,x0,1.06,fz+.18,2.5));
+     const t=tb(1.8,.08,.5,roof,x0,3.42,fz+.25,1);t.rotation.x=.35;g.add(t)});
+    const lan=new T.Group();lan.position.set(1.35,2.85,fz+.42);lan.add(tb(.06,.06,.5,iron,0,.25,-.2));lan.add(tb(.26,.36,.26,M(0xffd890,{emissive:0xffb54a,emissiveIntensity:1.1}),0,0,0));lan.add(tb(.32,.06,.32,iron,0,.2,0));g.add(lan);
+    if(o.sign){const bd=new T.Group();bd.position.set(-w/2+.9,3.2,fz+.75);bd.add(tb(.06,.06,.9,iron,0,.45,-.4));
+     const sm=new T.MeshStandardMaterial({map:signTex('BOTICA','#efe2c2','#3a2414','700 64px "Cormorant Garamond", serif'),roughness:.7});const sb=tb(.06,.48,1.5,sm,0,0,0,1);bd.add(sb);g.add(bd)}
+    g.userData.r=Math.max(w,d)/2+.6;W.add(g);return g};
+
+  /* nave industrial de ladrillo: pilastras, ventanales de arco con marco de hierro, portón y techo en diente de sierra */
+  const fitCyl=(g,circ,h,ts)=>{const uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*circ/ts,uv.getY(i)*h/ts);return g};
+  const factory=(W,x,z)=>{const g=face(new T.Group(),x,z),w=15,d=9,h=5.4,br=tm('brick_wall_02',{roughness:.9},[1.3,.8,.66]),iron=M(0x2a2d30,{metalness:.6,roughness:.45}),gl=DARKGLASS(),met=M(0x7c8288,{metalness:.55,roughness:.5});
+    g.add(tb(w,h,d,br,0,h/2,0,2.2));g.add(tb(w+.3,.4,d+.3,br,0,h+.2,0,2.2));const fz=d/2;
+    for(let k=0;k<=4;k++)g.add(tb(.55,h+.2,.32,br,-w/2+k*w/4,h/2,fz+.1,2.2));
+    [-w*3/8,-w/8,w/8,w*3/8].forEach((x0,k)=>{if(k===1){g.add(tb(3,3.6,.16,wm('#5b3a22'),x0,1.8,fz+.06,1.2));g.add(tb(3.3,.25,.3,br,x0,3.75,fz+.12,2.2));return}
+     g.add(tb(1.9,2.4,.05,gl,x0,2.3,fz+.03));const ar=new T.Mesh(new T.CircleGeometry(.95,20,0,Math.PI),gl);ar.position.set(x0,3.5,fz+.03);g.add(ar);
+     const ring=mesh(new T.TorusGeometry(1.02,.1,6,20,Math.PI),M(0x7a3a26,{roughness:.9}),x0,3.5,fz+.06);g.add(ring);
+     for(let i=1;i<4;i++)g.add(tb(.05,2.4,.06,iron,x0-.95+i*.475,2.3,fz+.07,1));[1.5,2.3,3.1].forEach(y=>g.add(tb(1.9,.05,.06,iron,x0,y,fz+.07,1)));g.add(tb(2.1,.14,.32,br,x0,1.05,fz+.14,2.2))});
+    const tw=w/4,sh=new T.Shape();sh.moveTo(0,0);sh.lineTo(tw,0);sh.lineTo(tw,1.7);sh.lineTo(0,0);
+    for(let k=0;k<4;k++){const eg=new T.ExtrudeGeometry(sh,{depth:d,bevelEnabled:false});eg.translate(-w/2+k*tw,h+.4,-d/2);g.add(mesh(eg,met));const gp=planeM(d-.4,1.4,gl,-w/2+(k+1)*tw-.02,h+1.15,0);gp.rotation.y=Math.PI/2;g.add(gp)}
+    g.userData.r=8.5;W.add(g);return g};
+  const chimney=(W,x,z,H)=>{const br=tm('brick_wall_02',{roughness:.9},[1.25,.76,.62]),g=new T.Group();g.position.set(x,0,z);
+    g.add(tb(2.4,1.2,2.4,br,0,.6,0,2.2));const cg=fitCyl(new T.CylinderGeometry(.75,1.1,H,22,1,true),5.5,H,2.2);g.add(mesh(cg,br,0,H/2+1.2,0));
+    [H*.55,H-.2].forEach(y=>g.add(mesh(new T.CylinderGeometry(.98-y/H*.25,.98-y/H*.25,.35,22),M(0x3a2a24,{roughness:.8}),0,y+1.2,0)));g.userData.r=1.6;W.add(g);smoke.push(new T.Vector3(x,H+1.5,z));return g};
+
+  /* laboratorio moderno de mediados del siglo XX: dos plantas, ventanas corridas, losa volada y marquesina */
+  const labBuilding=(W,x,z)=>{const g=face(new T.Group(),x,z),w=14,d=8,h=6.6,wall=tm('white_plaster_02',{roughness:.9},[1.62,1.6,1.55]),slab=M(0xe8e4dc,{roughness:.8}),gl=DARKGLASS(),fr=M(0x5f6a70,{metalness:.6,roughness:.35});
+    g.add(tb(w,h,d,wall,0,h/2,0,3));g.add(tb(w+1.2,.38,d+1.2,slab,0,h+.19,0));g.add(tb(w+.2,.5,d+.2,M(0x9a9a92,{roughness:.9}),0,.25,0));const fz=d/2;
+    [2.1,4.9].forEach(y=>{g.add(tb(w-1.4,1.15,.06,gl,0,y,fz+.02));for(let k=0;k<=10;k++)g.add(tb(.07,1.15,.1,fr,-(w-1.4)/2+k*(w-1.4)/10,y,fz+.05,1));g.add(tb(w-1,.12,.3,slab,0,y-.64,fz+.12))});
+    g.add(tb(4.4,.22,2.4,slab,0,3.25,fz+1.2));[-1.9,1.9].forEach(dx=>g.add(mesh(new T.CylinderGeometry(.09,.09,3.2,10),fr,dx,1.6,fz+2.25)));
+    g.add(tb(2.2,2.7,.06,gl,0,1.35,fz+.03));g.add(tb(.06,2.7,.1,fr,0,1.35,fz+.06,1));
+    const sg=new T.MeshStandardMaterial({map:signTex('LABORATORIO','#efede7','#1f3a4a','600 58px Manrope, sans-serif'),roughness:.8});g.add(planeM(5,.62,sg,0,3.95,fz+.02));
+    g.userData.r=8;W.add(g);return g};
+
+  /* farmacia de hoy: vitrina de vidrio con perfilería de aluminio, fachada verde con letrero, marquesina con luces,
+     estanterías con productos de colores, mostrador y equipos en la cubierta */
+  const pharmacy=(W,x,z)=>{const g=face(new T.Group(),x,z),w=12,d=8,h=4.8,wall=tm('painted_plaster_wall',{roughness:.8},[1.55,1.55,1.52]),alu=M(0xc9ced3,{metalness:.85,roughness:.3}),
+     glass=new T.MeshPhysicalMaterial({color:0xdcecf2,metalness:.1,roughness:.03,transparent:true,opacity:.28,envMapIntensity:1.8,depthWrite:false}),green=M(0x0f7a4e,{roughness:.45}),white=M(0xf4f4f2,{roughness:.5}),fz=d/2;
+    g.add(tb(w,h,.3,wall,0,h/2,-fz+.15,3));[-1,1].forEach(s=>g.add(tb(.3,h,d,wall,s*(w/2-.15),h/2,0,3)));g.add(tb(w+.5,.4,d+.5,white,0,h+.2,0));g.add(tb(w-.3,.12,d-.3,M(0xe6e4df,{roughness:.35}),0,.06,0));
+    g.add(tb(w+.2,1.25,.42,green,0,h-.63,fz+.05));g.add(planeM(6.4,.8,new T.MeshStandardMaterial({map:signTex('FARMACIA','#0f7a4e','#ffffff','700 70px Manrope, sans-serif'),emissive:0xffffff,emissiveIntensity:.15,roughness:.5}),-1.2,h-.63,fz+.27));
+    g.add(tb(w-.3,.35,.3,M(0xa7a7a2,{roughness:.9}),0,.175,fz-.1));
+    for(let k=0;k<=6;k++)g.add(tb(.09,3.5,.12,alu,-w/2+.2+k*(w-.4)/6,2.1,fz,1));g.add(tb(w-.3,.1,.14,alu,0,3.85,fz,1));
+    g.add(planeM(w-.4,3.5,glass,0,2.1,fz-.02));
+    g.add(tb(4.6,.18,1.9,white,1.6,3.55,fz+.95));for(let k=0;k<3;k++){const dl=mesh(new T.CircleGeometry(.12,14),M(0xffffff,{emissive:0xfff4d8,emissiveIntensity:1.4}),.2+k*1.4,3.45,fz+.95,false);dl.rotation.x=Math.PI/2;g.add(dl)}
+    g.add(tb(w-1,.05,d-1,M(0xffffff,{emissive:0xffffff,emissiveIntensity:.55}),0,h-.25,0));
+    const prod=new T.InstancedMesh(new T.BoxGeometry(.22,.3,.18),new T.MeshStandardMaterial({roughness:.5}),150),d3=new T.Object3D(),col=new T.Color(),pal=['#e94b5b','#2f80c9','#f2c14e','#3bb273','#ffffff','#8e5bd6','#f28c3b'];let n=0;
+    [[-3.6,-fz+.5],[0,-fz+.5],[3.6,-fz+.5]].forEach(([sx,sz])=>{g.add(tb(3.2,2.6,.5,white,sx,1.3,sz));for(let lv=0;lv<5;lv++){g.add(tb(3.2,.04,.52,M(0xdedede),sx,.3+lv*.5,sz+.02));for(let k=0;k<10&&n<150;k++){d3.position.set(sx-1.4+k*.31,.47+lv*.5,sz+.05);d3.updateMatrix();prod.setMatrixAt(n,d3.matrix);prod.setColorAt(n,col.set(pal[(lv*3+k)%pal.length]).convertSRGBToLinear());n++}}});
+    prod.count=n;g.add(prod);g.add(tb(3.4,1.1,.8,white,1.8,.55,.6));g.add(tb(3.4,.9,.05,green,1.8,.55,1.01));
+    const cr=new T.Group(),gm=M(0x1aa060,{emissive:0x1aa060,emissiveIntensity:1.3});cr.add(mesh(new T.BoxGeometry(1.2,.4,.18),gm));cr.add(mesh(new T.BoxGeometry(.4,1.2,.18),gm));cr.position.set(w/2-.3,h-.4,fz+.9);
+    g.add(tb(.08,.08,.9,alu,w/2-.3,h-.4,fz+.45,1));g.add(cr);spinners.push([cr,1.2]);
+    [[-3,-1.5],[2.5,-2]].forEach(([ax,az])=>{g.add(tb(1.3,.8,.9,M(0xd9d9d6,{roughness:.6}),ax,h+.8,az));const f=mesh(new T.CircleGeometry(.3,16),M(0x333333),ax,h+.8,az+.46,false);g.add(f)});
+    place(g,'planter_box_01',[[-4.6,0,fz+.55,0,.7],[-2.2,0,fz+.55,0,.7]]);g.userData.r=7.5;W.add(g);return g};
   const BUILD=[
    /* 1. época ancestral: bosque tropical, chozas de bahareque y paja */
    W=>{const TRS=spots(N(24),5).map(([x,z])=>realTree(W,x,z,rr(.85,1.25)));canopy(W,TRS);
@@ -1668,9 +1748,8 @@ const VIG=[
     scatter(W,'rock_07',[[-6,-9,2.4,.4]]);W.add(snake(-6,-9).translateY(2.15));},
    /* 2. tiempo de las boticas: casas encaladas con teja y mesas con vasijas */
    W=>{const wallW=pmat('white_plaster_02',2,1.2,{roughness:.95}),roof=pmat('clay_roof_tiles',3,2,{roughness:.85}),wood=M(0x4a301c,{roughness:.7}),blue=M(0x2a5d9f,{roughness:.35});
-    for(let i=0;i<8;i++){const[x,z]=spot(9),g=new T.Group();g.position.set(x,0,z);g.rotation.y=Math.atan2(-x,-z)+Math.PI;
-     g.add(mesh(new T.BoxGeometry(6,3.6,4.4),wallW,0,1.8,0));const r=mesh(new T.CylinderGeometry(2.9,2.9,6.4,3,1),roof,0,4.3,0);r.rotation.z=Math.PI/2;r.rotation.x=Math.PI/2;r.scale.set(1,1,.5);g.add(r);
-     g.add(mesh(new T.BoxGeometry(1.2,2.2,.12),wood,0,1.1,2.22));[-1.9,1.9].forEach(dx=>{g.add(mesh(new T.BoxGeometry(1,1,.12),blue,dx,2.1,2.22));g.add(mesh(new T.BoxGeometry(1.2,.12,.3),wood,dx,1.55,2.3))});W.add(g)}
+    BL.length=0;const CW=[[1.55,1.52,1.45],[1.6,1.32,.88],[1.3,1.42,1.55],[1.6,1.22,1.02],[1.55,1.5,1.3]],CB=['#8a4b2e','#3d5a73','#5f6b3a','#7a2f2f'],CWD=['#2f5d46','#2a4d7a','#6b3b24','#7a2f2f','#3f6f6a'];
+    for(let i=0;i<8;i++){const ww=[7,8,9][i%3],[x,z]=bspot(9,ww/2+1.5);colonial(W,x,z,{w:ww,wall:CW[i%5],base:CB[i%4],wood:CWD[(i*3)%5],sign:i%3===0})}
     for(let i=0;i<6;i++){const[x,z]=spot(4),g=new T.Group();g.position.set(x,0,z);g.rotation.y=rn()*6;place(g,'woodentable_01',[[0,0,0,0,.85]]);
      place(g,'antique_ceramic_vase_01',[[-.7,.85,0,rn()*6,.75]]);place(g,'ceramic_vase_01',[[.05,.85,.1,rn()*6,.65]]);place(g,'jug_01',[[.7,.85,-.05,rn()*6,.38]]);W.add(g)}
     for(let i=0;i<7;i++){const[x,z]=spot(4);W.add(mesh(new T.CylinderGeometry(.07,.09,3.2,8),M(0x2b2b2b,{metalness:.6,roughness:.4}),x,1.6,z));W.add(mesh(new T.BoxGeometry(.55,.65,.55),M(0xffd27a,{emissive:0xffb84a,emissiveIntensity:.9}),x,3.4,z))}
@@ -1680,7 +1759,7 @@ const VIG=[
    W=>{const copper=M(0xb8733a,{metalness:.8,roughness:.3}),brick=pmat('brick_wall_02',1,1,{roughness:.9}),tall=pmat('brick_wall_02',1,4,{roughness:.9,color:0xd9927a}),glass=new T.MeshPhysicalMaterial({color:0xd8f3ea,transparent:true,opacity:.45,roughness:.05});
     for(let i=0;i<14;i++){const[x,z]=spot(6),g=new T.Group();g.position.set(x,0,z);g.add(mesh(new T.CylinderGeometry(1,1.25,1.1,18),brick,0,.55,0));g.add(mesh(new T.SphereGeometry(1.35,28,20),copper,0,2,0));
      const n=mesh(new T.CylinderGeometry(.16,.26,2.8,12),copper,1.15,3.3,0);n.rotation.z=-1;g.add(n);g.add(mesh(new T.SphereGeometry(.6,18,14),glass,2.4,2.1,0));W.add(g);smoke.push(new T.Vector3(x,3.6,z))}
-    for(let i=0;i<7;i++){const[x,z]=spot(9);W.add(mesh(new T.BoxGeometry(1.8,9,1.8),tall,x,4.5,z));smoke.push(new T.Vector3(x,9.2,z))}
+    BL.length=0;for(let i=0;i<3;i++){const[x,z]=bspot(10,9.5);factory(W,x,z)}for(let i=0;i<4;i++){const[x,z]=bspot(8,2.5);chimney(W,x,z,rr(11,15))}
     woodBarrels(W,spots(16,4));},
    /* 4. la era de la evidencia: escritorios metálicos, estanterías y cristalería */
    W=>{const top=M(0xf7f7f5,{roughness:.3}),leg=M(0x8a9497,{metalness:.7,roughness:.3}),glass=new T.MeshPhysicalMaterial({color:0x7fd4c4,transparent:true,opacity:.55,roughness:.05,clearcoat:1}),atom=[M(0x0f5a42,{roughness:.25}),M(0x6a2788,{roughness:.25}),M(0xf8f5ee,{roughness:.25})],gold=M(0xd4ad55,{metalness:.9,roughness:.25});
@@ -1690,20 +1769,19 @@ const VIG=[
      pts.forEach((p,k)=>{g.add(mesh(new T.SphereGeometry(.48,24,16),atom[k%3],p.x,p.y,p.z));const q=pts[(k+1)%6],b=mesh(new T.CylinderGeometry(.1,.1,p.distanceTo(q),10),gold,(p.x+q.x)/2,(p.y+q.y)/2,0);b.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),q.clone().sub(p).normalize());g.add(b)});
      g.add(mesh(new T.CylinderGeometry(.12,.12,4,8),leg,0,-2,0));W.add(g);spinners.push([g,.5])}
     for(let i=0;i<4;i++){const[x,z]=spot(8),g=new T.Group();g.position.set(x,0,z);g.add(mesh(new T.BoxGeometry(1.6,.3,1.2),leg,0,.15,0));g.add(mesh(new T.BoxGeometry(.3,2.2,.3),leg,-.4,1.3,0));const tb=mesh(new T.CylinderGeometry(.25,.3,1.5,14),top,.1,2.1,0);tb.rotation.z=-.5;g.add(tb);g.scale.setScalar(1.5);W.add(g)}
+    BL.length=0;for(let i=0;i<3;i++){const[x,z]=bspot(10,9);labBuilding(W,x,z)}
     scatter(W,'steel_frame_shelves_01',spots(6,6).map(([x,z])=>[x,z,2.8,rn()*6]));
     scatter(W,'potted_plant_02',spots(N(8),4).map(([x,z])=>[x,z,1.3,rn()*6]));},
    /* 5. la farmacia de hoy: fachadas pintadas, vidrio y jardineras */
    W=>{const white=pmat('painted_plaster_wall',3,1.5,{roughness:.8}),glassM=new T.MeshPhysicalMaterial({color:0x9fd6e8,transparent:true,opacity:.45,roughness:.03,clearcoat:1}),green=M(0x1aa060,{emissive:0x1aa060,emissiveIntensity:1.1}),purple=M(0x6a2788,{roughness:.15}),capw=M(0xf8f5ee,{roughness:.15});
-    for(let i=0;i<4;i++){const[x,z]=spot(11),g=new T.Group();g.position.set(x,0,z);g.rotation.y=Math.atan2(-x,-z)+Math.PI;g.add(mesh(new T.BoxGeometry(10,4.4,6.5),white,0,2.2,0));g.add(mesh(new T.PlaneGeometry(8,2.8),glassM,0,1.7,3.26,false));
-     g.add(mesh(new T.BoxGeometry(10.4,.4,7),M(0x0f5a42),0,4.6,0));const cr=new T.Group();cr.add(mesh(new T.BoxGeometry(1.5,.5,.2),green));cr.add(mesh(new T.BoxGeometry(.5,1.5,.2),green));cr.position.set(3.4,5.6,3.3);g.add(cr);spinners.push([cr,1.2]);
-     place(g,'planter_box_01',[[-3.2,0,3.9,0,.7],[0,0,3.9,0,.7]]);W.add(g)}
+    BL.length=0;for(let i=0;i<4;i++){const[x,z]=bspot(10,8.5);pharmacy(W,x,z)}
     {const[x,z]=spot(10),g=new T.Group();g.position.set(x,2.4,z);g.rotation.z=.9;g.add(mesh(new T.CylinderGeometry(1,1,2.2,32),purple,0,1.1,0));g.add(mesh(new T.SphereGeometry(1,32,16,0,Math.PI*2,0,Math.PI/2),purple,0,2.2,0));g.add(mesh(new T.CylinderGeometry(1.02,1.02,2.2,32),capw,0,-1.1,0));g.add(mesh(new T.SphereGeometry(1.02,32,16,0,Math.PI*2,Math.PI/2,Math.PI/2),capw,0,-2.2,0));W.add(g);spinners.push([g,.35])}
     scatter(W,'potted_plant_02',spots(N(12),4).map(([x,z])=>[x,z,rr(1.2,1.5),rn()*6]));
     scatter(W,'shrub_04',spots(N(14),3).map(([x,z])=>[x,z,rr(.9,1.2),rn()*6]));}];
 
   const loadWorld=i=>{
    if(world){S.remove(world);world.traverse(o=>{if(o.userData.keep)return;if(o.geometry)o.geometry.dispose();if(o.material){[].concat(o.material).forEach(m=>{if(m.map&&m.map!==bark&&m.map!==dot)m.map.dispose();m.dispose()})}})}
-   rings=[];spinners=[];smoke=[];snakeHead=null;cur=i;sd=31+i*977;
+   rings=[];spinners=[];smoke=[];snakeHead=null;cur=i;BL.length=0;for(const k in MC)delete MC[k];sd=31+i*977;
    const E=ERAS[i],W=new T.Group();world=W;S.add(W);
    if(!SKC[i<3?1:2])S.background=skyTex(E.sky[0],E.sky[1]);setSky(i<3?1:2);S.fog.color.set(i<3?'#d5e0ec':'#d9e2ea').convertSRGBToLinear();S.fog.near=45;S.fog.far=160;
    const GT=['leafy_grass','cobblestone_floor_01','brick_wall_02','floor_tiles_06','concrete_pavers'][i],ground=mesh(new T.PlaneGeometry(400,400),pmat(GT,125,125,{roughness:i>2?.55:.95,color:i===2?0xd9927a:i?0xffffff:0x8fbf6a}),0,0,-2,false);ground.rotation.x=-Math.PI/2;W.add(ground);
