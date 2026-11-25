@@ -392,6 +392,38 @@ body.lock .dots,body.lock .totop{display:none}
 .mosaic img{width:100%;height:auto;transition:transform .7s ease}
 .mosaic button:hover img{transform:scale(1.04)}
 .mosaic figcaption{padding:12px 16px 14px;font-size:14px;color:var(--soft)}
+/* galería compartida por los asistentes */
+.share{margin-top:46px;padding-top:34px;border-top:1px solid var(--hair)}
+.share-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px}
+.share-head h3{font-size:clamp(26px,3vw,34px);color:var(--em2)}
+.share-head p{color:var(--soft);max-width:560px;margin-top:6px}
+.mosaic.com figcaption p{color:var(--ink);font-size:14.5px;line-height:1.55;white-space:pre-line}
+.mosaic.com figcaption b{display:block;margin-top:8px;font-size:13px;color:var(--em2)}
+.com-empty{text-align:center;color:var(--soft);font-style:italic;padding:18px 0}
+.com-empty[hidden]{display:none}
+.sform{position:relative;width:min(94vw,520px);max-height:92vh;overflow:auto;background:var(--panel);border-radius:22px;padding:28px 26px 26px;display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 80px -20px #000a}
+.sform h3{font-size:30px;color:var(--em2);padding-right:40px}
+.sintro{color:var(--soft);font-size:14.5px;margin-top:-6px}
+.sx{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--panel);font-size:24px;line-height:1;color:var(--soft);cursor:pointer}
+.sdrop{position:relative;display:block;border:2px dashed var(--hair);border-radius:16px;background:var(--sage);cursor:pointer;overflow:hidden;min-height:150px}
+.sdrop:focus-within{outline:2px solid var(--em2);outline-offset:2px}
+.sdrop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.sph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:150px;color:var(--em2);pointer-events:none}
+.sph small{color:var(--soft)}
+.sdrop img{display:block;width:100%;max-height:300px;object-fit:contain;background:#0001;pointer-events:none}
+.sf{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600;color:var(--ink)}
+.sf span{display:flex;justify-content:space-between}
+.sf em{font-style:normal;font-weight:400;color:var(--soft);font-size:12.5px}
+.sf input,.sf textarea{font:inherit;font-weight:400;font-size:15px;border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:var(--paper);color:var(--ink);resize:vertical}
+.sf input:focus,.sf textarea:focus{outline:2px solid var(--em2);outline-offset:0;border-color:transparent}
+.shp{position:absolute;left:-9999px;width:1px;height:1px}
+.sok{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--soft);line-height:1.45}
+.sok input{margin-top:3px;width:18px;height:18px;accent-color:var(--em2);flex:none}
+.smsg{font-size:14px;min-height:1px}
+.smsg.err{color:var(--bad)}
+.smsg.ok{color:var(--ok);font-weight:600}
+.sform .btn{justify-content:center}
+.sform .btn[disabled]{opacity:.6;cursor:wait}
 @media(max-width:960px){nav b{font-size:0;margin-right:8px}nav b .navlogo{margin-right:0}nav .wrap{gap:8px}}
 .mpick{position:fixed;left:16px;bottom:70px;z-index:70;display:flex;gap:6px;padding:5px;border-radius:999px;background:#fffdf8f2;border:1px solid var(--hair);box-shadow:var(--shadow)}
 .mpick[hidden]{display:none}
@@ -596,8 +628,31 @@ setTimeout(done,5750);document.getElementById('iskip').focus({preventScroll:true
   <div class="wrap">
     <div class="head"><div><div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>30 de octubre de 2026</div><h2>Momentos del simposio</h2><p class="lede">Así se vivió la jornada: la entrada al auditorio, los cuadros vivos de cada semestre y los rincones que prepararon los estudiantes. Toca una foto para verla en grande.</p></div></div>
     <div class="mosaic" id="mosaic"></div>
+    <div class="share" id="compartidos">
+      <div class="share-head">
+        <div><h3>Galería de los asistentes</h3><p>¿Estuviste en el simposio? Sube tu foto y cuéntanos cómo lo viviste. Cada publicación aparece aquí después de una breve revisión.</p></div>
+        <button type="button" class="btn gold" id="shareBtn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Comparte tu momento</button>
+      </div>
+      <div class="mosaic com" id="comunidad" aria-live="polite"></div>
+      <p class="com-empty" id="comEmpty">Cargando los momentos compartidos…</p>
+    </div>
   </div>
 </section>
+
+<dialog id="shareDlg" aria-labelledby="shareTitle">
+  <form class="sform" id="shareForm" novalidate>
+    <button type="button" class="sx" id="shareClose" aria-label="Cerrar">×</button>
+    <h3 id="shareTitle">Comparte tu momento</h3>
+    <p class="sintro">Tu foto y tu relato se publicarán en la web del simposio cuando el equipo organizador los revise.</p>
+    <label class="sdrop" id="sdrop"><input type="file" id="sfile" accept="image/jpeg,image/png,image/webp,image/heic,image/*" required><span class="sph" id="sph"><svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><b>Elige una foto</b><small>JPG, PNG o WEBP</small></span><img id="sprev" alt="Vista previa de tu foto" hidden></label>
+    <label class="sf"><span>Tu nombre</span><input type="text" id="sname" maxlength="60" autocomplete="name" placeholder="Ej.: Laura, 4.º semestre" required></label>
+    <label class="sf"><span>Tu experiencia <em id="scount">0/600</em></span><textarea id="stext" rows="4" maxlength="600" placeholder="¿Qué fue lo que más te gustó? ¿Qué aprendiste?" required></textarea></label>
+    <input type="text" id="sweb" class="shp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="sok"><input type="checkbox" id="sagree" required><span>Autorizo publicar esta foto y este relato en la web del simposio, y las personas que aparecen en la foto están de acuerdo.</span></label>
+    <p class="smsg" id="smsg" role="status"></p>
+    <button type="submit" class="btn dark" id="ssend">Enviar mi momento</button>
+  </form>
+</dialog>
 
 <section class="band" id="piezas">
   <div class="wrap">
@@ -874,6 +929,69 @@ $('gallery').addEventListener('click',e=>{const b=e.target.closest('button');if(
 const MOM=[['img/evento/entrada.jpg','Entrada al Auditorio Ciencias de la Salud','t'],['img/evento/cuadro-1.jpg','1.º semestre · Raíces de la medicina tradicional','t'],['img/evento/cuadro-2a.jpg','2.º semestre · Botica de ayer','w'],['img/evento/espacio-fotos.jpg','Espacio para fotos: de la tradición a la farmacia de hoy','t'],['img/evento/cuadro-3.jpg','3.º semestre · Raíces que sanan, ciencia que transforma','t'],['img/evento/cuadro-2b.jpg','La botica de 2.º semestre, lista para recibir al público','w'],['img/evento/cuadro-5.jpg','5.º semestre · La Farmacia de hoy','w']];
 $('mosaic').innerHTML=MOM.map(([src,cap,sh],i)=>`<figure class="${sh}"><button type="button" data-i="${i}" aria-label="Ver en grande: ${esc(cap)}"><img src="${src}" alt="${esc(cap)}" loading="lazy"></button><figcaption>${esc(cap)}</figcaption></figure>`).join('');
 $('mosaic').addEventListener('click',e=>{const b=e.target.closest('button');if(b)openList(MOM,+b.dataset.i)});
+/* ---------- galería compartida por los asistentes (Supabase) ---------- */
+const SHARE=(()=>{
+ const SB='https://msddjuevttnwogwudeqd.supabase.co';
+ const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zZGRqdWV2dHRud29nd3VkZXFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU1Njg0NzAsImV4cCI6MjExMTE0NDQ3MH0.j6uNr1np7bNPxxHcwD6rXDunpVd9LeZJ77m_MAiwc9g'; /* clave pública (anon): solo permite lo que dejan las reglas de seguridad */
+ const H={apikey:KEY,Authorization:'Bearer '+KEY};
+ const grid=$('comunidad'),empty=$('comEmpty');let COM=[];
+ const load=async()=>{
+  try{
+   const r=await fetch(SB+'/rest/v1/momentos?select=nombre,relato,foto_url,creado&order=creado.desc&limit=100',{headers:H});
+   if(!r.ok)throw 0;const rows=await r.json();
+   COM=rows.map(m=>[m.foto_url,m.nombre+': '+m.relato]);
+   grid.innerHTML=rows.map((m,i)=>`<figure><button type="button" data-i="${i}" aria-label="Ver en grande la foto de ${esc(m.nombre)}"><img src="${esc(m.foto_url)}" alt="Foto compartida por ${esc(m.nombre)}" loading="lazy"></button><figcaption><p>${esc(m.relato)}</p><b>— ${esc(m.nombre)}</b></figcaption></figure>`).join('');
+   empty.textContent='Aún no hay momentos compartidos. ¡Sé la primera persona en compartir el tuyo!';empty.hidden=rows.length>0;
+  }catch(e){empty.textContent='No pudimos cargar los momentos compartidos. Intenta de nuevo más tarde.';empty.hidden=false}
+ };
+ grid.addEventListener('click',e=>{const b=e.target.closest('button');if(b)openList(COM,+b.dataset.i)});
+ /* formulario */
+ const d=$('shareDlg'),f=$('shareForm'),file=$('sfile'),prev=$('sprev'),ph=$('sph'),msg=$('smsg'),send=$('ssend'),txt=$('stext');
+ const say=(t,c)=>{msg.textContent=t;msg.className='smsg'+(c?' '+c:'')};
+ const reset=()=>{f.reset();prev.hidden=true;prev.removeAttribute('src');ph.hidden=false;$('scount').textContent='0/600';say('');send.disabled=false;send.textContent='Enviar mi momento'};
+ $('shareBtn').onclick=()=>{reset();try{d.showModal()}catch(e){d.setAttribute('open','')}};
+ $('shareClose').onclick=()=>d.close();
+ d.addEventListener('click',e=>{if(e.target===d)d.close()});
+ txt.addEventListener('input',()=>{$('scount').textContent=txt.value.length+'/600'});
+ file.addEventListener('change',()=>{const fl=file.files[0];if(!fl)return;prev.src=URL.createObjectURL(fl);prev.hidden=false;ph.hidden=true;say('')});
+ prev.addEventListener('error',()=>{prev.hidden=true;ph.hidden=false;say('Elegiste una imagen que el navegador no puede mostrar; igual intentaremos enviarla.')});
+ /* reduce la foto (máx. 1600 px, JPG) para que suba rápido y ocupe poco */
+ const shrink=async fl=>{
+  try{
+   const bmp=await createImageBitmap(fl,{imageOrientation:'from-image'});const s=Math.min(1,1600/Math.max(bmp.width,bmp.height));
+   const c=document.createElement('canvas');c.width=Math.round(bmp.width*s);c.height=Math.round(bmp.height*s);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+   const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.85));if(b)return b;
+  }catch(e){}
+  if(/^image\/(jpeg|png|webp)$/.test(fl.type)&&fl.size<=5242880)return fl;
+  throw new Error('formato');
+ };
+ f.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const fl=file.files[0],nombre=$('sname').value.trim(),relato=txt.value.trim();
+  if(!fl)return say('Elige una foto para compartir.','err');
+  if(nombre.length<2)return say('Escribe tu nombre.','err');
+  if(relato.length<5)return say('Cuéntanos un poco de tu experiencia.','err');
+  if(!$('sagree').checked)return say('Marca la casilla de autorización para poder publicar tu foto.','err');
+  if($('sweb').value){say('¡Gracias! Tu momento quedó enviado.','ok');return}
+  send.disabled=true;send.textContent='Enviando…';say('Preparando tu foto…');
+  try{
+   let blob;try{blob=await shrink(fl)}catch(x){throw new Error('No pudimos leer esa foto. Prueba con una JPG o PNG.')}
+   const ext=blob.type==='image/png'?'png':blob.type==='image/webp'?'webp':'jpg';
+   const id=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
+   const path='subidas/'+id+'.'+ext;
+   say('Subiendo tu foto…');
+   const up=await fetch(SB+'/storage/v1/object/momentos/'+path,{method:'POST',headers:{...H,'content-type':blob.type||'image/jpeg','x-upsert':'false'},body:blob});
+   if(!up.ok)throw new Error(up.status===413?'La foto es muy pesada (máximo 5 MB).':'No pudimos subir la foto. Revisa tu conexión e intenta de nuevo.');
+   const ins=await fetch(SB+'/rest/v1/momentos',{method:'POST',headers:{...H,'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({nombre,relato,foto_url:SB+'/storage/v1/object/public/momentos/'+path})});
+   if(!ins.ok)throw new Error('No pudimos guardar tu relato. Intenta de nuevo.');
+   say('¡Gracias! Tu momento quedó enviado y aparecerá en la galería cuando el equipo lo revise.','ok');
+   send.textContent='Enviado ✓';f.querySelectorAll('input,textarea').forEach(x=>x.disabled=true);
+   setTimeout(()=>{if(d.open)d.close();f.querySelectorAll('input,textarea').forEach(x=>x.disabled=false)},3500);
+  }catch(x){say(x.message||'Algo salió mal. Intenta de nuevo.','err');send.disabled=false;send.textContent='Enviar mi momento'}
+ });
+ load();
+ return{load};
+})();
 $('dclose').onclick=()=>dlg.close();$('dprev').onclick=()=>openG(gi-1);$('dnext').onclick=()=>openG(gi+1);
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 dlg.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')openG(gi-1);if(e.key==='ArrowRight')openG(gi+1)});
