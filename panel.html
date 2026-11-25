@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel de momentos · Simposio XXII</title>
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE  herramienta de trabajo sobria para quien modera
+   IDEA   la mesa de revisión de una exposición: cada momento es una ficha que se aprueba o se retira
+   PICTURE la propia lista de fichas con su foto, lista para decidir
+   COLOUR blanco y crema del sitio, esmeralda para aprobar, rojo apagado para eliminar, oro como filo
+   TYPE   Cormorant Garamond para títulos + Manrope para texto
+   LAYOUT barra superior con cifras y pestañas; fichas en cuadrícula; en celular una columna */
+:root{color-scheme:light;--bg:#fffdf8;--ink:#12251d;--soft:#5b665f;--em:#0a3529;--acc:#0d5a45;--cream:#f7f1e3;--line:#ebe2cd;--hair:#d8c08a;--g3:#9c7426;--bad:#a8322a;--shadow:0 1px 2px #3a2a0a0d,0 14px 34px -14px #3a2a0a2e}
+:root[data-theme]{color-scheme:light}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Manrope,system-ui,sans-serif}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;line-height:1.1;margin:0}
+button,input{font:inherit;color:inherit}
+a{color:var(--acc)}
+.top{background:var(--cream);border-bottom:1px solid var(--line);padding:14px max(4vw,16px)}
+.top .in{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;text-decoration:none;color:var(--ink)}
+.brand img{width:40px;height:40px}
+.brand b{font-family:"Cormorant Garamond",serif;font-size:22px}
+.brand span{display:block;font-size:13px;color:var(--soft);font-weight:500}
+main{max-width:1200px;margin:0 auto;padding:28px max(4vw,16px) 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:clamp(20px,4vw,36px)}
+.gate{max-width:440px;margin:6vh auto 0}
+.gate h1{font-size:34px;margin-bottom:8px}
+.gate p{color:var(--soft);margin:0 0 18px}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
+input[type=password],input[type=text]{width:100%;min-height:48px;padding:0 14px;border-radius:12px;border:1px solid var(--hair);background:#fff;font-size:16px}
+input:focus-visible,button:focus-visible{outline:2px solid var(--g3);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:600;font-size:14px;cursor:pointer}
+.btn:hover{border-color:var(--hair)}
+.btn.pri{background:var(--em);color:#fff;border-color:var(--em)}
+.btn.ok{background:var(--acc);color:#fff;border-color:var(--acc)}
+.btn.bad{color:var(--bad);border-color:#e3c4c0}
+.btn.bad.sure{background:var(--bad);color:#fff;border-color:var(--bad)}
+.btn[disabled]{opacity:.5;cursor:default}
+.gate .btn{width:100%;margin-top:18px}
+.msg{margin-top:12px;font-size:14px;min-height:20px}
+.msg.err{color:var(--bad)}
+.msg.okm{color:var(--acc)}
+.show{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--soft);margin-top:8px;cursor:pointer}
+.bar{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:22px}
+.bar h1{font-size:clamp(30px,4vw,40px)}
+.counts{display:flex;gap:22px;margin-top:6px;color:var(--soft);font-size:14px}
+.counts strong{font-family:"Cormorant Garamond",serif;font-size:30px;color:var(--em);display:block;line-height:1;font-variant-numeric:lining-nums tabular-nums}
+.tabs{display:inline-flex;padding:4px;border-radius:999px;background:var(--cream);border:1px solid var(--line)}
+.tabs button{min-height:40px;padding:0 16px;border-radius:999px;border:0;background:none;font-weight:600;font-size:14px;color:var(--soft);cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--em);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.it{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.it .ph{display:block;aspect-ratio:4/3;background:var(--cream);overflow:hidden}
+.it .ph img{width:100%;height:100%;object-fit:cover}
+.it .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.it .meta{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.it h3{font-size:22px;overflow-wrap:anywhere}
+.it time{font-size:12.5px;color:var(--soft);white-space:nowrap}
+.it p{margin:0;font-size:15px;white-space:pre-wrap;overflow-wrap:anywhere}
+.tag{align-self:flex-start;font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+.tag.p{background:#fff3d6;color:#7a5a14}
+.tag.a{background:#e3f1ea;color:var(--acc)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:6px}
+.empty{padding:40px 20px;text-align:center;color:var(--soft);border:1px dashed var(--hair);border-radius:16px;grid-column:1/-1}
+details.cfg{margin-top:36px;max-width:520px}
+details.cfg summary{cursor:pointer;font-weight:600;color:var(--soft);min-height:44px;display:flex;align-items:center}
+.note{font-size:13px;color:var(--soft);margin-top:8px}
+[hidden]{display:none!important}
+@media(max-width:600px){.grid{grid-template-columns:minmax(0,1fr)}.tabs{width:100%}.tabs button{flex:1;padding:0 8px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="./"><img src="img/logo.png" alt=""><div><b>Simposio XXII</b><span>Panel de momentos de los asistentes</span></div></a>
+  <button class="btn" id="out" type="button" hidden>Salir del panel</button>
+</div></header>
+
+<main>
+  <!-- Crear clave (solo la primera vez) -->
+  <section class="card gate" id="setup" hidden>
+    <h1>Crea la clave del panel</h1>
+    <p>Es la primera vez que se abre el panel. Elige la clave que usarán los organizadores para aprobar los momentos. Solo se puede crear una vez; después solo se cambia con la clave actual.</p>
+    <form id="fSetup">
+      <label for="n1">Nueva clave (mínimo 8 caracteres)</label>
+      <input id="n1" type="password" autocomplete="new-password" minlength="8" required>
+      <label for="n2">Repite la clave</label>
+      <input id="n2" type="password" autocomplete="new-password" minlength="8" required>
+      <label class="show"><input type="checkbox" id="showS"> Mostrar clave</label>
+      <button class="btn pri" type="submit">Crear clave y entrar</button>
+      <div class="msg" id="mSetup" role="status"></div>
+    </form>
+  </section>
+
+  <!-- Entrar -->
+  <section class="card gate" id="login" hidden>
+    <h1>Panel de momentos</h1>
+    <p>Escribe la clave del panel para revisar y aprobar lo que comparten los asistentes.</p>
+    <form id="fLogin">
+      <label for="k">Clave del panel</label>
+      <input id="k" type="password" autocomplete="current-password" required>
+      <label class="show"><input type="checkbox" id="showL"> Mostrar clave</label>
+      <button class="btn pri" type="submit">Entrar</button>
+      <div class="msg" id="mLogin" role="status"></div>
+    </form>
+  </section>
+
+  <!-- Panel -->
+  <section id="panel" hidden>
+    <div class="bar">
+      <div>
+        <h1>Momentos de los asistentes</h1>
+        <div class="counts"><div><strong id="cP">0</strong>pendientes</div><div><strong id="cA">0</strong>publicados</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <div class="tabs" role="group" aria-label="Filtrar">
+          <button type="button" data-f="p" aria-pressed="true">Pendientes</button>
+          <button type="button" data-f="a" aria-pressed="false">Publicados</button>
+          <button type="button" data-f="t" aria-pressed="false">Todos</button>
+        </div>
+        <button class="btn" id="re" type="button">Actualizar</button>
+      </div>
+    </div>
+    <div class="msg" id="mPanel" role="status"></div>
+    <div class="grid" id="grid"></div>
+
+    <details class="cfg">
+      <summary>Cambiar la clave del panel</summary>
+      <form id="fChange" class="card" style="margin-top:8px">
+        <label for="c0">Clave actual</label>
+        <input id="c0" type="password" autocomplete="current-password" required>
+        <label for="c1">Nueva clave (mínimo 8 caracteres)</label>
+        <input id="c1" type="password" autocomplete="new-password" minlength="8" required>
+        <button class="btn pri" type="submit" style="margin-top:14px">Cambiar clave</button>
+        <div class="msg" id="mChange" role="status"></div>
+        <p class="note">Al cambiarla, quien tenga la clave anterior ya no podrá entrar.</p>
+      </form>
+    </details>
+  </section>
+</main>
+
+<script>
+{
+const SB='https://msddjuevttnwogwudeqd.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zZGRqdWV2dHRud29nd3VkZXFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU1Njg0NzAsImV4cCI6MjExMTE0NDQ3MH0.j6uNr1np7bNPxxHcwD6rXDunpVd9LeZJ77m_MAiwc9g'; /* clave pública: las acciones del panel exigen además la clave del panel */
+const $=id=>document.getElementById(id);
+const ERR={clave:'Clave incorrecta.',bloqueado:'Demasiados intentos fallidos. Espera 15 minutos e inténtalo de nuevo.',sin_clave:'El panel todavía no tiene clave.',corta:'La clave debe tener al menos 8 caracteres.',ya_existe:'La clave ya fue creada. Entra con ella.',no_existe:'Ese momento ya no existe.',red:'No hay conexión con la base de datos. Revisa tu internet e inténtalo otra vez.'};
+const rpc=async(fn,args)=>{try{const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify(args||{})});if(!r.ok)return{ok:false,error:'red'};return await r.json()}catch(e){return{ok:false,error:'red'}}};
+const say=(id,t,kind)=>{const m=$(id);m.textContent=t||'';m.className='msg'+(kind?' '+kind:'')};
+let CL='',ITEMS=[],F='p',timer=0;
+const store={get(){try{return sessionStorage.getItem('panelClave')||''}catch(e){return ''}},set(v){try{v?sessionStorage.setItem('panelClave',v):sessionStorage.removeItem('panelClave')}catch(e){}}};
+const show=w=>{['setup','login','panel'].forEach(x=>$(x).hidden=x!==w);$('out').hidden=w!=='panel'};
+const fmt=d=>{try{return new Date(d).toLocaleString('es-CO',{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'})}catch(e){return ''}};
+
+const render=()=>{
+ const p=ITEMS.filter(x=>!x.aprobado),a=ITEMS.filter(x=>x.aprobado);
+ $('cP').textContent=p.length;$('cA').textContent=a.length;
+ const list=F==='p'?p:F==='a'?a:ITEMS,g=$('grid');g.textContent='';
+ if(!list.length){const e=document.createElement('div');e.className='empty';e.textContent=F==='p'?'No hay momentos pendientes por revisar.':F==='a'?'Todavía no hay momentos publicados.':'Todavía nadie ha compartido un momento.';g.appendChild(e);return}
+ list.forEach(x=>{
+  const it=document.createElement('article');it.className='it';
+  if(x.foto_url){const a=document.createElement('a');a.className='ph';a.href=x.foto_url;a.target='_blank';a.rel='noopener';a.setAttribute('aria-label','Abrir la foto de '+(x.nombre||'')+' en grande');const im=document.createElement('img');im.src=x.foto_url;im.alt='Foto enviada por '+(x.nombre||'un asistente');im.loading='lazy';a.appendChild(im);it.appendChild(a)}
+  const bd=document.createElement('div');bd.className='bd';
+  const tg=document.createElement('span');tg.className='tag '+(x.aprobado?'a':'p');tg.textContent=x.aprobado?'Publicado':'Pendiente';bd.appendChild(tg);
+  const mt=document.createElement('div');mt.className='meta';const h=document.createElement('h3');h.textContent=x.nombre||'';const t=document.createElement('time');t.textContent=fmt(x.creado);mt.append(h,t);bd.appendChild(mt);
+  const pr=document.createElement('p');pr.textContent=x.relato||'';bd.appendChild(pr);
+  const ac=document.createElement('div');ac.className='acts';
+  const b1=document.createElement('button');b1.type='button';b1.className='btn '+(x.aprobado?'':'ok');b1.textContent=x.aprobado?'Ocultar de la galería':'Aprobar y publicar';b1.dataset.act=x.aprobado?'hide':'ok';b1.dataset.id=x.id;
+  const b2=document.createElement('button');b2.type='button';b2.className='btn bad';b2.textContent='Eliminar';b2.dataset.act='del';b2.dataset.id=x.id;
+  ac.append(b1,b2);bd.appendChild(ac);it.appendChild(bd);g.appendChild(it)});
+};
+const load=async(quiet)=>{
+ if(!quiet)say('mPanel','Cargando…');
+ const r=await rpc('panel_listar',{p_clave:CL});
+ if(!r.ok){if(r.error==='clave'||r.error==='bloqueado'||r.error==='sin_clave'){logout();say('mLogin',ERR[r.error],'err');return}say('mPanel',ERR[r.error]||'No se pudo cargar.','err');return}
+ ITEMS=r.items||[];render();say('mPanel',quiet?'':'Lista actualizada.','okm');if(!quiet)setTimeout(()=>{if($('mPanel').textContent==='Lista actualizada.')say('mPanel','')},2500)};
+const enter=async(clave,msgId)=>{
+ const r=await rpc('panel_listar',{p_clave:clave});
+ if(!r.ok){say(msgId,ERR[r.error]||'No se pudo entrar.','err');return false}
+ CL=clave;store.set(clave);ITEMS=r.items||[];show('panel');render();say('mPanel','');clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)load(true)},60000);return true};
+const logout=()=>{CL='';store.set('');ITEMS=[];clearInterval(timer);$('k').value='';show('login')};
+
+$('fSetup').addEventListener('submit',async e=>{e.preventDefault();const a=$('n1').value,b=$('n2').value;
+ if(a.length<8)return say('mSetup',ERR.corta,'err');if(a!==b)return say('mSetup','Las dos claves no coinciden.','err');
+ say('mSetup','Creando la clave…');const r=await rpc('panel_crear_clave',{p_nueva:a});
+ if(!r.ok){say('mSetup',ERR[r.error]||'No se pudo crear la clave.','err');if(r.error==='ya_existe')setTimeout(()=>show('login'),1500);return}
+ $('n1').value=$('n2').value='';await enter(a,'mSetup')});
+$('fLogin').addEventListener('submit',async e=>{e.preventDefault();say('mLogin','Comprobando…');if(await enter($('k').value,'mLogin'))say('mLogin','')});
+$('showS').addEventListener('change',e=>{['n1','n2'].forEach(i=>$(i).type=e.target.checked?'text':'password')});
+$('showL').addEventListener('change',e=>{$('k').type=e.target.checked?'text':'password'});
+$('out').addEventListener('click',logout);
+$('re').addEventListener('click',()=>load());
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;F=b.dataset.f;document.querySelectorAll('.tabs [data-f]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render()});
+$('grid').addEventListener('click',async e=>{
+ const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const id=b.dataset.id,act=b.dataset.act;
+ if(act==='del'&&!b.classList.contains('sure')){b.classList.add('sure');b.textContent='¿Seguro? Toca otra vez';setTimeout(()=>{if(b.isConnected){b.classList.remove('sure');b.textContent='Eliminar'}},4000);return}
+ b.disabled=true;
+ const r=act==='del'?await rpc('panel_eliminar',{p_clave:CL,p_id:id}):await rpc('panel_marcar',{p_clave:CL,p_id:id,p_aprobado:act==='ok'});
+ if(!r.ok){b.disabled=false;if(r.error==='clave'||r.error==='bloqueado'){logout();say('mLogin',ERR[r.error],'err');return}say('mPanel',ERR[r.error]||'No se pudo guardar el cambio.','err');return}
+ say('mPanel',act==='ok'?'Publicado: ya aparece en la galería del sitio.':act==='hide'?'Oculto: ya no aparece en la galería.':'Eliminado.','okm');load(true)});
+$('fChange').addEventListener('submit',async e=>{e.preventDefault();const a=$('c0').value,n=$('c1').value;
+ if(n.length<8)return say('mChange',ERR.corta,'err');say('mChange','Cambiando…');
+ const r=await rpc('panel_cambiar_clave',{p_actual:a,p_nueva:n});
+ if(!r.ok)return say('mChange',ERR[r.error]||'No se pudo cambiar la clave.','err');
+ CL=n;store.set(n);$('c0').value=$('c1').value='';say('mChange','Clave cambiada. Compártela solo con los organizadores.','okm')});
+
+(async()=>{
+ const st=await rpc('panel_estado');
+ if(st&&st.error==='red'){show('login');say('mLogin',ERR.red,'err');return}
+ if(!st.tiene_clave){show('setup');return}
+ const saved=store.get();if(saved&&await enter(saved,'mLogin'))return;
+ show('login')})();
+}
+</script>
+</body>
+</html>
