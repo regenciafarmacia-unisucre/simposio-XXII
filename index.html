@@ -381,6 +381,11 @@ body.lock .dots,body.lock .totop{display:none}
 .mosaic button:hover img{transform:scale(1.04)}
 .mosaic figcaption{padding:12px 16px 14px;font-size:14px;color:var(--soft)}
 @media(max-width:960px){nav b{font-size:0;margin-right:8px}nav b .navlogo{margin-right:0}nav .wrap{gap:8px}}
+.mpick{position:fixed;left:16px;bottom:70px;z-index:70;display:flex;gap:6px;padding:5px;border-radius:999px;background:#fffdf8f2;border:1px solid var(--hair);box-shadow:var(--shadow)}
+.mpick[hidden]{display:none}
+.mpick button{min-height:38px;padding:0 14px;border-radius:999px;border:0;background:none;font:600 13px Manrope,sans-serif;color:var(--em2);cursor:pointer}
+.mpick button[aria-pressed=true]{background:var(--em2);color:#fff}
+body.lock .mpick{left:auto;right:16px;bottom:auto;top:70px}
 @media(max-width:1040px){.acts{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}.act{flex:0 0 230px;scroll-snap-align:start}.acts-nav{display:flex}}
 @media(max-width:960px){.explorer{grid-template-columns:minmax(0,1fr)}.list{position:static;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px;gap:8px}.item{flex:0 0 240px;scroll-snap-align:start;border-color:var(--line)}.cast{grid-template-columns:minmax(0,1fr)}.room{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:none}footer .wrap{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}footer .wrap>div:first-child{grid-column:1/-1}}
 @media(max-width:860px){.hero .grid,.tv,.herb,.quiz{grid-template-columns:minmax(0,1fr)}.medal{max-width:280px;order:-1}.herb .info{order:-1}.hero .art.a{width:90vw;opacity:.18}.meta,.stats .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}.meta div:nth-child(3){padding-left:0;border-left:0}.meta div:nth-child(-n+2){padding-bottom:14px}.stats div:nth-child(3){border-left:0;padding-left:0}.stats div:nth-child(-n+2){padding-bottom:20px}.gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gallery figcaption{font-size:17px}}
@@ -432,6 +437,7 @@ setTimeout(done,5750);document.getElementById('iskip').focus({preventScroll:true
   <div class="links" id="links"><a href="#emblema">Emblema</a><a href="#programa">Programa</a><a href="#herbario">Herbario</a><a href="#cuadros">Cuadros vivos</a><a href="#personas">Personas</a><a href="#quiz">Pon a prueba</a><a href="#transmision">Transmisión</a><a href="#momentos">Momentos</a><a href="#piezas">Afiches</a></div>
 </div><div class="progress" id="prog-bar"></div></nav>
 <button class="music" id="musicBtn" type="button" aria-pressed="false"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="mlabel" id="mlabel">Activar música</span></button>
+<div class="mpick" id="mpick" role="group" aria-label="Elegir obra" hidden><button type="button" data-t="elisa" aria-pressed="true">Para Elisa</button><button type="button" data-t="luna" aria-pressed="false">Claro de luna</button></div>
 <div class="dots" id="dots" role="navigation" aria-label="Ir a una sección"></div>
 <button class="totop" id="totop" type="button" aria-label="Volver arriba"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 
@@ -593,7 +599,7 @@ setTimeout(done,5750);document.getElementById('iskip').focus({preventScroll:true
     <div class="brand"><img src="img/logo.png" alt=""><div><h3>Simposio XXII</h3><p>El farmacéutico y la medicina tradicional: preservando saberes y promoviendo el uso seguro.</p></div></div>
     <div><h3>Cuándo y dónde</h3><p>30 de octubre de 2026, desde la 1:40 p.m.<br>Auditorio Ciencias de la Salud, Universidad de Sucre</p></div>
     <div><h3>Organiza</h3><p>Tecnología en Regencia de Farmacia, Semestre VI<br>Universidad de Sucre · 2026-2</p></div>
-    <small>Contenido tomado de los afiches oficiales y del informe final del Comité de Marketing del XXII Simposio. Fotos de las plantas: Wikimedia Commons, con el crédito de cada autor bajo la foto.</small>
+    <small>Contenido tomado de los afiches oficiales y del informe final del Comité de Marketing del XXII Simposio. Fotos de las plantas: Wikimedia Commons, con el crédito de cada autor bajo la foto. Música: «Para Elisa» interpretada por Sebion7125 (CC BY-SA 3.0) y «Claro de luna», primer movimiento, de Musopen (dominio público), ambas vía Wikimedia Commons.</small>
   </div>
 </footer>
 
@@ -860,74 +866,27 @@ $('dclose').onclick=()=>dlg.close();$('dprev').onclick=()=>openG(gi-1);$('dnext'
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 dlg.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')openG(gi-1);if(e.key==='ArrowRight')openG(gi+1)});
 
-/* ---------- música de fondo que responde a lo que se toca ---------- */
+/* ---------- música de fondo: grabaciones reales de Beethoven ---------- */
 const MUSIC=(()=>{
- let ctx=null,bus,rev,noiseBuf,timer=0,step=0,nextT=0,th=null,thKey='inicio',deg=3,on=false,sr=3,swap=0;
- const r=()=>(sr=sr*16807%2147483647)/2147483647;
- const TH={
-  inicio:{name:'Para Elisa · Beethoven',bpm:88,seq:1},
-  serpiente:{name:'La serpiente · misterio',bpm:58,root:57,scale:[0,1,4,5,7,8,10],chords:[[0,7,12],[1,8,13],[0,7,12],[-2,5,10]],lead:'flute',steps:[0,6,8,12],prob:.85,drone:1,dur:1.1},
-  mortero:{name:'El mortero · el oficio',bpm:92,root:55,scale:[0,2,3,5,7,8,10],chords:[[0,7,15],[-4,3,8],[-2,5,10],[0,7,15]],lead:'pluck',steps:[0,2,4,7,10,12,14],prob:.5,drums:{k:'x.......x.......',w:'..x..x....x..x..',s:'....x.......x...'}},
-  hojas:{name:'Las hojas · gaita y maraca',bpm:96,root:62,scale:[0,2,4,7,9],chords:[[0,7,16],[5,12,17],[7,14,19],[0,7,16]],lead:'flute',steps:[0,2,3,6,8,10,11,14],prob:.75,dur:.32,drums:{s:'x.x.x.x.x.x.x.x.',k:'x.....x...x.....'}},
-  capsula:{name:'La cápsula · ciencia',bpm:84,root:65,scale:[0,2,4,6,7,9,11],chords:[[0,7,16,23],[2,9,14,18],[4,11,16,19],[-1,6,11,14]],lead:'bell',steps:[0,3,6,9,12],prob:.8},
-  molecula:{name:'La molécula · laboratorio',bpm:108,root:64,scale:[0,2,4,7,9,11],chords:[[0,7,11,16],[-3,4,9,14],[5,12,16,21],[2,9,14,18]],lead:'pluck',steps:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],prob:.7,arp:1,lv:.12},
-  matimba:{name:'La Matimba · tambor de la región',bpm:100,root:60,scale:[0,2,4,5,7,9,10],chords:[[0,7,16],[5,12,17],[7,14,17],[0,7,16]],lead:'pluck',steps:[0,3,6,10,12],prob:.6,drums:{k:'x..x..x...x..x..',t:'..x...x.x...x..x',s:'x.xxx.xxx.xxx.xx'}},
-  botica:{name:'Luz de botica · nocturno',bpm:54,root:50,scale:[0,2,3,5,7,8,10],chords:[[0,7,15],[-4,3,8],[-7,0,5],[-5,2,7]],lead:'bell',steps:[0,8],prob:.55,drone:1}
- };
- const mtof=m=>440*Math.pow(2,(m-69)/12);
- const out=(node,wet)=>{node.connect(bus);const s=ctx.createGain();s.gain.value=wet;node.connect(s);s.connect(rev)};
- const env=(g,t,a,peak,d)=>{g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d)};
-const NM={C:0,'C#':1,D:2,'D#':3,E:4,F:5,'F#':6,G:7,'G#':8,A:9,'A#':10,B:11},mid=n=>{const m=/^([A-G]#?)(\d)$/.exec(n);return NM[m[1]]+12*(+m[2]+1)};
- const bar=a=>a.map(x=>x||[]);
- const A1=bar([['E5'],['D#5'],['E5'],['B4'],['D5'],['C5']]),A2=bar([['A4','A2'],[0,'E3'],[0,'A3'],['C4'],['E4'],['A4']]),A3=bar([['B4','E2'],[0,'E3'],[0,'G#3'],['E4'],['G#4'],['B4']]),
-  A4=bar([['C5','A2'],[0,'E3'],[0,'A3'],['E4'],['E5'],['D#5']]),A7=bar([['B4','E2'],[0,'E3'],[0,'G#3'],['E4'],['C5'],['B4']]),
-  A8a=bar([['A4','A2'],[0,'E3'],[0,'A3'],[],['E5'],['D#5']]),A8b=bar([['A4','A2'],[0,'E3'],[0,'A3'],['B4'],['C5'],['D5']]),
-  B1=bar([['E5','C3'],[0,'G3'],[0,'C4'],['G4'],['F5'],['E5']]),B2=bar([['D5','G2'],[0,'G3'],[0,'B3'],['F4'],['E5'],['D5']]),
-  B3=bar([['C5','A2'],[0,'E3'],[0,'A3'],['E4'],['D5'],['C5']]),B4=bar([['B4','E2'],[0,'E3'],[0,'G#3'],[],['E5'],['D#5']]);
- const ELISE=[['E5'],['D#5']].concat(A1,A2,A3,A4,A1,A2,A7,A8a,A1,A2,A3,A4,A1,A2,A7,A8b,B1,B2,B3,B4);
- const V={
-  piano:(t,f,v,d)=>{const g=ctx.createGain(),lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(Math.min(9000,f*9),t);lp.frequency.exponentialRampToValueAtTime(Math.max(500,f*2.2),t+1.1);lp.connect(g);
-   [[1,.62,0,'triangle'],[2,.24,1.6,'sine'],[3,.1,-1.3,'sine'],[4,.05,.9,'sine']].forEach(([h,a,dt,ty])=>{const o=ctx.createOscillator(),og=ctx.createGain();o.type=ty;o.frequency.value=f*h;o.detune.value=dt;og.gain.value=a;o.connect(og);og.connect(lp);o.start(t);o.stop(t+d+1.9)});
-   g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(v*.32,t+.32);g.gain.exponentialRampToValueAtTime(.0001,t+d+1.7);out(g,.42)},
-  pluck:(t,f,v)=>{const o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),g2=ctx.createGain();o.frequency.value=f;o2.frequency.value=f*4.01;g2.gain.value=.12;o2.connect(g2);g2.connect(g);o.connect(g);env(g,t,.005,v,1.3);out(g,.35);o.start(t);o2.start(t);o.stop(t+1.5);o2.stop(t+1.5)},
-  bell:(t,f,v)=>{const c=ctx.createOscillator(),m=ctx.createOscillator(),mg=ctx.createGain(),g=ctx.createGain();c.frequency.value=f;m.frequency.value=f*3.5;mg.gain.setValueAtTime(f*2,t);mg.gain.exponentialRampToValueAtTime(1,t+1.8);m.connect(mg);mg.connect(c.frequency);c.connect(g);env(g,t,.004,v*.6,2.6);out(g,.5);c.start(t);m.start(t);c.stop(t+2.8);m.stop(t+2.8)},
-  flute:(t,f,v,d)=>{const o=ctx.createOscillator(),l=ctx.createOscillator(),lg=ctx.createGain(),g=ctx.createGain(),lp=ctx.createBiquadFilter();o.type='triangle';o.frequency.value=f;l.frequency.value=5.2;lg.gain.value=f*.012;l.connect(lg);lg.connect(o.frequency);lp.type='lowpass';lp.frequency.value=f*4;o.connect(lp);lp.connect(g);
-   g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v*.7,t+.08);g.gain.setValueAtTime(v*.55,t+d*.7);g.gain.exponentialRampToValueAtTime(.0001,t+d+.25);
-   const n=ctx.createBufferSource(),bp=ctx.createBiquadFilter(),ng=ctx.createGain();n.buffer=noiseBuf;bp.type='bandpass';bp.frequency.value=f*2;bp.Q.value=2;ng.gain.setValueAtTime(v*.25,t);ng.gain.exponentialRampToValueAtTime(.0001,t+.18);n.connect(bp);bp.connect(ng);ng.connect(g);
-   out(g,.45);o.start(t);l.start(t);n.start(t);o.stop(t+d+.3);l.stop(t+d+.3);n.stop(t+.2)}
- };
- const pad=(t,notes,dur,v)=>notes.forEach(m=>[-7,7].forEach(dt=>{const o=ctx.createOscillator(),g=ctx.createGain(),lp=ctx.createBiquadFilter();o.type='sawtooth';o.frequency.value=mtof(m);o.detune.value=dt;lp.type='lowpass';lp.frequency.value=850;o.connect(lp);lp.connect(g);
-  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+dur*.35);g.gain.linearRampToValueAtTime(v*.8,t+dur*.85);g.gain.linearRampToValueAtTime(.0001,t+dur+1.2);out(g,.6);o.start(t);o.stop(t+dur+1.3)}));
- const drone=(t,m,dur)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=mtof(m);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.06,t+1.5);g.gain.linearRampToValueAtTime(.0001,t+dur+1);o.connect(g);out(g,.4);o.start(t);o.stop(t+dur+1.1)};
- const noise=(t,type,freq,q,peak,dec)=>{const n=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();n.buffer=noiseBuf;f.type=type;f.frequency.value=freq;f.Q.value=q;n.connect(f);f.connect(g);env(g,t,.002,peak,dec);out(g,.12);n.start(t,r()*.5);n.stop(t+dec+.05)};
- const tone=(t,f0,f1,peak,dec)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dec*.8);o.connect(g);env(g,t,.003,peak,dec);out(g,.1);o.start(t);o.stop(t+dec+.05)};
- const hit=(t,k)=>{if(k==='k')tone(t,115,42,.55,.38);if(k==='t')tone(t,210,120,.32,.22);if(k==='w')noise(t,'bandpass',1700,6,.5,.06);if(k==='s')noise(t,'highpass',6500,.7,.1+r()*.1,.05)};
- const sdeg=(sc,d)=>{const L=sc.length,o=Math.floor(d/L);return sc[((d%L)+L)%L]+12*o};
- const play=(s,t)=>{const T=th,bar=Math.floor(s/16)%4,st=s%16,six=60/T.bpm/4;
-  if(T.seq){const L=ELISE.length,i=s<L?s:2+(s-2)%(L-2),[rh,lh]=ELISE[i],next=ELISE[(i+1)%L];const sw=t+(r()-.5)*.008;
-   if(rh){const held=!next[0];V.piano(sw,mtof(mid(rh)),.2,held?.5:.26)}if(lh)V.piano(t,mtof(mid(lh)),.12,.6);return}
-  if(st===0){pad(t,T.chords[bar].map(x=>T.root-12+x),16*six,.016);if(T.drone)drone(t,T.root-24,16*six)}
-  if(T.drums)for(const k in T.drums)if(T.drums[k][st]==='x')hit(t,k);
-  if(T.steps.includes(st)&&r()<T.prob){let m;if(T.arp){const ch=T.chords[bar];m=T.root+12+ch[st%ch.length]+(st>=8?12:0)}else{deg+=[-2,-1,-1,1,1,2][r()*6|0];deg=Math.max(-2,Math.min(9,deg));m=T.root+12+sdeg(T.scale,deg)}
-   V[T.lead](t,mtof(m),T.lv||.2,T.dur||.5)}};
- const tick=()=>{if(!th)return;while(nextT<ctx.currentTime+.15){play(step,nextT);nextT+=60/th.bpm/4;step++}};
- const btn=()=>$('musicBtn'),ui=()=>{const b=btn();if(!b)return;b.setAttribute('aria-pressed',String(on));b.classList.toggle('on',on);$('mlabel').textContent=on?TH[thKey].name:'Activar música'};
- const init=()=>{const AC=window.AudioContext||window.webkitAudioContext;ctx=new AC();bus=ctx.createGain();bus.gain.value=0;const comp=ctx.createDynamicsCompressor();bus.connect(comp);comp.connect(ctx.destination);
-  const len=ctx.sampleRate*2.8,ir=ctx.createBuffer(2,len,ctx.sampleRate);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}
-  rev=ctx.createConvolver();rev.buffer=ir;const rg=ctx.createGain();rg.gain.value=.7;rev.connect(rg);rg.connect(comp);
-  noiseBuf=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);const nd=noiseBuf.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1};
- const toggle=()=>{try{if(!ctx)init()}catch(e){$('mlabel').textContent='Tu navegador no permite audio';return}
-  on=!on;const now=ctx.currentTime;
-  if(on){ctx.resume();th=TH[thKey];nextT=now+.08;step=0;clearInterval(timer);timer=setInterval(tick,25);bus.gain.cancelScheduledValues(now);bus.gain.setTargetAtTime(.85,now,.6)}
-  else{bus.gain.cancelScheduledValues(now);bus.gain.setTargetAtTime(0,now,.25);setTimeout(()=>{if(!on){clearInterval(timer);ctx.suspend()}},900)}
-  ui()};
- const react=k=>{const night=!!document.querySelector('.medal.night'),key=k&&TH[k]?k:(night?'botica':'inicio');if(key===thKey)return;thKey=key;ui();if(!on||!ctx)return;
-  const now=ctx.currentTime;bus.gain.cancelScheduledValues(now);bus.gain.setTargetAtTime(0,now,.22);clearTimeout(swap);
-  swap=setTimeout(()=>{th=TH[thKey];step=0;deg=3;nextT=ctx.currentTime+.05;bus.gain.setTargetAtTime(.85,ctx.currentTime,.45)},650)};
- document.addEventListener('visibilitychange',()=>{if(!ctx||!on)return;document.hidden?ctx.suspend():ctx.resume()});
- return{toggle,react,ui};
+ const TR={elisa:{name:'Para Elisa · Beethoven',src:'audio/para-elisa.mp3',rate:.9},luna:{name:'Claro de luna · Beethoven',src:'audio/claro-de-luna.mp3',rate:1}};
+ let ctx=null,on=false,cur='elisa',manual=false;const el={},gn={};
+ const mk=k=>{const a=new Audio();a.crossOrigin='anonymous';a.src=TR[k].src;a.loop=true;a.preload='auto';a.defaultPlaybackRate=TR[k].rate;a.playbackRate=TR[k].rate;
+  try{a.preservesPitch=true;a.mozPreservesPitch=true;a.webkitPreservesPitch=true}catch(e){}
+  el[k]=a;if(ctx){try{const src=ctx.createMediaElementSource(a),g=ctx.createGain();g.gain.value=0;src.connect(g);g.connect(ctx.destination);gn[k]=g}catch(e){}}if(!gn[k])a.volume=0};
+ const fade=(k,to,sec)=>{if(gn[k]){const t=ctx.currentTime,g=gn[k].gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(to,t+sec)}else if(el[k]){const a=el[k],from=a.volume,t0=performance.now();const st=()=>{const q=Math.min(1,(performance.now()-t0)/(sec*1000));a.volume=from+(to-from)*q;if(q<1)requestAnimationFrame(st)};st()}};
+ const start=k=>{if(!el[k])mk(k);const a=el[k];a.playbackRate=TR[k].rate;const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{});fade(k,.6,1.6)};
+ const halt=k=>{if(!el[k])return;fade(k,0,1.2);setTimeout(()=>{if(!(on&&cur===k))el[k].pause()},1300)};
+ const ui=()=>{const b=$('musicBtn');if(!b)return;b.setAttribute('aria-pressed',String(on));b.classList.toggle('on',on);$('mlabel').textContent=on?TR[cur].name:'Activar música';
+  const mp=$('mpick');mp.hidden=!on;mp.querySelectorAll('[data-t]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.t===cur)))};
+ const toggle=()=>{if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){ctx=null}}if(ctx&&ctx.state==='suspended')ctx.resume();
+  on=!on;if(on)start(cur);else halt(cur);ui()};
+ const choose=k=>{if(!TR[k])return;manual=true;if(k!==cur){const prev=cur;cur=k;if(on){halt(prev);start(cur)}}if(!on)toggle();else ui()};
+ const react=()=>{if(manual)return;const want=document.querySelector('.medal.night')?'luna':'elisa';if(want===cur)return;const prev=cur;cur=want;if(on){halt(prev);start(cur)}ui()};
+ document.addEventListener('visibilitychange',()=>{if(!on||!el[cur])return;if(document.hidden)el[cur].pause();else{const pr=el[cur].play();if(pr&&pr.catch)pr.catch(()=>{})}});
+ return{toggle,react,ui,choose};
 })();
 $('musicBtn').addEventListener('click',()=>MUSIC.toggle());
+$('mpick').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(b)MUSIC.choose(b.dataset.t)});
 
 /* ---------- significados ---------- */
 const MEAN={
