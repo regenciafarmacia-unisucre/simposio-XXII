@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simposio XXII</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE  premium e institucional: una edición de lujo de la memoria del simposio
+   IDEA   el herbario del simposio: láminas montadas de las plantas que de verdad se estudiaron, con su etiqueta
+   PICTURE San Gregorio y Matimba dibujadas en hilo de oro en la portada; un pliego de herbario interactivo con las cinco especies
+   COLOUR esmeralda profundo dominante, blanco, salvia muy clara de apoyo, oro en degradado como acento; papel de herbario en ambos temas
+   TYPE   Cormorant Garamond para títulos + Manrope para texto
+   LAYOUT portada completa en una pantalla; cifras; programa; herbario; cita; cuadros vivos en fila; escenario y sala; quiz; transmisión; afiches */
+:root{color-scheme:light;--bg:#fffdf8;--ink:#12251d;--soft:#5b665f;--em:#06281f;--em2:#0a3529;--acc:#0d5a45;--sage:#f7f1e3;--sage2:#efe5cf;--panel:#ffffff;--line:#ebe2cd;--hair:#d8c08a;--g1:#f5e3a8;--g2:#d4ad55;--g3:#9c7426;--gold:linear-gradient(135deg,var(--g1),var(--g2) 45%,var(--g3));--goldd:linear-gradient(135deg,#c79a3e,#9c7426 50%,#6f5118);--ok:#0f7a4f;--bad:#b23a2e;--shadow:0 1px 2px #3a2a0a0d,0 14px 34px -14px #3a2a0a2e;--paper:#fbf9f2}
+:root[data-theme]{color-scheme:light}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:76px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 Manrope,system-ui,sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.05;margin:0;text-wrap:balance}
+h2{font-size:clamp(36px,4.6vw,54px)}
+h3{font-size:clamp(24px,2.4vw,30px)}
+p{margin:0}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit}
+.wrap{max-width:1200px;margin:0 auto}
+.band{padding-block:clamp(52px,6.5vw,92px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--g2);outline-offset:3px}
+.gt{background:var(--goldd);-webkit-background-clip:text;background-clip:text;color:transparent}
+.orn{display:flex;align-items:center;gap:12px;color:var(--g3);font-size:14px;font-weight:600;margin-bottom:14px}
+.orn svg{width:34px;height:12px;flex:none}
+.lede{color:var(--soft);max-width:34em;margin-top:12px;font-size:17px}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px 40px;margin-bottom:36px}
+nav{position:fixed;inset:0 0 auto;z-index:20;padding:0 max(5vw,16px);color:var(--ink);transition:background .3s,box-shadow .3s}
+nav.solid{background:#fffdf8eb;backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;min-height:64px}
+nav b{font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:700;white-space:nowrap;margin-right:auto}
+nav .links{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav .links a{flex:none;text-decoration:none;padding:8px 12px;font-size:14px;font-weight:500;color:var(--soft);position:relative}
+nav .links a::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .3s}
+nav .links a.on,nav .links a:hover{color:var(--ink)}
+nav .links a.on::after,nav .links a:hover::after{transform:scaleX(1)}
+.progress{position:absolute;left:0;bottom:0;height:2px;background:var(--gold);width:0}
+.hero{background:radial-gradient(80% 85% at 76% 32%,#ffffff 0,#fbf6ea 50%,#f3e9d3 100%);color:var(--ink);position:relative;overflow:hidden;padding-top:clamp(100px,10vw,128px);padding-bottom:0}
+.hero .art{position:absolute;pointer-events:none}
+.hero .art.a{right:-4%;top:-6%;width:min(52vw,640px);aspect-ratio:3/4;opacity:.5}
+.hero .art.b{left:-7%;bottom:-14%;width:min(34vw,400px);aspect-ratio:3/4;opacity:.4}
+.hero .grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px 56px;align-items:center;position:relative}
+.hero h1{font-size:clamp(44px,5.8vw,80px);font-weight:700;line-height:.98}
+.hero h1 em{font-style:italic;font-weight:700}
+.sub{font-size:clamp(17px,1.6vw,20px);margin-top:20px;color:var(--soft);max-width:30em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;min-height:50px;padding:0 24px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent;cursor:pointer;background:none;transition:transform .2s}
+.btn.gold{background:var(--gold);color:#241a06;box-shadow:0 10px 30px -10px #d4ad5599}
+.btn.gold::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,#ffffff80 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s}
+.btn.gold:hover::after{transform:translateX(120%)}
+.btn:hover{transform:translateY(-1px)}
+.btn.line{border-color:var(--em2);color:var(--em2)}
+.btn.line:hover{background:#0a35290d}
+.btn.dark{background:var(--em2);color:#fff}
+.btn.ghost{border-color:var(--line);color:var(--ink);min-height:44px;padding:0 18px;font-size:14px}
+.btn.ghost:hover{border-color:var(--g2)}
+.medal{position:relative;aspect-ratio:1;max-width:470px;width:100%;justify-self:center}
+.medal svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ring{animation:spin 60s linear infinite;transform-origin:200px 200px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.disc{position:absolute;inset:12%;display:grid;place-items:center}
+.disc img{width:84%}
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(36px,4vw,56px);border-top:1px solid var(--hair);position:relative}
+.meta div{padding:18px 20px 26px 0}
+.meta div+div{padding-left:20px;border-left:1px solid var(--line)}
+.meta span{display:block;font-size:12.5px;font-weight:600;color:var(--g3)}
+.meta strong{font-weight:600;font-size:16px;color:var(--ink);line-height:1.4;display:block;margin-top:4px}
+.stats{background:var(--panel);color:var(--ink);padding:clamp(32px,4vw,48px) max(5vw,16px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats .wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.stats div{padding:4px 24px;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0;padding-left:0}
+.stats strong{display:block;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(48px,5.4vw,76px);line-height:1;font-variant-numeric:lining-nums tabular-nums}
+.stats span{font-size:14.5px;color:var(--soft);display:block;margin-top:8px;max-width:15em}
+.filters{display:inline-flex;padding:4px;border-radius:999px;background:var(--sage);border:1px solid var(--line)}
+.chip{min-height:40px;padding:0 18px;border-radius:999px;border:0;background:none;font-size:14px;font-weight:600;color:var(--soft);cursor:pointer;transition:all .25s}
+.chip[aria-pressed=true]{background:var(--em2);color:#fff}
+.explorer{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:28px;align-items:start}
+.list{display:grid;gap:4px;position:sticky;top:88px}
+.item{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;text-align:left;padding:14px 14px 14px 10px;border-radius:14px;border:1px solid transparent;background:none;cursor:pointer;transition:background .25s,border-color .25s}
+.item:hover{background:var(--sage)}
+.item[aria-selected=true]{background:var(--panel);border-color:var(--hair);box-shadow:var(--shadow)}
+.item .n{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:600;line-height:1;color:var(--soft);padding-top:2px;text-align:center}
+.item[aria-selected=true] .n{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.item b{display:block;font-size:15px;font-weight:600;line-height:1.35}
+.item small{display:block;font-size:13px;color:var(--soft);margin-top:3px}
+.item[hidden]{display:none}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(24px,3.2vw,44px);box-shadow:var(--shadow);overflow:hidden}
+.card::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--gold)}
+.card.anim>*{animation:fade .45s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--acc)}
+.tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--acc)}
+.tag.v{color:light-dark(#8a6a1e,#e8cf8a)}
+.tag.v::before{background:var(--g2)}
+.card h3{margin:12px 0 22px;font-size:clamp(27px,2.8vw,38px)}
+.speakers{display:flex;flex-wrap:wrap;gap:16px 32px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.who{display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;align-items:center;flex:1 1 260px}
+.av.ph{object-fit:cover;object-position:50% 22%;background:#eee}
+.av{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:"Cormorant Garamond",serif;font-weight:700;font-size:22px;color:#f5e3a8;background:radial-gradient(circle at 30% 25%,#14614a,var(--em));box-shadow:0 0 0 2px var(--panel),0 0 0 3px var(--g2)}
+.who b{display:block;font-size:16px;font-weight:600}
+.who small{display:block;font-size:14px;color:var(--soft);line-height:1.5}
+.flag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--soft);margin-top:4px}
+.flag i{width:20px;height:14px;border-radius:2px;box-shadow:0 0 0 1px #0002}
+.idea{position:relative;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:clamp(23px,2.4vw,29px);line-height:1.3;margin:26px 0;padding-left:44px}
+.idea::before{content:"“";position:absolute;left:0;top:-14px;font-size:72px;line-height:1;background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pts{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.pts li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;font-size:15.5px}
+.pts li::before{content:"";width:12px;height:1px;background:var(--g2);margin:13px 0 0}
+.pts b{color:var(--acc);font-weight:700}
+.sub-list{margin:8px 0 0;padding-left:20px}
+.sub-list li{display:list-item;margin:4px 0}
+.sub-list li::before{display:none}
+.sub-list li::marker{color:var(--g2);font-weight:700}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+.pager button{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:14px;font-weight:600;cursor:pointer}
+.pager button:hover:not(:disabled){border-color:var(--g2)}
+.pager button:disabled{opacity:.35;cursor:default}
+.herb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+.sheet{position:relative;background:var(--paper);color:#1d2a22;border-radius:6px;padding:22px 22px 18px;box-shadow:0 1px 0 #00000010,0 30px 60px -30px #06281f66,inset 0 0 0 1px #e8e2cf;max-width:430px;width:100%;justify-self:center}
+.sheet .plate{position:relative;display:block;width:100%;aspect-ratio:3/4;background:#e9e4d6;box-shadow:0 1px 2px rgba(0,0,0,.2),0 8px 18px -10px rgba(0,0,0,.35)}
+.sheet .plate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tape{position:absolute;width:74px;height:22px;background:rgba(246,240,222,.86);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.tape.t1{left:-14px;top:14px;transform:rotate(-38deg)}
+.tape.t2{right:-14px;top:14px;transform:rotate(38deg)}
+.tape.t3{left:50%;bottom:-8px;transform:translateX(-50%) rotate(-3deg)}
+.credit{font-size:11.5px;color:#7a6f55;margin:10px 0 0;line-height:1.4}
+.credit a{color:#5c4f2c}
+.sheet .plate.anim{animation:fade .5s ease both}
+.sheet .foot{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-top:6px}
+.sheet .no{font-family:"Cormorant Garamond",serif;font-size:20px;color:#7a6a44}
+.label{border:1px solid #b9a774;background:#fffdf6;padding:10px 14px;font-size:12.5px;line-height:1.45;width:min(260px,70%)}
+.label b{display:block;font-family:"Cormorant Garamond",serif;font-size:15px;letter-spacing:.06em;color:#4a3d1c;border-bottom:1px solid #d9cba2;padding-bottom:4px;margin-bottom:6px}
+.label i{font-family:"Cormorant Garamond",serif;font-size:17px;color:#1d2a22}
+.label span{color:#6b6450}
+.species{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:22px 0 26px}
+.sp{display:grid;justify-items:center;gap:4px;padding:10px 4px 8px;border-radius:14px;border:1px solid var(--line);background:var(--panel);cursor:pointer;text-align:center;transition:border-color .2s,box-shadow .2s}
+.sp img{width:52px;height:52px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--hair)}
+.sp span{font-size:12.5px;font-weight:600;line-height:1.25}
+.sp[aria-selected=true]{border-color:var(--g2);box-shadow:0 0 0 3px color-mix(in srgb,var(--g2) 20%,transparent)}
+.sp:hover{border-color:var(--hair)}
+.info h3{font-size:clamp(32px,3.4vw,44px)}
+.info .sci{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:22px;color:var(--acc);margin-top:4px}
+.info p.t{margin-top:16px;color:var(--soft);font-size:16px}
+.info .src{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--soft)}
+.quote{background:var(--bg);color:var(--em2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
+.quote .art{position:absolute;pointer-events:none;width:min(30vw,340px);aspect-ratio:3/4;opacity:.24}
+.quote .art.l{left:-3%;bottom:-18%}
+.quote .art.r{right:-3%;top:-14%}
+.quote blockquote{position:relative;margin:0 auto;max-width:14em;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:clamp(38px,5.6vw,72px);line-height:1.05}
+.quote p{position:relative;color:var(--soft);margin-top:20px;font-size:15px}
+.quote .rule{width:80px;height:1px;background:var(--gold);margin:0 auto 28px}
+.acts-wrap{position:relative}
+.acts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;list-style:none;margin:0;padding:0}
+.act{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+.act:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.act .scene{background:linear-gradient(180deg,var(--sage),var(--sage2));display:grid;place-items:center;padding:18px 10px 10px;border-bottom:1px solid var(--line)}
+.act .scene svg{width:100%;max-width:150px;aspect-ratio:1}
+.act .scene{aspect-ratio:4/3}
+.act .scene.photo{all:unset;display:block;aspect-ratio:4/3;overflow:hidden;cursor:zoom-in;border-bottom:1px solid var(--line);background:var(--sage2)}
+.act .scene.photo img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.act:hover .scene.photo img{transform:scale(1.05)}
+.act .scene.photo:focus-visible{outline:2px solid var(--g2);outline-offset:-2px}
+.act .txt{padding:16px 18px 20px}
+.act .sem{font-size:13px;font-weight:700;color:var(--g3)}
+.act h3{font-size:22px;margin:6px 0 6px}
+.act p{font-size:14px;color:var(--soft)}
+.acts-nav{display:none;gap:8px;justify-content:flex-end;margin-top:14px}
+.acts-nav button{min-width:44px;min-height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:18px}
+.cast{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;align-items:stretch}
+.roster{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,2.6vw,32px)}
+.roster h3,.room h3{font-size:26px;margin-bottom:14px}
+.row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;padding:12px 8px;border:0;border-top:1px solid var(--line);background:none;text-align:left;cursor:pointer;border-radius:10px;transition:background .2s}
+.row:hover{background:var(--sage)}
+.row .av{width:48px;height:48px;font-size:18px}
+.row b{display:block;font-size:15.5px;font-weight:600}
+.row small{display:block;font-size:13.5px;color:var(--soft);line-height:1.4}
+.row em{font-style:normal;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--sage);color:var(--acc);white-space:nowrap}
+.row em.v{background:color-mix(in srgb,var(--g2) 18%,transparent);color:light-dark(#7a5a14,#e8cf8a)}
+.room{display:grid;gap:16px;grid-template-rows:repeat(3,auto)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.box h4{margin:0 0 8px;font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline}
+.box h4 i{font-style:normal;font-size:28px;background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.box p{font-size:14.5px;color:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips span{font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--sage);color:var(--acc)}
+.quiz{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.5fr);gap:clamp(24px,4vw,56px);align-items:center}
+.qside .mini{display:flex;gap:10px;margin-top:26px}
+.qside .mini span{flex:1;height:4px;border-radius:2px;background:var(--sage2)}
+.qside .mini span.done{background:var(--gold)}
+.qbox{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(24px,3.2vw,40px);box-shadow:var(--shadow)}
+.qtop{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--soft);margin-bottom:18px}
+.qbox h3{font-size:clamp(25px,2.5vw,31px);margin-bottom:20px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;text-align:left;min-height:54px;padding:11px 16px;border-radius:14px;border:1px solid var(--line);background:var(--panel);font-size:15.5px;cursor:pointer;transition:border-color .2s,background .2s}
+.opt::before{content:attr(data-l);flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;border:1px solid var(--line);color:var(--soft)}
+.opt:hover:not(:disabled){border-color:var(--g2);background:var(--sage)}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+.opt.ok::before{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 9%,transparent)}
+.opt.bad::before{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.fb{margin-top:16px;font-size:15px;min-height:24px}
+.qnav{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+.score{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:92px;line-height:1}
+.tv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px clamp(24px,5vw,64px);align-items:center}
+.screen{position:relative;background:radial-gradient(120% 120% at 80% 0,#125541,var(--em));border-radius:22px;padding:28px;color:#fff;display:grid;gap:22px;box-shadow:0 40px 80px -30px #06281fb3;overflow:hidden}
+.screen::before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;background:var(--gold);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.6;pointer-events:none}
+.live{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#f5e3a8}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:#ff5a4a;box-shadow:0 0 0 4px #ff5a4a33}
+.screen dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0}
+.screen dt{font-size:13px;color:#b9cdc3}
+.screen dd{margin:0;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(40px,4.2vw,56px);line-height:1}
+.bar{height:3px;border-radius:2px;background:#ffffff22;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold)}
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.gallery figure{margin:0}
+.gallery button{all:unset;cursor:zoom-in;display:block;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--sage);aspect-ratio:3/4}
+.gallery button:focus-visible{outline:2px solid var(--g2);outline-offset:3px}
+.gallery img{width:100%;height:100%;object-fit:contain;padding:14px;transition:transform .6s ease}
+.gallery button:hover img{transform:scale(1.03)}
+.gallery figcaption{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:600;padding:12px 2px 0}
+dialog{border:0;padding:0;background:transparent;max-width:min(94vw,860px);overflow:visible}
+dialog::backdrop{background:#04130fef;backdrop-filter:blur(4px)}
+dialog img{max-height:82vh;width:auto;margin:0 auto;border-radius:10px}
+dialog p{color:#cfe0d6;text-align:center;margin-top:12px;font-size:15px}
+.dbtn{position:fixed;min-width:48px;min-height:48px;border-radius:999px;border:1px solid #d4ad5566;background:#06281fcc;color:#f5e3a8;font-size:15px;font-weight:600;cursor:pointer;padding:0 18px}
+#dclose{top:16px;right:16px}#dprev{left:16px;top:50%}#dnext{right:16px;top:50%}
+footer{background:var(--sage);color:var(--soft);border-top:1px solid var(--line)}
+footer .wrap{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:32px;align-items:start}
+footer .brand{display:flex;gap:18px;align-items:center}
+footer .brand img{width:84px;height:84px;flex:none}
+footer h3{color:var(--em2);font-size:23px;margin-bottom:6px}
+footer p{font-size:15px}
+footer small{display:block;grid-column:1/-1;border-top:1px solid var(--line);padding-top:20px;font-size:13px;color:var(--soft)}
+.medal canvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:pan-y}
+.medal canvas:active{cursor:grabbing}
+.medal canvas:focus-visible{outline:2px solid var(--g2);outline-offset:-10px}
+.disc[hidden],.hint3d[hidden],canvas[hidden]{display:none}
+.hint3d{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);font-size:12.5px;font-weight:600;color:#6f5118;background:#fffdf8e6;border:1px solid var(--hair);padding:5px 14px;border-radius:999px;white-space:nowrap;pointer-events:none}
+.navlogo{width:36px;height:36px;vertical-align:middle;margin-right:8px;display:inline-block}
+.tilt{transition:transform .18s ease-out;transform-style:preserve-3d;will-change:transform}
+.act,.gallery button{position:relative}
+.act::after,.gallery button::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(circle at var(--mx,50%) var(--my,0%),#ffffff55,transparent 55%);opacity:0;transition:opacity .3s}
+.act:hover::after,.gallery button:hover::after{opacity:1}
+.sheet.tilt .label{transform:translateZ(24px)}
+.sheet.tilt .plate{transform:translateZ(10px)}
+.tip3d{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(92%,360px);background:#fffdf8f2;border:1px solid var(--hair);border-radius:16px;padding:12px 40px 12px 16px;box-shadow:var(--shadow);animation:fadeO .3s ease both}
+.tip3d b{display:block;font-family:"Cormorant Garamond",serif;font-size:21px;color:var(--em2);line-height:1.1}
+.tip3d p{font-size:13.5px;color:var(--soft);line-height:1.45;margin-top:4px}
+.tip3d button{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:0;background:none;font-size:20px;color:var(--soft);cursor:pointer}
+.tip3d[hidden]{display:none}
+.means{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.mean{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.mean .ico{width:76px;height:76px;border-radius:50%;background:var(--sage);display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--hair)}
+.mean .ico svg{width:52px;height:52px}
+.mean h3{font-size:26px;margin-top:4px}
+.mean p{font-size:15px;color:var(--soft);flex:1}
+.together{margin-top:28px;text-align:center;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(22px,2.4vw,28px);color:var(--em2)}
+@media(max-width:960px){.means{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.means{grid-template-columns:minmax(0,1fr)}}
+.medal{margin-bottom:66px}
+.ctrl3d{position:absolute;left:50%;bottom:-64px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:#fffdf8;border:1px solid var(--hair);box-shadow:var(--shadow);z-index:3;white-space:nowrap}
+.cbtn{min-width:40px;height:40px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font:600 16px Manrope,sans-serif;cursor:pointer;color:var(--em2);padding:0 12px}
+.cbtn.pri{background:var(--em2);color:#fff;border-color:var(--em2);font-size:14px}
+.cbtn:hover{border-color:var(--g2)}
+.ang{display:flex;align-items:center;gap:8px;padding:0 4px}
+.ang span{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;color:var(--em2);width:2.6em;text-align:right}
+.ang input{width:110px;accent-color:#9c7426;height:40px}
+.medal.full{position:fixed;inset:0;max-width:none;width:100%;height:100%;justify-self:stretch;aspect-ratio:auto;z-index:60;margin:0;background:radial-gradient(80% 80% at 50% 40%,#ffffff,#f3e9d3)}
+.medal.full>svg{display:none}
+.medal.full canvas{touch-action:none}
+.medal.full .ctrl3d{bottom:24px}
+.medal.full .hint3d{bottom:92px}
+.medal.full .tip3d{bottom:88px}
+body.lock{overflow:hidden}
+@media(max-width:600px){.ang input{width:70px}.ctrl3d{gap:4px;padding:5px}.cbtn{min-width:38px;padding:0 9px}}
+@keyframes fadeO{from{opacity:0}to{opacity:1}}
+.pins{position:absolute;inset:0;pointer-events:none;z-index:2}
+.pin{position:absolute;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;border:2px solid #fff;background:radial-gradient(circle,#f5e3a8,#b8892b);box-shadow:0 0 0 4px rgba(212,173,85,.28),0 4px 10px rgba(58,42,10,.3);pointer-events:auto;cursor:pointer;padding:0;transition:opacity .3s}
+.pin::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1.5px solid rgba(212,173,85,.7);animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{from{transform:scale(.6);opacity:1}to{transform:scale(1.6);opacity:0}}
+.pin span{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);white-space:nowrap;background:#fffdf8;border:1px solid var(--hair);border-radius:999px;padding:3px 10px;font:600 12.5px Manrope,sans-serif;color:var(--em2);opacity:0;transition:opacity .2s;pointer-events:none}
+.pin:hover span,.pin:focus-visible span,.pin.on span{opacity:1}
+.pin.far{opacity:.35}
+.pin.on{background:radial-gradient(circle,#fff,#d4ad55)}
+.htag{position:absolute;left:0;top:0;z-index:4;pointer-events:none;background:var(--em2);color:#fff;font:600 12.5px Manrope,sans-serif;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.htag[hidden]{display:none}
+.cap3d{display:none}
+.medal.full .cap3d{display:block;position:absolute;left:clamp(16px,4vw,48px);top:clamp(16px,4vw,40px);max-width:340px;z-index:3}
+.cap3d b{display:block;font-family:"Cormorant Garamond",serif;font-size:clamp(26px,3vw,36px);color:var(--em2);line-height:1.05}
+.cap3d span{display:block;margin-top:8px;font-size:14px;color:var(--soft)}
+.cbtn.fx{display:none}
+.medal.full .cbtn.fx{display:inline-block}
+.medal.full .ctrl3d{flex-wrap:wrap;justify-content:center;left:12px;right:12px;width:fit-content;max-width:calc(100% - 24px);margin:0 auto;transform:none;border-radius:22px;white-space:normal}
+.cbtn span{font-size:13px}
+.cbtn[aria-pressed=true]{background:var(--g3);color:#fff;border-color:var(--g3)}
+.tip3d small{display:block;font-size:12px;font-weight:600;color:var(--g3);margin-bottom:2px}
+.tip3d small:empty{display:none}
+.medal.night canvas{background:radial-gradient(circle at 50% 55%,#4a3418 0,#24180b 48%,rgba(36,24,11,0) 70%)}
+.medal.full.night{background:radial-gradient(80% 80% at 50% 45%,#3d2b14,#120c05)}
+.medal.full.night canvas{background:none}
+.medal.full.night .cap3d b{color:#f5e3a8}
+.medal.full.night .cap3d span{color:#d9cba2}
+.medal.full .tip3d{right:clamp(16px,4vw,48px);left:auto;transform:none;top:80px;bottom:auto;width:min(380px,90vw)}
+@media(max-width:600px){.medal.full .hint3d{display:none}.medal.full .tip3d{left:50%;right:auto;transform:translateX(-50%);top:auto;bottom:170px}.medal.full .cap3d{max-width:80vw}.medal.full .cap3d span{display:none}}
+.intro{position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow:hidden;background:radial-gradient(70% 70% at 50% 45%,#fffdf8,#f3e9d3);animation:iOut .8s 4.9s cubic-bezier(.7,0,.3,1) forwards}
+@keyframes iOut{to{opacity:0;transform:scale(1.06);visibility:hidden}}
+html.intro-on body{overflow:hidden}
+.intro-in{display:grid;justify-items:center;gap:12px;text-align:center;padding:24px}
+.i-stage{position:relative;width:min(64vw,320px);aspect-ratio:1}
+.i-stage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.i-draw{fill:none;stroke-dasharray:1;stroke-dashoffset:1.001;animation:iDraw 1.2s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes iDraw{to{stroke-dashoffset:0}}
+.i-mortar{animation-delay:.25s}
+.i-pestle{animation-delay:.55s;animation-duration:.9s}
+.i-leaf{animation-delay:.8s;animation-duration:.8s}
+.i-snake{animation-delay:.8s;animation-duration:1.3s}
+.i-snakehi{animation-delay:.9s;animation-duration:1.3s}
+.i-head{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.3);animation:iPop .45s 1.95s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes iPop{to{opacity:1;transform:none}}
+.i-art{animation:iFade .6s 2.25s forwards}
+@keyframes iFade{to{opacity:0}}
+.i-rot{opacity:0;transform-origin:200px 200px;animation:iIn .8s 2.3s forwards,spin 30s linear infinite}
+@keyframes iIn{to{opacity:1}}
+.i-logo{position:absolute;inset:11%;display:grid;place-items:center;filter:drop-shadow(0 18px 22px rgba(58,42,10,.22));opacity:0;transform:scale(.82);animation:iLogo .9s 2.15s cubic-bezier(.2,.8,.2,1) forwards}
+.i-logo img{width:100%}
+@keyframes iLogo{to{opacity:1;transform:none}}
+.i-rule{width:0;height:1px;background:linear-gradient(90deg,transparent,#d4ad55,transparent);animation:iRule .9s 2.6s forwards;margin-top:8px}
+@keyframes iRule{to{width:160px}}
+.i-title{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(42px,7vw,76px);color:#0a3529;line-height:1;margin:0}
+.i-title span{display:inline-block;opacity:0;transform:translateY(20px);animation:iUp .6s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes iUp{to{opacity:1;transform:none}}
+.i-sub{opacity:0;transform:translateY(10px);animation:iUp .7s 3.15s forwards;color:#0a3529;font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(22px,3vw,34px);line-height:1.15;margin:0;max-width:22em}
+.i-sub2{animation-delay:3.55s;color:#8a6a1e;font-style:italic;font-weight:500}
+.i-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle,#f5e3a8,#c79a3e);opacity:0;animation:iDot 3.6s ease-in-out infinite}
+@keyframes iDot{0%{opacity:0;transform:translateY(10px)}30%{opacity:.9}100%{opacity:0;transform:translateY(-60px)}}
+.i-skip{position:absolute;right:20px;bottom:20px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid #d8c08a;background:#fffdf8cc;color:#0a3529;font:600 14px Manrope,sans-serif;cursor:pointer}
+.i-skip:hover{background:#fff}
+@media(prefers-reduced-motion:reduce){.intro{display:none}}
+.hero h1 .h1b{display:block;font-size:.52em;font-weight:500;color:var(--em2);margin-top:.4em;line-height:1.12}
+.music{position:fixed;left:16px;bottom:16px;z-index:70;display:inline-flex;align-items:center;gap:10px;min-height:46px;padding:0 18px 0 14px;border-radius:999px;border:1px solid var(--hair);background:#fffdf8f2;color:var(--em2);font:600 14px Manrope,sans-serif;cursor:pointer;box-shadow:var(--shadow);max-width:calc(100vw - 32px)}
+.music .mlabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music .eq{display:inline-flex;align-items:flex-end;gap:2px;height:16px;flex:none}
+.music .eq i{width:3px;height:5px;background:var(--g3);border-radius:2px}
+.music.on{background:var(--em2);color:#fff;border-color:var(--em2)}
+.music.on .eq i{background:#e8cf8a;animation:eq .9s ease-in-out infinite}
+.music.on .eq i:nth-child(2){animation-delay:.2s}
+.music.on .eq i:nth-child(3){animation-delay:.4s}
+@keyframes eq{0%,100%{height:4px}50%{height:16px}}
+body.lock .music{left:auto;right:16px;bottom:auto;top:16px}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s ease,transform 1s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:12px}
+.dots a{position:relative;display:block;width:10px;height:10px;border-radius:50%;background:#d9cba2;box-shadow:0 0 0 3px #fffdf8cc;transition:transform .25s,background .25s}
+.dots a:hover,.dots a:focus-visible{transform:scale(1.35);background:var(--g3)}
+.dots a.on{background:var(--em2);transform:scale(1.35)}
+.dots span{position:absolute;right:20px;top:50%;transform:translateY(-50%);white-space:nowrap;background:var(--em2);color:#fff;font:600 12.5px Manrope,sans-serif;padding:4px 10px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .2s}
+.dots a:hover span,.dots a:focus-visible span{opacity:1}
+.totop{position:fixed;right:16px;bottom:16px;z-index:70;width:48px;height:48px;border-radius:50%;border:1px solid var(--hair);background:#fffdf8f2;color:var(--em2);box-shadow:var(--shadow);cursor:pointer;display:grid;place-items:center;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .3s,transform .3s}
+.totop svg{width:22px;height:22px}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.totop:hover{background:var(--em2);color:#fff}
+body.lock .dots,body.lock .totop{display:none}
+@media(max-width:1100px){.dots{display:none}}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}}
+.mosaic{columns:3 280px;column-gap:18px}
+.mosaic figure{break-inside:avoid;margin:0 0 18px;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.mosaic button{all:unset;display:block;cursor:zoom-in;overflow:hidden;position:relative}
+.mosaic button:focus-visible{outline:2px solid var(--g2);outline-offset:-2px}
+.mosaic img{width:100%;height:auto;transition:transform .7s ease}
+.mosaic button:hover img{transform:scale(1.04)}
+.mosaic figcaption{padding:12px 16px 14px;font-size:14px;color:var(--soft)}
+@media(max-width:1040px){.acts{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}.act{flex:0 0 230px;scroll-snap-align:start}.acts-nav{display:flex}}
+@media(max-width:960px){.explorer{grid-template-columns:minmax(0,1fr)}.list{position:static;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px;gap:8px}.item{flex:0 0 240px;scroll-snap-align:start;border-color:var(--line)}.cast{grid-template-columns:minmax(0,1fr)}.room{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:none}footer .wrap{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}footer .wrap>div:first-child{grid-column:1/-1}}
+@media(max-width:860px){.hero .grid,.tv,.herb,.quiz{grid-template-columns:minmax(0,1fr)}.medal{max-width:280px;order:-1}.herb .info{order:-1}.hero .art.a{width:90vw;opacity:.18}.meta,.stats .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}.meta div:nth-child(3){padding-left:0;border-left:0}.meta div:nth-child(-n+2){padding-bottom:14px}.stats div:nth-child(3){border-left:0;padding-left:0}.stats div:nth-child(-n+2){padding-bottom:20px}.gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gallery figcaption{font-size:17px}}
+@media(max-width:600px){nav b{display:none}.room{grid-template-columns:minmax(0,1fr)}.gallery{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.screen dl{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#dprev,#dnext{top:auto;bottom:16px}.filters{width:100%}.chip{flex:1}.species{grid-template-columns:repeat(5,minmax(56px,1fr));overflow-x:auto}.sp span{font-size:11.5px}.row{grid-template-columns:44px minmax(0,1fr)}.row em{grid-column:2;justify-self:start}footer .wrap{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="intro" id="intro" role="dialog" aria-label="Introducción del Simposio XXII">
+ <i class="i-dot" style="left:18%;top:30%;animation-delay:0.4s"></i><i class="i-dot" style="left:80%;top:24%;animation-delay:0.9s"></i><i class="i-dot" style="left:70%;top:70%;animation-delay:0.2s"></i><i class="i-dot" style="left:26%;top:72%;animation-delay:1.1s"></i><i class="i-dot" style="left:50%;top:14%;animation-delay:0.7s"></i><i class="i-dot" style="left:88%;top:52%;animation-delay:1.4s"></i><i class="i-dot" style="left:10%;top:52%;animation-delay:0.5s"></i><i class="i-dot" style="left:60%;top:86%;animation-delay:1s"></i>
+ <div class="intro-in">
+  <div class="i-stage">
+   <svg viewBox="0 0 400 400" aria-hidden="true">
+    <defs><linearGradient id="igd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5e3a8"/><stop offset=".5" stop-color="#d4ad55"/><stop offset="1" stop-color="#9c7426"/></linearGradient>
+    <path id="icirc" d="M200 200m-172 0a172 172 0 1 1 344 0a172 172 0 1 1-344 0"/></defs>
+    <circle class="i-draw i-ring" cx="200" cy="200" r="190" stroke="url(#igd)" stroke-width="1.2" pathLength="1"/>
+    <g class="i-rot"><text font-family="Manrope,sans-serif" font-size="12.5" font-weight="600" letter-spacing="5" fill="url(#igd)"><textPath href="#icirc">SIMPOSIO XXII · UNIVERSIDAD DE SUCRE · REGENCIA DE FARMACIA · 2026 ·</textPath></text></g>
+    <g class="i-art">
+     <path class="i-draw i-mortar" d="M96 196H304C304 270 262 318 200 318C138 318 96 270 96 196Z" stroke="url(#igd)" stroke-width="2.2" pathLength="1"/>
+     <ellipse class="i-draw i-mortar" cx="200" cy="196" rx="104" ry="17" stroke="url(#igd)" stroke-width="1.6" pathLength="1"/>
+     <path class="i-draw i-mortar" d="M164 316L152 340H248L236 316" stroke="url(#igd)" stroke-width="2" pathLength="1"/>
+     <path class="i-draw i-pestle" d="M184 200L142 96Q148 84 160 90L204 198" stroke="url(#igd)" stroke-width="2" pathLength="1"/>
+     <path class="i-draw i-leaf" d="M214 192C222 160 248 146 270 150C262 176 240 190 214 192ZM214 192L262 156" stroke="#2f8a5e" stroke-width="2" pathLength="1"/>
+     <path class="i-draw i-snake" d="M118 300C150 338 262 338 290 292C312 254 220 246 150 256C96 264 98 228 150 222C220 214 318 226 310 188C304 160 270 150 262 126C256 108 266 94 284 92" stroke="#1d7a50" stroke-width="12" stroke-linecap="round" pathLength="1"/>
+     <path class="i-draw i-snakehi" d="M118 300C150 338 262 338 290 292C312 254 220 246 150 256C96 264 98 228 150 222C220 214 318 226 310 188C304 160 270 150 262 126C256 108 266 94 284 92" stroke="#e2c27a" stroke-width="1.6" stroke-linecap="round" pathLength="1"/>
+     <g class="i-head"><ellipse cx="292" cy="90" rx="15" ry="9.5" transform="rotate(-12 292 90)" fill="#1d7a50"/><circle cx="296" cy="86" r="2.2" fill="#e2c27a"/><path d="M306 88l9-2m-9 2l8 4" stroke="#b3263d" stroke-width="1.6" stroke-linecap="round"/></g>
+    </g>
+   </svg>
+   <div class="i-logo"><img src="img/logo.png" alt=""></div>
+  </div>
+  <div class="i-rule"></div>
+  <h2 class="i-title" id="ititle" aria-label="Simposio XXII">Simposio XXII</h2>
+  <p class="i-sub">El farmacéutico y la medicina tradicional:</p><p class="i-sub i-sub2">Preservando saberes y promoviendo el uso seguro</p>
+ </div>
+ <button class="i-skip" id="iskip" type="button">Saltar intro</button>
+</div>
+<script>(function(){var i=document.getElementById('intro'),seen=false;try{seen=sessionStorage.getItem('sim-intro')==='1';sessionStorage.setItem('sim-intro','1')}catch(e){}
+if(seen||matchMedia('(prefers-reduced-motion: reduce)').matches){i.remove();return}
+document.documentElement.classList.add('intro-on');
+var t=document.getElementById('ititle'),w='Simposio XXII';t.textContent='';for(var k=0;k<w.length;k++){var sp=document.createElement('span');sp.setAttribute('aria-hidden','true');sp.textContent=w[k]===' '?'\u00a0':w[k];sp.style.animationDelay=(2.45+k*.05)+'s';t.appendChild(sp)}
+var done=function(){if(!i.isConnected)return;i.remove();document.documentElement.classList.remove('intro-on')};
+var skip=function(){i.style.animation='iOut .45s cubic-bezier(.7,0,.3,1) forwards';setTimeout(done,470)};
+document.getElementById('iskip').onclick=skip;i.addEventListener('click',function(e){if(e.target===i)skip()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&i.isConnected)skip()});
+setTimeout(done,5750);document.getElementById('iskip').focus({preventScroll:true})})();</script>
+
+<nav id="nav" aria-label="Secciones"><div class="wrap">
+  <b><img class="navlogo" src="img/logo.png" alt="">Simposio <span class="gt">XXII</span></b>
+  <div class="links" id="links"><a href="#emblema">Emblema</a><a href="#programa">Programa</a><a href="#herbario">Herbario</a><a href="#cuadros">Cuadros vivos</a><a href="#personas">Personas</a><a href="#quiz">Pon a prueba</a><a href="#transmision">Transmisión</a><a href="#momentos">Momentos</a><a href="#piezas">Afiches</a></div>
+</div><div class="progress" id="prog-bar"></div></nav>
+<button class="music" id="musicBtn" type="button" aria-pressed="false"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="mlabel" id="mlabel">Activar música</span></button>
+<div class="dots" id="dots" role="navigation" aria-label="Ir a una sección"></div>
+<button class="totop" id="totop" type="button" aria-label="Volver arriba"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+<header class="band hero" id="inicio">
+  <svg class="art a" id="heroA" viewBox="0 0 300 400" aria-hidden="true"></svg>
+  <svg class="art b" id="heroB" viewBox="0 0 300 400" aria-hidden="true"></svg>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>XXII Simposio Académico de Tecnología en Regencia de Farmacia</div>
+        <h1>El farmacéutico y la <em class="gt">medicina tradicional</em>: <span class="h1b">Preservando saberes y promoviendo el uso seguro</span></h1>
+        <p class="sub">Un diálogo entre la ciencia y los saberes ancestrales, en el marco de la estrategia de la OMS sobre medicina tradicional 2025–2034.</p>
+        <div class="cta"><a class="btn gold" href="#programa">Explorar el programa</a><a class="btn line" href="https://www.youtube.com/watch?v=4babjAHo-0Y">Ver la transmisión</a></div>
+      </div>
+      <div class="medal">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5e3a8"/><stop offset=".5" stop-color="#d4ad55"/><stop offset="1" stop-color="#9c7426"/></linearGradient>
+            <path id="circ" d="M200 200m-176 0a176 176 0 1 1 352 0a176 176 0 1 1-352 0"/>
+          </defs>
+          <circle cx="200" cy="200" r="196" fill="none" stroke="url(#gg)" stroke-width=".8" opacity=".7"/>
+          <circle cx="200" cy="200" r="158" fill="none" stroke="url(#gg)" stroke-width=".8" opacity=".5"/>
+          <g class="ring"><text font-family="Manrope,sans-serif" font-size="13" font-weight="600" letter-spacing="5.2" fill="url(#gg)"><textPath href="#circ">SIMPOSIO XXII · UNIVERSIDAD DE SUCRE · REGENCIA DE FARMACIA · 2026 ·</textPath></text></g>
+        </svg>
+        <canvas id="c3d" tabindex="0" role="img" aria-label="Mortero con una serpiente enroscada, cápsula, molécula, fruto de Matimba y hojas en 3D. Arrastra o usa las flechas para girarlo en 360 grados; más y menos para acercar."></canvas><div class="disc" id="disc3d" hidden><img src="img/logo.png" alt="Emblema del Simposio XXII: serpiente, mortero, cápsula y hoja"></div><span class="hint3d" id="hint3d">Arrastra para girar · toca los puntos dorados</span><div class="tip3d" id="tip3d" hidden role="status"><small id="tipStep"></small><b></b><p></p><button type="button" aria-label="Cerrar">×</button></div><div class="pins" id="pins"></div><div class="htag" id="htag" hidden></div><div class="cap3d"><b>El emblema del Simposio XXII</b><span>Arrastra para girar en 360°, usa la rueda o pellizca para acercar y toca los puntos dorados para explorar cada pieza.</span></div><div class="ctrl3d" role="group" aria-label="Controles de la vista 360°"><button type="button" id="b360" class="cbtn pri" aria-label="Girar 360 grados">↻ 360°</button><label class="ang"><span id="angOut">0°</span><input type="range" id="angIn" min="0" max="359" step="1" value="0" aria-label="Ángulo de la vista"></label><button type="button" id="bTour" class="cbtn fx" aria-pressed="false">Recorrido guiado</button><button type="button" id="bGrind" class="cbtn fx">Moler hierbas</button><button type="button" id="bLight" class="cbtn fx" aria-pressed="false">Luz de botica</button><button type="button" id="bZoomOut" class="cbtn fx" aria-label="Alejar">−</button><button type="button" id="bZoomIn" class="cbtn fx" aria-label="Acercar">+</button><button type="button" id="bFull" class="cbtn" aria-label="Explorar en grande">⤢ <span>Explorar</span></button></div>
+      </div>
+    </div>
+    <div class="meta">
+      <div><span>Fecha</span><strong>30 de octubre de 2026</strong></div>
+      <div><span>Hora</span><strong>Desde la 1:40 p.m.</strong></div>
+      <div><span>Lugar</span><strong>Auditorio Ciencias de la Salud</strong></div>
+      <div><span>Institución</span><strong>Universidad de Sucre · 2026-2</strong></div>
+    </div>
+  </div>
+</header>
+
+<section class="stats" aria-label="El simposio en cifras">
+  <div class="wrap">
+    <div><strong class="gt" data-n="5">5</strong><span>ponencias: 4 conferencias y 1 de semilleros</span></div>
+    <div><strong class="gt" data-n="5">5</strong><span>cuadros vivos, uno por semestre</span></div>
+    <div><strong class="gt" data-n="2">2</strong><span>conferencias virtuales, desde España y Antioquia</span></div>
+    <div><strong class="gt" data-n="421">421</strong><span>visualizaciones de la transmisión</span></div>
+  </div>
+</section>
+
+<section class="band" id="emblema" style="background:var(--sage)">
+  <div class="wrap">
+    <div class="head"><div><div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>El símbolo</div><h2>Lo que significa el emblema</h2><p class="lede">Cada pieza del emblema cuenta una parte del tema del simposio. También puedes tocarlas en el mortero 3D de la portada.</p></div></div>
+    <div class="means" id="means"></div>
+    <p class="together">Juntas dicen lo mismo que el simposio: el farmacéutico es el puente entre el saber ancestral y la ciencia.</p>
+  </div>
+</section>
+
+<section class="band" id="programa">
+  <div class="wrap">
+    <div class="head">
+      <div><div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>Programa académico</div><h2>Lo que aconteció</h2><p class="lede">Elige un momento del programa para ver quién habló y qué dejó. También puedes usar las flechas del teclado.</p></div>
+      <div class="filters" id="filters" role="group" aria-label="Filtrar por modalidad">
+        <button class="chip" type="button" data-f="all" aria-pressed="true">Todo</button>
+        <button class="chip" type="button" data-f="p" aria-pressed="false">Presencial</button>
+        <button class="chip" type="button" data-f="v" aria-pressed="false">Virtual</button>
+      </div>
+    </div>
+    <div class="explorer">
+      <div class="list" id="list" role="tablist" aria-label="Momentos del programa"></div>
+      <article class="card" id="card" role="tabpanel" aria-live="polite"></article>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="herbario" style="background:var(--sage)">
+  <div class="wrap herb">
+    <figure class="sheet" style="margin:0">
+      <div class="plate" id="plate"><img id="plateImg" alt="" decoding="async"><i class="tape t1"></i><i class="tape t2"></i><i class="tape t3"></i></div>
+      <div class="foot"><span class="no" id="sheetNo"></span><div class="label" id="label"></div></div><p class="credit" id="credit"></p>
+    </figure>
+    <div class="info">
+      <div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>Herbario del simposio</div>
+      <h2>Las plantas de las que se habló</h2>
+      <p class="lede">Cinco especies que aparecieron en las ponencias: dos analizadas en el laboratorio de la Universidad de Sucre y tres de las registradas en Chochó.</p>
+      <div class="species" id="species" role="tablist" aria-label="Especies"></div>
+      <div id="herbInfo" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="band quote">
+  <svg class="art l" id="quoteL" viewBox="0 0 300 400" aria-hidden="true"></svg>
+  <svg class="art r" id="quoteR" viewBox="0 0 300 400" aria-hidden="true"></svg>
+  <div class="rule"></div>
+  <blockquote>Lo natural no siempre es sinónimo de <span class="gt">seguro</span>.</blockquote>
+  <p>Mensaje central del simposio, dicho en la apertura por la decana encargada</p>
+</section>
+
+<section class="band" id="cuadros" style="background:var(--sage)">
+  <div class="wrap">
+    <div class="head"><div><div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>En escena</div><h2>Cuadros vivos</h2><p class="lede">Los semestres 1.º a 5.º contaron en escena la historia de la farmacia, de las raíces a la farmacia de hoy.</p></div></div>
+    <div class="acts-wrap">
+      <ol class="acts" id="acts"></ol>
+      <div class="acts-nav"><button type="button" id="actPrev" aria-label="Cuadro anterior">‹</button><button type="button" id="actNext" aria-label="Cuadro siguiente">›</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="personas">
+  <div class="wrap">
+    <div class="head"><div><div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>Comunidad</div><h2>Quienes estuvieron allí</h2><p class="lede">Toca a una persona del escenario para ir a su momento en el programa.</p></div></div>
+    <div class="cast">
+      <div class="roster"><h3>En el escenario</h3><div id="roster"></div></div>
+      <div class="room">
+        <div class="box"><h4>Organización</h4><p><b style="color:var(--ink)">Sexto semestre</b> de Tecnología en Regencia de Farmacia, a cargo del evento y de los cuadros vivos. El <b style="color:var(--ink)">Comité de Marketing</b> llevó la difusión y la transmisión.</p></div>
+        <div class="box"><h4>En escena <i>5</i></h4><p>Estudiantes de los semestres 1.º a 5.º, con un cuadro vivo cada uno.</p></div>
+        <div class="box"><h4>Comunidad universitaria</h4><p>Estudiantes y docentes de la Universidad de Sucre, y el público que siguió el simposio en vivo por YouTube.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="quiz" style="background:var(--sage)">
+  <div class="wrap quiz">
+    <div class="qside"><div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>Interactivo</div><h2>Pon a prueba lo aprendido</h2><p class="lede">Cuatro preguntas sobre lo que se dijo en el simposio. Cada respuesta te muestra de qué ponencia sale.</p><div class="mini" id="mini" aria-hidden="true"></div></div>
+    <div class="qbox" id="qbox"></div>
+  </div>
+</section>
+
+<section class="band" id="transmision">
+  <div class="wrap tv">
+    <div>
+      <div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>Grabación completa</div>
+      <h2>Míralo de nuevo</h2>
+      <p class="lede">El simposio se transmitió completo en vivo por el canal de YouTube “SIMPOSIO XXII TECNOLOGÍA EN REGENCIA”, y la grabación sigue disponible para quien no pudo asistir.</p>
+      <div class="cta" style="margin-top:24px"><a class="btn dark" href="https://www.youtube.com/watch?v=4babjAHo-0Y">Ver la transmisión completa</a></div>
+      <p style="font-size:14px;color:var(--soft);margin-top:16px;max-width:34em">La invitación se llevó salón por salón en el Campus de Ciencias de la Salud, sede Puerta Blanca, y con los representantes de cada programa.</p>
+    </div>
+    <div class="screen" aria-label="Cifras de la transmisión al 21 de noviembre de 2026">
+      <span class="live">Transmitido en vivo · 30 de octubre de 2026</span>
+      <dl><div><dt>Visualizaciones</dt><dd class="gt">421</dd></div><div><dt>Me gusta</dt><dd class="gt">44</dd></div><div><dt>Suscriptores</dt><dd class="gt">53</dd></div></dl>
+      <div><div class="bar"><i style="width:10.5%"></i></div><p style="font-size:14px;color:#b9cdc3;margin-top:10px">El 10,5 % de las visualizaciones terminó en un “me gusta”. Cifras al 21 de noviembre de 2026.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="momentos" style="background:var(--sage)">
+  <div class="wrap">
+    <div class="head"><div><div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>30 de octubre de 2026</div><h2>Momentos del simposio</h2><p class="lede">Así se vivió la jornada: la entrada al auditorio, los cuadros vivos de cada semestre y los rincones que prepararon los estudiantes. Toca una foto para verla en grande.</p></div></div>
+    <div class="mosaic" id="mosaic"></div>
+  </div>
+</section>
+
+<section class="band" id="piezas">
+  <div class="wrap">
+    <div class="head"><div><div class="orn"><svg viewBox="0 0 34 12" aria-hidden="true"><path d="M0 6h22" stroke="currentColor"/><path d="M24 6c3-5 7-5 10 0-3 5-7 5-10 0z" fill="currentColor"/></svg>Identidad del evento</div><h2>Afiches y certificado</h2><p class="lede">Las piezas oficiales del simposio. Toca una para verla en grande.</p></div></div>
+    <div class="gallery" id="gallery"></div>
+  </div>
+</section>
+
+<footer class="band">
+  <div class="wrap">
+    <div class="brand"><img src="img/logo.png" alt=""><div><h3>Simposio XXII</h3><p>El farmacéutico y la medicina tradicional: preservando saberes y promoviendo el uso seguro.</p></div></div>
+    <div><h3>Cuándo y dónde</h3><p>30 de octubre de 2026, desde la 1:40 p.m.<br>Auditorio Ciencias de la Salud, Universidad de Sucre</p></div>
+    <div><h3>Organiza</h3><p>Tecnología en Regencia de Farmacia, Semestre VI<br>Universidad de Sucre · 2026-2</p></div>
+    <small>Contenido tomado de los afiches oficiales y del informe final del Comité de Marketing del XXII Simposio. Fotos de las plantas: Wikimedia Commons, con el crédito de cada autor bajo la foto.</small>
+  </div>
+</footer>
+
+<dialog id="viewer" aria-label="Pieza en grande">
+  <button type="button" class="dbtn" id="dclose">Cerrar</button>
+  <button type="button" class="dbtn" id="dprev" aria-label="Anterior">‹</button>
+  <button type="button" class="dbtn" id="dnext" aria-label="Siguiente">›</button>
+  <img id="big" alt=""><p id="bigcap"></p>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+{
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const f=n=>(+n).toFixed(1);
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- dibujo botánico ---------- */
+const bez=(a,b,c,t)=>[(1-t)**2*a[0]+2*(1-t)*t*b[0]+t*t*c[0],(1-t)**2*a[1]+2*(1-t)*t*b[1]+t*t*c[1]];
+const ang=(a,b,c,t)=>Math.atan2(2*(1-t)*(b[1]-a[1])+2*t*(c[1]-b[1]),2*(1-t)*(b[0]-a[0])+2*t*(c[0]-b[0]))*180/Math.PI;
+const GOLD='<defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5e3a8"/><stop offset=".55" stop-color="#d4ad55"/><stop offset="1" stop-color="#9c7426"/></linearGradient></defs>';
+const fl=(M,c)=>M.line?'none':c, sk=(M,c)=>M.line?'url(#lg)':c;
+const shapes={
+ lan:(l,w)=>[`M0 0C${f(l*.25)} ${f(-w)} ${f(l*.7)} ${f(-w*.85)} ${f(l)} 0C${f(l*.7)} ${f(w*.85)} ${f(l*.25)} ${f(w)} 0 0Z`,`M0 0C${f(l*.25)} ${f(-w)} ${f(l*.7)} ${f(-w*.85)} ${f(l)} 0Z`],
+ obo:(l,w)=>[`M0 0C${f(l*.15)} ${f(-w*.5)} ${f(l*.6)} ${f(-w*1.15)} ${f(l*.92)} ${f(-w*.55)}Q${f(l*1.03)} ${f(-w*.1)} ${f(l)} 0Q${f(l*1.03)} ${f(w*.1)} ${f(l*.92)} ${f(w*.55)}C${f(l*.6)} ${f(w*1.15)} ${f(l*.15)} ${f(w*.5)} 0 0Z`,`M0 0C${f(l*.15)} ${f(-w*.5)} ${f(l*.6)} ${f(-w*1.15)} ${f(l*.92)} ${f(-w*.55)}Q${f(l*1.03)} ${f(-w*.1)} ${f(l)} 0Z`],
+ ell:(l,w)=>[`M0 0C${f(l*.08)} ${f(-w*.95)} ${f(l*.78)} ${f(-w*1.05)} ${f(l)} 0C${f(l*.78)} ${f(w*1.05)} ${f(l*.08)} ${f(w*.95)} 0 0Z`,`M0 0C${f(l*.08)} ${f(-w*.95)} ${f(l*.78)} ${f(-w*1.05)} ${f(l)} 0Z`],
+ cre:(l,w)=>{const up=[],lo=[];for(let i=0;i<=40;i++){const u=i/40;let h=w*Math.pow(Math.sin(Math.PI*Math.pow(u,.72)),.85);h*=1+.1*Math.abs(Math.sin(u*Math.PI*9));up.push(`${f(l*u)} ${f(-h)}`);lo.unshift(`${f(l*u)} ${f(h)}`)}return[`M${up.join('L')}L${lo.join('L')}Z`,`M${up.join('L')}Z`]}
+};
+const leaf=(M,x,y,a,l,w,sh,col,vein,nv=5,edge)=>{
+ const [body,half]=shapes[sh](l,w);let v=`M0 0L${f(l*.96)} 0`;
+ for(let k=1;k<=nv;k++){const x0=l*k/(nv+1),h=w*.72*Math.sin(Math.PI*k/(nv+1));v+=`M${f(x0)} 0Q${f(x0+l*.07)} ${f(-h*.5)} ${f(x0+l*.15)} ${f(-h)}M${f(x0)} 0Q${f(x0+l*.07)} ${f(h*.5)} ${f(x0+l*.15)} ${f(h)}`}
+ return `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(a)})"><path d="${body}" fill="${fl(M,col)}" stroke="${M.line?'url(#lg)':(edge||'none')}" stroke-width="${M.line?1.1:1}"/>${M.line?'':`<path d="${half}" fill="#06281f" opacity=".16"/>`}<path d="${v}" fill="none" stroke="${sk(M,vein)}" stroke-width="${M.line?.6:.9}" opacity="${M.line?.75:.55}"/></g>`;
+};
+const stem=(M,d,col,w)=>`<path d="${d}" fill="none" stroke="${sk(M,col)}" stroke-width="${M.line?1.4:w}" stroke-linecap="round"/>`;
+
+const sanGregorio=M=>{
+ const a=[150,398],b=[132,240],c=[154,70];let s='';
+ [.13,.28,.42,.55,.67,.78].forEach((t,i)=>{const [x,y]=bez(a,b,c,t),d=ang(a,b,c,t),sp=(i%2?44:62)-i*3,l=120-i*12,w=24-i*2;
+  s+=leaf(M,x,y,d+sp,l,w,'lan','#22573a','#9b3355',6);s+=leaf(M,x,y,d-sp,l*.94,w,'lan','#2a6644','#9b3355',6)});
+ s+=stem(M,'M150 398Q132 240 154 70','#7a2440',5)+stem(M,'M154 70Q156 44 160 16','#7a2440',2.6);
+ for(let i=0;i<8;i++){const t=.08+i*.12,[x,y]=bez([154,70],[156,44],[160,16],t),side=i%2?1:-1,sc=1-i*.09;
+  if(i<6)s+=`<g transform="translate(${f(x)} ${f(y)}) rotate(${-90+side*58}) scale(${f(sc)})"><path d="M0 0C5 -3 14 -4 20 -2L26 -7L25 0L27 5L20 2C14 4 5 3 0 0Z" fill="${fl(M,'#c8325a')}" stroke="${M.line?'url(#lg)':'#8e1f3d'}" stroke-width=".8"/>${M.line?'':'<path d="M20 -2L26 -7L25 0Z" fill="#ec7f98"/>'}</g>`;
+  else s+=`<ellipse cx="${f(x+side*4)}" cy="${f(y)}" rx="4.5" ry="3" fill="${fl(M,'#9e2a4a')}" stroke="${M.line?'url(#lg)':'none'}"/>`}
+ return s;
+};
+const matimba=M=>{
+ const a=[30,380],b=[120,300],c=[236,150];let s='';
+ [.1,.22,.34,.5,.62,.74,.86,.95].forEach((t,i)=>{const [x,y]=bez(a,b,c,t),d=ang(a,b,c,t),side=i%2?1:-1;
+  s+=leaf(M,x,y,d+side*(52-i*2),104-i*7,31-i*1.5,'obo',i%2?'#2c5a33':'#346b3c','#a3c28c',6)});
+ s+=stem(M,'M30 380Q120 300 236 150','#5a3a22',6);
+ const [px,py]=bez(a,b,c,.42),cx=150,cy=328,R=46;
+ s+=`<path d="M${f(px)} ${f(py)}Q${f(px+6)} ${f(py+14)} ${cx} ${cy-R+2}" fill="none" stroke="${sk(M,'#5a3a22')}" stroke-width="${M.line?1.2:3}"/>`;
+ if(!M.line)s+=`<defs><radialGradient id="mf" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d79a55"/><stop offset=".6" stop-color="#9a5e26"/><stop offset="1" stop-color="#5e3712"/></radialGradient></defs>`;
+ s+=`<ellipse cx="${cx}" cy="${cy}" rx="${R}" ry="${R*.94}" fill="${M.line?'none':'url(#mf)'}" stroke="${sk(M,'#4a2b10')}" stroke-width="${M.line?1.2:1}"/>`;
+ const N=62;for(let k=1;k<N;k++){const r=R*.9*Math.sqrt(k/N),th=k*2.39996,x=cx+r*Math.cos(th),y=cy+r*Math.sin(th)*.94,q=r/R,len=5+q*9,w=8-q*2.5,ux=Math.cos(th),uy=Math.sin(th),bx=x-uy*w/2,by=y+ux*w/2,ex=x+uy*w/2,ey=y-ux*w/2;
+  s+=`<path d="M${f(bx)} ${f(by)}L${f(x+ux*len)} ${f(y+uy*len)}L${f(ex)} ${f(ey)}Z" fill="${fl(M,q>.6?'#7a4519':'#a96a2e')}" stroke="${sk(M,'#4a2b10')}" stroke-width="${M.line?.6:.5}" stroke-linejoin="round"/>`}
+ const [tx,ty]=bez(a,b,c,.97);
+ [70,98,126].forEach(d=>{s+=`<g transform="translate(${f(tx)} ${f(ty)}) rotate(${d})"><path d="M0 0C6 -6 22 -6 30 0C22 6 6 6 0 0Z" fill="${fl(M,'#5e1a26')}" stroke="${sk(M,'#3a0f17')}" stroke-width=".8"/></g>`});
+ return s;
+};
+const oregano=M=>{
+ const a=[150,398],b=[146,250],c=[150,80];let s='';
+ [.14,.32,.5,.66,.8].forEach((t,i)=>{const [x,y]=bez(a,b,c,t),d=ang(a,b,c,t),sp=78-i*7,l=78-i*8,w=36-i*3;
+  s+=leaf(M,x,y,d+sp,l,w,'cre','#7fb36f','#d8ecc8',4,'#5d9150');s+=leaf(M,x,y,d-sp,l*.96,w,'cre','#8cc07b','#d8ecc8',4,'#5d9150')});
+ s+=stem(M,'M150 398Q146 250 150 80','#5f8f4e',6)+stem(M,'M150 80L151 40','#5f8f4e',3);
+ s+=leaf(M,150,82,-90+34,30,15,'cre','#9ccd8a','#e3f2d6',2,'#5d9150')+leaf(M,150,82,-90-34,30,15,'cre','#9ccd8a','#e3f2d6',2,'#5d9150');
+ for(let i=0;i<9;i++){const y=60-i*4,x=151+(i%2?3.5:-3.5);s+=`<circle cx="${f(x)}" cy="${f(y)}" r="${f(2.6-i*.15)}" fill="${fl(M,'#b49ad6')}" stroke="${M.line?'url(#lg)':'#8a6fb3'}" stroke-width=".6"/>`}
+ if(!M.line)for(let i=0;i<70;i++){const t=(i*.6180339)%1,x=95+((i*37)%110),y=120+((i*53)%240);s+=`<circle cx="${x}" cy="${y}" r=".7" fill="#fff" opacity="${f(.15+t*.2)}"/>`}
+ return s;
+};
+const matarraton=M=>{
+ const a=[60,385],b=[120,230],c=[236,92];let s='';
+ for(let i=0;i<7;i++){const t=.2+i*.11,[x,y]=bez(a,b,c,t),d=ang(a,b,c,t);s+=leaf(M,x,y,d+60,48,16,'ell','#3f7d3a','#a6c98c',4);s+=leaf(M,x,y,d-60,46,16,'ell','#4a8a43','#a6c98c',4)}
+ s+=stem(M,'M60 385Q120 230 236 92','#4f6b33',3);s+=leaf(M,236,92,ang(a,b,c,1),50,17,'ell','#3f7d3a','#a6c98c',4);
+ const A=[250,392],B=[270,330],C=[258,236];s+=stem(M,'M250 392Q270 330 258 236','#6b5a45',3);
+ for(let i=0;i<12;i++){const t=.18+i*.07,[x,y]=bez(A,B,C,t),side=i%2?1:-1,sc=1-i*.055;
+  if(i<9)s+=`<g transform="translate(${f(x)} ${f(y)}) rotate(${side*48}) scale(${f(sc)})"><path d="M0 0L${side*9} -3" stroke="${sk(M,'#6b5a45')}" stroke-width="1"/><g transform="translate(${side*11} -4)"><path d="M0 2C-8 0 -10 -12 0 -13C10 -12 8 0 0 2Z" fill="${fl(M,'#eab0cf')}" stroke="${sk(M,'#b4688f')}" stroke-width=".8"/><path d="M-4 1Q0 8 4 1Z" fill="${fl(M,'#c0659a')}" stroke="${M.line?'url(#lg)':'none'}" stroke-width=".6"/>${M.line?'':'<path d="M0 -10L0 -1" stroke="#c0659a" stroke-width=".8"/>'}</g></g>`;
+  else s+=`<circle cx="${f(x+side*5)}" cy="${f(y)}" r="${f(3.2-(i-9)*.6)}" fill="${fl(M,'#c97aa6')}" stroke="${M.line?'url(#lg)':'none'}"/>`}
+ return s;
+};
+const guayaba=M=>{
+ const a=[150,398],b=[160,250],c=[140,60];let s='';
+ [.16,.4,.62,.84].forEach((t,i)=>{const [x,y]=bez(a,b,c,t),d=ang(a,b,c,t),sp=58-i*4,l=i===3?60:108-i*8,w=i===3?18:30-i*2;
+  s+=leaf(M,x,y,d+sp,l,w,'ell','#567f3f','#c4d9a6',11);s+=leaf(M,x,y,d-sp,l*.96,w,'ell','#628b48','#c4d9a6',11)});
+ s+=stem(M,'M150 398Q160 250 140 60','#8a7254',5);
+ if(!M.line)s+=`<defs><radialGradient id="gf" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#eef09a"/><stop offset=".7" stop-color="#b9c652"/><stop offset="1" stop-color="#7f9030"/></radialGradient></defs>`;
+ s+=`<path d="M152 330Q120 318 92 300" fill="none" stroke="${sk(M,'#8a7254')}" stroke-width="${M.line?1.1:2.5}"/>`;
+ s+=`<circle cx="80" cy="330" r="34" fill="${M.line?'none':'url(#gf)'}" stroke="${sk(M,'#6f7d2a')}" stroke-width="${M.line?1.1:1}"/>`;
+ if(!M.line)s+=`<ellipse cx="92" cy="340" rx="14" ry="10" fill="#e48a6a" opacity=".35"/>`;
+ s+=`<path d="M80 364l3 6 4-5 1 7 4-3" fill="none" stroke="${sk(M,'#5a4a22')}" stroke-width="1.4" stroke-linejoin="round"/>`;
+ s+=`<circle cx="210" cy="342" r="30" fill="${fl(M,'#c8d36a')}" stroke="${sk(M,'#6f7d2a')}" stroke-width="1.1"/><circle cx="210" cy="342" r="25" fill="${fl(M,'#ef8f8a')}" stroke="${M.line?'url(#lg)':'none'}" stroke-width=".8"/><circle cx="210" cy="342" r="13" fill="${fl(M,'#f7b3ad')}" stroke="${M.line?'url(#lg)':'none'}" stroke-width=".6"/>`;
+ for(let i=0;i<14;i++){const t=i/14*Math.PI*2;s+=`<ellipse cx="${f(210+18*Math.cos(t))}" cy="${f(342+18*Math.sin(t))}" rx="1.8" ry="1.2" transform="rotate(${f(t*180/Math.PI)} ${f(210+18*Math.cos(t))} ${f(342+18*Math.sin(t))})" fill="${fl(M,'#f8ebc9')}" stroke="${M.line?'url(#lg)':'none'}" stroke-width=".5"/>`}
+ return s;
+};
+const plants=[
+ {id:'sangregorio',c:'San Gregorio',alt:'También llamada Siete Potencias',sci:'Justicia secunda',fam:'Acanthaceae',where:'Analizada en laboratorio, Universidad de Sucre',talk:'puente',talkName:'El químico farmacéutico como puente',
+  t:'Una de las dos especies locales que el grupo de investigación en productos naturales de la Universidad de Sucre estudió con análisis fitoquímico. En el estudio de las dos especies se hallaron alcaloides, taninos y oxalatos de calcio.',draw:sanGregorio,tapes:[[143,318,0],[143,204,-4]]},
+ {id:'matimba',c:'Matimba',alt:'',sci:'Annona purpurea',fam:'Annonaceae',where:'Analizada en laboratorio, Universidad de Sucre',talk:'puente',talkName:'El químico farmacéutico como puente',
+  t:'La segunda especie local del estudio fitoquímico de la Universidad de Sucre, junto con San Gregorio. Su análisis empezó por una buena identificación y recolección, sin lluvia, pesticidas ni metales pesados.',draw:matimba,tapes:[[60,355,50],[190,214,50]]},
+ {id:'oregano',c:'Orégano',alt:'',sci:'',fam:'',where:'Registrada en Chochó, Sincelejo, Sucre',talk:'chocho',talkName:'Saberes en Chochó',
+  t:'Una de las más de 30 plantas medicinales que los semilleros registraron en los patios y bordes de Chochó, donde se preparan sobre todo por cocción.',draw:oregano,tapes:[[148,330,0],[149,200,0]]},
+ {id:'matarraton',c:'Matarratón',alt:'',sci:'Gliricidia sepium',fam:'Fabaceae',where:'Registrada en Chochó, Sincelejo, Sucre',talk:'chocho',talkName:'Saberes en Chochó',
+  t:'Otra de las plantas de patio que aparecen en el estudio de Chochó. Allí el saber sobre su uso pasa de forma oral dentro de la familia, cuando aparece una enfermedad.',draw:matarraton,tapes:[[73,354,25],[256,372,-10]]},
+ {id:'guayaba',c:'Hoja de guayaba',alt:'',sci:'Psidium guajava',fam:'Myrtaceae',where:'Registrada en Chochó, Sincelejo, Sucre',talk:'chocho',talkName:'Saberes en Chochó',
+  t:'La hoja de guayaba figura entre las especies registradas en Chochó. El estudio advierte que la baja participación de los jóvenes pone en riesgo este saber familiar.',draw:guayaba,tapes:[[152,368,0],[152,222,0]]}
+];
+const C={line:false},L={line:true};
+$('heroA').innerHTML=GOLD+matimba(L);
+$('heroB').innerHTML=GOLD+sanGregorio(L);
+$('quoteL').innerHTML=GOLD+matarraton(L);
+$('quoteR').innerHTML=GOLD+guayaba(L);
+
+/* ---------- herbario ---------- */
+let hp=0;
+const PH={
+ sangregorio:{src:'img/plantas/sangregorio.jpg',pos:'30% 50%',by:'Krzysztof Ziarnek, Kenraiz',lic:'CC BY-SA 4.0',url:'https://commons.wikimedia.org/wiki/File:Dianthera_secunda_kz01.jpg'},
+ matimba:{src:'img/plantas/matimba.jpg',pos:'50% 60%',by:'Rovinalba (Sahagún, Córdoba)',lic:'Dominio público',url:'https://commons.wikimedia.org/wiki/File:Annona_purpurea_Rovin_Alba_Sahagun_Colombia.jpg'},
+ oregano:{src:'img/plantas/oregano.jpg',pos:'50% 40%',by:'David J. Stang',lic:'CC BY-SA 4.0',url:'https://commons.wikimedia.org/wiki/File:Plectranthus_amboinicus_1zz.jpg',alt:'orégano orejón, foto de referencia'},
+ matarraton:{src:'img/plantas/matarraton.jpg',pos:'40% 55%',by:'Filo gèn\'',lic:'CC BY-SA 4.0',url:'https://commons.wikimedia.org/wiki/File:Gliricidia_sepium_(Fabaceae)_01.jpg'},
+ guayaba:{src:'img/plantas/guayaba.jpg',pos:'50% 45%',by:'Forest y Kim Starr',lic:'CC BY 3.0',url:'https://commons.wikimedia.org/wiki/File:Starr_080103-1436_Psidium_guajava.jpg'}
+};
+$('species').innerHTML=plants.map((p,i)=>`<button class="sp" type="button" role="tab" data-i="${i}" aria-label="${esc(p.c)}"><img src="${PH[p.id].src}" alt="" loading="lazy" style="object-position:${PH[p.id].pos}"><span>${esc(p.c)}</span></button>`).join('');
+const spBtns=[...document.querySelectorAll('.sp')];
+const showPlant=(i,focus)=>{
+ hp=i;const p=plants[i];
+ spBtns.forEach((b,k)=>{b.setAttribute('aria-selected',k===i);b.tabIndex=k===i?0:-1});
+ const pl=$('plate'),im=$('plateImg'),ph=PH[p.id];pl.classList.remove('anim');void pl.offsetWidth;pl.classList.add('anim');
+ im.src=ph.src;im.alt='Fotografía de '+p.c+(ph.alt?', '+ph.alt:'');im.style.objectPosition=ph.pos;
+ $('credit').innerHTML='Foto: '+esc(ph.by)+' · '+esc(ph.lic)+' · <a href="'+ph.url+'">Wikimedia Commons</a>'+(ph.alt?'. Foto de referencia del orégano orejón; el informe registra la planta solo como orégano.':'');
+ $('sheetNo').textContent='N.º '+(i+1)+' / '+plants.length;
+ $('label').innerHTML=`<b>HERBARIO · SIMPOSIO XXII</b>${p.sci?`<i>${esc(p.sci)}</i><br><span>${esc(p.fam)}</span><br>`:''}<span>Nombre común:</span> ${esc(p.c)}<br><span>${esc(p.where)}</span>`;
+ $('herbInfo').innerHTML=`<h3>${esc(p.c)}</h3>${p.sci?`<div class="sci">${esc(p.sci)}</div>`:`<div class="sci" style="font-style:normal;font-family:Manrope,sans-serif;font-size:14px;color:var(--soft)">El informe la registra solo por su nombre común</div>`}${p.alt?`<p style="font-size:14px;color:var(--soft);margin-top:2px">${esc(p.alt)}</p>`:''}<p class="t">${esc(p.t)}</p><div class="src"><span>Se habló de ella en</span><a class="btn ghost" href="#${p.talk}">${esc(p.talkName)} ›</a></div>`;
+ if(focus)spBtns[i].focus();
+};
+$('species').addEventListener('click',e=>{const b=e.target.closest('.sp');if(b)showPlant(+b.dataset.i)});
+$('species').addEventListener('keydown',e=>{if(e.key==='ArrowRight'&&hp<plants.length-1){e.preventDefault();showPlant(hp+1,true)}if(e.key==='ArrowLeft'&&hp>0){e.preventDefault();showPlant(hp-1,true)}});
+showPlant(0);
+
+/* ---------- programa ---------- */
+const CO='linear-gradient(#fcd116 0 50%,#003893 50% 75%,#ce1126 75%)',ES='linear-gradient(#aa151b 0 25%,#f1bf00 25% 75%,#aa151b 75%)';
+const prog=[
+ {id:'apertura',short:'Apertura',tag:'Apertura',m:'p',title:'Inauguración del simposio',people:[{n:'Rosa Mayra',r:'Decana encargada'},{n:'Bernardo Banda Mora',r:'Profesor, jefe de departamento'}],
+  idea:'Un espacio de diálogo entre la ciencia y los saberes ancestrales.',
+  pts:['La decana destacó la organización de los estudiantes de sexto semestre y los cuadros vivos.','Enmarcó el evento en la estrategia de la OMS sobre medicina tradicional 2025–2034 y recordó que lo natural no siempre es seguro.','Subrayó el papel educativo y preventivo del farmacéutico para evitar interacciones y promover el uso racional.','El jefe de departamento agradeció a docentes, conferencistas y estudiantes, e inauguró el simposio.']},
+ {id:'interculturalidad',short:'Interculturalidad en salud',tag:'Conferencia',m:'p',title:'La interculturalidad en salud: un puente entre la medicina tradicional y la práctica farmacéutica',people:[{n:'Leonardo Pérez Montes',r:'Regente de farmacia egresado de la Universidad de Sucre e ingeniero industrial',f:CO,c:'Colombia'}],
+  idea:'Escuchar sin descalificar es el primer paso para orientar a un paciente que usa plantas medicinales.',
+  pts:['<b>Marco normativo:</b> de la Constitución de 1991 y la Ley 1751 al Decreto Ley 480 de 2025, que consolida el Sistema Indígena de Salud Propio e Intercultural (SISPI).','<b>Pilares:</b> autonomía de los pueblos, con la experiencia del resguardo Zenú en San Andrés de Sotavento; respeto por la cosmovisión propia del cuidado; intercambio recíproco de saberes.','<b>Cinco ejes para la práctica farmacéutica:</b><ol class="sub-list"><li>Escuchar sin descalificar las prácticas tradicionales del paciente.</li><li>Identificar interacciones, duplicidades y errores de dosis entre plantas y fármacos.</li><li>Educar con lenguaje claro y culturalmente pertinente.</li><li>Trabajar con equipos interdisciplinarios: medicina, enfermería y área social.</li><li>Hacer seguimiento y farmacovigilancia territorializada.</li></ol>']},
+ {id:'naturopatia',short:'Naturopatía con criterio',tag:'Conferencia virtual',m:'v',title:'Naturopatía sí, pero con criterio',people:[{n:'Dra. Adella Carrasco',r:'Naturópata con más de 30 años de experiencia, directora de la Escuela Internacional de Naturopatía',f:ES,c:'España',ph:'img/evento/adella-carrasco.jpg'}],
+  idea:'Que hoy no haya evidencia no invalida un saber, pero obliga a investigarlo con rigor y ética.',
+  pts:['Cuestionó que todo lo natural sea inocuo y llamó a investigar sin apropiarse del conocimiento de las comunidades.','<b>Seis criterios de práctica responsable:</b><ol class="sub-list"><li>Conocimiento fundamentado.</li><li>Distinguir experiencia de evidencia.</li><li>Seguridad frente a toxicidad e interacciones.</li><li>Individualizar al paciente.</li><li>Respetar los límites de competencia: no diagnosticar ni retirar tratamientos médicos.</li><li>Honestidad ética.</li></ol>','Señaló los intereses comerciales en suplementos y propuso cooperar entre químicos, farmacéuticos y naturópatas.']},
+ {id:'puente',short:'El químico farmacéutico como puente',tag:'Conferencia',m:'p',title:'El químico farmacéutico: puente científico entre el saber etnobotánico y la medicina basada en la evidencia',people:[{n:'Dra. Rita Luz Márquez Vizcaíno',r:'Química farmacéutica, magíster en Ciencias Biológicas, líder del grupo GIPNUS de la Universidad de Sucre',f:CO,c:'Colombia'}],
+  idea:'Una planta mal recolectada, con lluvia, pesticidas o metales pesados, arruina todo el análisis posterior.',
+  pts:['<b>Control de calidad:</b> la farmacognosia empieza por identificar bien la especie y recolectarla bien, evitando la degradación enzimática.','<b>Análisis fitoquímico en la Universidad de Sucre:</b> cromatografía en columna, en capa delgada, HPLC y de gases acoplada a masas; espectrofotometría UV-Visible y resonancia magnética nuclear.','<b>Especies estudiadas:</b> <i>Justicia secunda</i> (San Gregorio o Siete Potencias) y <i>Annona purpurea</i> (Matimba), con hallazgo de alcaloides, taninos y oxalatos de calcio.']},
+ {id:'biblioteca',short:'Biblioteca 4.0',tag:'Conferencia virtual',m:'v',title:'Biblioteca 4.0 de plantas medicinales: contribución tecnológica a la conservación de los conocimientos etnofarmacológicos afrocolombianos',people:[{n:'Dra. Lina Marcela Trujillo Chacón',r:'Química, doctora en Ciencias Farmacéuticas y Alimentarias, investigadora de la Universidad de Antioquia y Minciencias',f:CO,c:'Colombia'}],
+  idea:'La inteligencia artificial y los códigos QR también pueden conservar el saber de las parteras del Patía.',
+  pts:['<b>La brecha:</b> pese a la megadiversidad de Colombia, las plataformas existentes no integran usos ancestrales, fitoquímica y bioactividad, como sí lo hace la biblioteca digital de medicina tradicional de México.','<b>Proyecto en el Valle del Patía (Cauca):</b> con comunidades afrocolombianas y parteras, une recolección etnobotánica, análisis fitoquímico, aprendizaje automático para predecir bioactividad y códigos QR en huertas escolares.']},
+ {id:'chocho',short:'Saberes en Chochó',tag:'Ponencia de semilleros',m:'p',title:'Transmisión social y familiar de saberes etnofarmacéuticos en el corregimiento de Chochó (Sincelejo, Sucre)',people:[{n:'Semilleros de investigación',r:'Farmacia Clínica y Asistencial, y Quehacer Farmacéutico, Universidad de Sucre',i:'SI'}],
+  idea:'Más de 30 plantas medicinales y un saber que se transmite en familia, pero con pocos jóvenes que lo hereden.',
+  pts:['<b>Método:</b> estudio cualitativo con entrevistas y observación directa a 7 sabedores y habitantes de 38 a 81 años.','<b>Plantas:</b> más de 30 especies en patios y bordes del pueblo, entre ellas orégano, matarratón, hoja de guayaba y chingamochila, preparadas sobre todo por cocción.','<b>Hallazgos:</b> el saber circula de forma oral y familiar cuando aparece una enfermedad, y combina plantas con fe y oraciones. La baja participación de los jóvenes lo pone en riesgo ante la cercanía urbana de Sincelejo.']}
+];
+const ini=n=>n.replace(/^(Dra?\.|Prof\.)\s*/,'').split(' ').filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join('');
+let cur=0,filter='all';
+const visible=()=>prog.map((p,i)=>i).filter(i=>filter==='all'||prog[i].m===filter);
+$('list').innerHTML=prog.map((p,i)=>`<button class="item" type="button" role="tab" id="tab-${p.id}" data-i="${i}" aria-controls="card"><span class="n">${i+1}</span><span><b>${esc(p.short)}</b><small>${esc(p.tag)} · ${esc(p.people[0].n)}</small></span></button>`).join('');
+const items=[...document.querySelectorAll('.item')];
+const showTalk=(i,focus,quiet)=>{
+ cur=i;const t=prog[i];
+ items.forEach((b,k)=>{b.setAttribute('aria-selected',k===i);b.tabIndex=k===i?0:-1});
+ const v=visible(),pos=v.indexOf(i),prev=v[pos-1],next=v[pos+1];
+ const c=$('card');c.classList.remove('anim');void c.offsetWidth;c.classList.add('anim');c.setAttribute('aria-labelledby','tab-'+t.id);
+ c.innerHTML=`<span class="tag${t.m==='v'?' v':''}">${esc(t.tag)}</span><h3>${esc(t.title)}</h3>
+ <div class="speakers">${t.people.map(p=>`<div class="who">${p.ph?`<img class="av ph" src="${p.ph}" alt="Fotografía de ${esc(p.n)}">`:`<div class="av" aria-hidden="true">${esc(p.i||ini(p.n))}</div>`}<div><b>${esc(p.n)}</b><small>${esc(p.r)}</small>${p.c?`<span class="flag"><i style="background:${p.f}"></i>${esc(p.c)}</span>`:''}</div></div>`).join('')}</div>
+ <p class="idea">${esc(t.idea)}</p><ul class="pts">${t.pts.map(x=>`<li><span>${x}</span></li>`).join('')}</ul>
+ <div class="pager"><button type="button" data-go="${prev??''}" ${prev===undefined?'disabled':''}>‹ ${prev===undefined?'Anterior':esc(prog[prev].short)}</button><button type="button" data-go="${next??''}" ${next===undefined?'disabled':''}>${next===undefined?'Siguiente':esc(prog[next].short)} ›</button></div>`;
+ if(focus)items[i].focus();
+ if(!quiet)try{history.replaceState(null,'','#'+t.id)}catch(e){}
+};
+$('list').addEventListener('click',e=>{const b=e.target.closest('.item');if(b)showTalk(+b.dataset.i)});
+$('list').addEventListener('keydown',e=>{const v=visible(),pos=v.indexOf(cur);
+ if(['ArrowDown','ArrowRight'].includes(e.key)&&pos<v.length-1){e.preventDefault();showTalk(v[pos+1],true)}
+ if(['ArrowUp','ArrowLeft'].includes(e.key)&&pos>0){e.preventDefault();showTalk(v[pos-1],true)}});
+$('card').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b&&b.dataset.go!=='')showTalk(+b.dataset.go)});
+$('filters').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;filter=b.dataset.f;
+ document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c===b));
+ items.forEach((it,k)=>it.hidden=!(filter==='all'||prog[k].m===filter));
+ const v=visible();showTalk(v.includes(cur)?cur:v[0])});
+const goTalk=id=>{const k=prog.findIndex(p=>p.id===id);if(k<0)return false;if(!visible().includes(k)){filter='all';document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.f==='all'));items.forEach(it=>it.hidden=false)}showTalk(k,false,true);goTo($('programa'));return true};
+const fromHash=()=>goTalk(location.hash.slice(1));
+const startHash=location.hash;
+showTalk(0,false,true);
+if(startHash)goTalk(startHash.slice(1));
+addEventListener('hashchange',fromHash);
+
+/* ---------- cuadros vivos ---------- */
+const sceneDefs='<defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5e3a8"/><stop offset=".5" stop-color="#d4ad55"/><stop offset="1" stop-color="#9c7426"/></linearGradient></defs>';
+const scenes=[
+ ()=>{let s='';[[60,74,-118,46],[60,74,-90,54],[60,74,-62,46]].forEach(([x,y,a,l])=>{const r=a*Math.PI/180,ex=x+Math.cos(r)*l,ey=y+Math.sin(r)*l;s+=`<path d="M${x} ${y}L${f(ex)} ${f(ey)}" stroke="#3d6b3a" stroke-width="2"/>`;for(let k=1;k<5;k++){const px=x+Math.cos(r)*l*k/5,py=y+Math.sin(r)*l*k/5;s+=leaf(C,px,py,a+40,14-k,5,'lan','#2f6b45','#a6c98c',2)+leaf(C,px,py,a-40,14-k,5,'lan','#3a7a50','#a6c98c',2)}});
+  s+='<path d="M60 76C58 88 46 96 40 108M60 76C62 90 70 98 78 110M60 76C60 92 58 102 60 112M50 92C44 94 38 92 32 96M70 94C76 96 82 94 88 99" fill="none" stroke="url(#sg)" stroke-width="1.6" stroke-linecap="round"/><rect x="52" y="68" width="16" height="9" rx="2" fill="url(#sg)"/><path d="M52 72h16" stroke="#7a5a1e" stroke-width=".8"/>';return s},
+ ()=>'<path d="M44 32h32v6c-6 4-6 10-4 16 3 10 3 22-2 34-2 6-6 8-12 8h-12c-6 0-10-2-12-8-5-12-5-24-2-34 2-6 2-12-4-16z" transform="translate(4 0)" fill="#0f4635"/><path d="M46 32h40" stroke="url(#sg)" stroke-width="2"/><path d="M45 24h42a4 4 0 0 1 4 4v4H41v-4a4 4 0 0 1 4-4z" fill="url(#sg)"/><circle cx="66" cy="19" r="4.5" fill="url(#sg)"/><rect x="50" y="54" width="32" height="22" rx="3" fill="#f7f1df" stroke="url(#sg)"/><path d="M55 61h22M57 66h18M60 71h12" stroke="#9c7426" stroke-width="1.2"/><path d="M43 47h46M42 84h48" stroke="url(#sg)" stroke-width="1.4" opacity=".8"/><path d="M28 104h76" stroke="#9fb2a8" stroke-width="1.5"/><path d="M20 104c0-10 4-16 10-18 2 6 0 14-4 18" fill="#3a7a50"/><path d="M98 104c2-12 8-18 14-18-1 8-5 14-12 18" fill="#2f6b45"/>',
+ ()=>'<path d="M30 108h44M38 108l6-16M66 108l-6-16" stroke="#6b7f75" stroke-width="2" stroke-linecap="round"/><path d="M52 104c-7-5-4-12 0-16 4 4 7 11 0 16z" fill="#e08a2a"/><path d="M52 104c-3-2-2-6 0-8 2 2 3 6 0 8z" fill="#f5d46a"/><circle cx="52" cy="66" r="21" fill="#e8f1ec" stroke="#0f4635" stroke-width="2.5"/><path d="M32 70a20 20 0 0 0 40 0z" fill="#2f8a6e"/><path d="M62 50C74 34 92 36 100 62" fill="none" stroke="#0f4635" stroke-width="6" stroke-linecap="round"/><path d="M62 50C74 34 92 36 100 62" fill="none" stroke="#e8f1ec" stroke-width="2.5" stroke-linecap="round"/><path d="M100 66c-2 4 2 6 2 6s2-2 0-6z" fill="#2f8a6e"/><path d="M92 86c0-6 4-8 8-8s8 2 8 8v8c0 4-3 6-8 6s-8-2-8-6z" fill="#e8f1ec" stroke="#0f4635" stroke-width="2"/><path d="M92 92h16v2c0 4-3 6-8 6s-8-2-8-6z" fill="#2f8a6e"/><circle cx="46" cy="60" r="3" fill="#fff" opacity=".7"/>',
+ ()=>'<rect x="22" y="14" width="46" height="92" rx="2" fill="#f7f5ee" stroke="#0f4635" stroke-width="1.6"/><path d="M26 96h38M26 24h38" stroke="#9c7426" stroke-width="1" stroke-dasharray="3 2"/><g opacity=".9"><ellipse cx="34" cy="80" rx="4" ry="3" fill="#2f8a6e"/><ellipse cx="34" cy="52" rx="4" ry="3" fill="#6a2788"/><ellipse cx="45" cy="70" rx="4" ry="3" fill="#d4ad55"/><ellipse cx="45" cy="40" rx="4" ry="3" fill="#2f8a6e"/><ellipse cx="56" cy="62" rx="4" ry="3" fill="#c8325a"/><ellipse cx="56" cy="34" rx="4" ry="3" fill="#6a2788"/></g><circle cx="34" cy="96" r="1.6" fill="#0f4635"/><circle cx="45" cy="96" r="1.6" fill="#0f4635"/><circle cx="56" cy="96" r="1.6" fill="#0f4635"/><rect x="80" y="12" width="14" height="78" rx="3" fill="#e8f1ec" stroke="#0f4635" stroke-width="1.6"/><rect x="81.5" y="30" width="11" height="12" fill="#2f8a6e"/><rect x="81.5" y="46" width="11" height="9" fill="#d4ad55"/><rect x="81.5" y="58" width="11" height="14" fill="#6a2788" opacity=".8"/><path d="M87 90v10M82 96h10" stroke="#0f4635" stroke-width="2"/><path d="M87 104c-2 3 0 5 0 5s2-2 0-5z" fill="#6a2788"/>',
+ ()=>'<rect x="14" y="30" width="64" height="72" rx="8" fill="#dfe7e2" stroke="#9fb2a8" stroke-width="1.5"/>'+[[30,48],[56,48],[30,68],[56,68],[30,88],[56,88]].map(([x,y],i)=>`<g transform="translate(${x} ${y}) rotate(-28)"><rect x="-13" y="-8" width="26" height="16" rx="8" fill="#fff" stroke="#b9c8c0"/>${i===5?'':`<path d="M-13 0a8 8 0 0 1 8-8h5v16h-5a8 8 0 0 1-8-8z" fill="#6a2788"/><path d="M0 -8v16" stroke="#4a1a60" stroke-width=".8"/>`}</g>`).join('')+'<path d="M90 26h10v10h10v10h-10v10H90V46H80V36h10z" fill="#2f8a6e" stroke="url(#sg)" stroke-width="1.5"/><path d="M84 76c8-6 18-4 24 4" fill="none" stroke="url(#sg)" stroke-width="1.6"/><path d="M96 70l-6 14h12z" fill="#0f4635"/>'
+];
+const acts=[['1.º','Raíces de un saber','“Raíces de la medicina tradicional”: recolección de plantas, sabiduría ancestral y transmisión entre generaciones.','img/evento/cuadro-1.jpg'],
+ ['2.º','Entre plantas y saberes','“Botica de ayer”: la época de las boticas. “Entre plantas y saberes, la experiencia se convierte en medicina.”','img/evento/cuadro-2a.jpg'],
+ ['3.º','El saber que se transforma','“Raíces que sanan, ciencia que transforma”: de la sabedora al microscopio. “El conocimiento ancestral florece cuando dialoga con la ciencia.”','img/evento/cuadro-3.jpg'],
+ ['4.º','La ciencia revela lo que la tradición conocía','Evidencia: el laboratorio comprueba lo que se usaba.',''],
+ ['5.º','La Farmacia de hoy','Escena de dispensación: el farmacéutico de hoy atiende, investiga y trabaja en equipo.','img/evento/cuadro-5.jpg']];
+var LIST=null;
+const actPh=acts.filter(a=>a[3]).map(a=>[a[3],'Cuadro vivo de '+a[0]+' semestre · '+a[1]]);
+$('acts').innerHTML=acts.map(([s,t,d,ph],i)=>`<li class="act">${ph?`<button type="button" class="scene photo" data-ph="${actPh.findIndex(x=>x[0]===ph)}" aria-label="Ver en grande la foto del cuadro vivo de ${esc(s)} semestre"><img src="${ph}" alt="Cuadro vivo de ${esc(s)} semestre: ${esc(t)}" loading="lazy"></button>`:`<div class="scene"><svg viewBox="0 0 120 120" aria-hidden="true">${sceneDefs}${scenes[i]()}</svg></div>`}<div class="txt"><div class="sem">${esc(s)} semestre</div><h3>${esc(t)}</h3><p>${esc(d)}</p></div></li>`).join('');
+$('acts').addEventListener('click',e=>{const b=e.target.closest('[data-ph]');if(b)openList(actPh,+b.dataset.ph)});
+const actList=$('acts');const step=()=>actList.querySelector('.act').getBoundingClientRect().width+16;
+$('actPrev').onclick=()=>actList.scrollBy({left:-step(),behavior:calm?'auto':'smooth'});
+$('actNext').onclick=()=>actList.scrollBy({left:step(),behavior:calm?'auto':'smooth'});
+
+/* ---------- personas ---------- */
+const cast=[['Rosa Mayra','Decana encargada','Apertura','apertura'],['Bernardo Banda Mora','Profesor, jefe de departamento','Apertura','apertura'],['Leonardo Pérez Montes','Regente de farmacia e ingeniero industrial · Colombia','Conferencia','interculturalidad'],['Dra. Adella Carrasco','Escuela Internacional de Naturopatía · España','Virtual','naturopatia'],['Dra. Rita Luz Márquez Vizcaíno','Grupo GIPNUS, Universidad de Sucre','Conferencia','puente'],['Dra. Lina Marcela Trujillo Chacón','Universidad de Antioquia y Minciencias','Virtual','biblioteca'],['Semilleros de investigación','Farmacia Clínica y Asistencial, y Quehacer Farmacéutico','Semilleros','chocho']];
+$('roster').innerHTML=cast.map(([n,r,b,id])=>`<button class="row" type="button" data-t="${id}">${id==='naturopatia'?'<img class="av ph" src="img/evento/adella-carrasco.jpg" alt="">':`<div class="av" aria-hidden="true">${esc(id==='chocho'?'SI':ini(n))}</div>`}<span><b>${esc(n)}</b><small>${esc(r)}</small></span><em class="${b==='Virtual'?'v':''}">${esc(b)}</em></button>`).join('');
+$('roster').addEventListener('click',e=>{const b=e.target.closest('.row');if(b){goTalk(b.dataset.t);try{history.replaceState(null,'','#'+b.dataset.t)}catch(err){}}});
+
+/* ---------- quiz ---------- */
+const quiz=[
+ {q:'¿Qué estrategia de la OMS enmarcó el simposio?',o:['Estrategia sobre medicina tradicional 2025–2034','Agenda de salud digital 2030','Plan de farmacovigilancia 2020–2024'],a:0,src:'Apertura'},
+ {q:'¿Qué especies analizó en laboratorio el grupo de la Universidad de Sucre?',o:['Orégano y matarratón','San Gregorio y Matimba','Hoja de guayaba y chingamochila'],a:1,src:'El químico farmacéutico como puente'},
+ {q:'¿Cuál es el primer eje de la práctica farmacéutica intercultural?',o:['Retirar los tratamientos tradicionales','Recetar plantas medicinales','Escuchar sin descalificar las prácticas del paciente'],a:2,src:'Interculturalidad en salud'},
+ {q:'¿A cuántos sabedores y habitantes entrevistaron los semilleros en Chochó?',o:['7','30','81'],a:0,src:'Saberes en Chochó'}
+];
+let qi=0,score=0,answered=false;
+const mini=()=>{$('mini').innerHTML=quiz.map((q,k)=>`<span class="${k<qi?'done':''}"></span>`).join('')};
+const drawQ=()=>{
+ const box=$('qbox');mini();
+ if(qi>=quiz.length){
+  box.innerHTML=`<p style="color:var(--soft)">Tu resultado</p><div class="score gt">${score} / ${quiz.length}</div><p style="margin:14px 0 6px">${score===quiz.length?'Excelente: recuerdas lo esencial del simposio.':score>=2?'Bien. Repasa en el programa las ponencias que fallaste.':'Vale la pena recorrer el programa otra vez.'}</p><div class="qnav" style="justify-content:flex-start"><button class="btn dark" type="button" id="qre">Intentar de nuevo</button></div>`;
+  $('qre').onclick=()=>{qi=0;score=0;drawQ()};return;
+ }
+ const q=quiz[qi];answered=false;
+ box.innerHTML=`<div class="qtop"><span>Pregunta ${qi+1} de ${quiz.length}</span><span>Aciertos: ${score}</span></div><h3>${esc(q.q)}</h3><div class="opts">${q.o.map((o,k)=>`<button class="opt" type="button" data-k="${k}" data-l="${'ABC'[k]}">${esc(o)}</button>`).join('')}</div><p class="fb" id="fb" aria-live="polite"></p><div class="qnav"><button class="btn dark" type="button" id="qnext" hidden>${qi===quiz.length-1?'Ver resultado':'Siguiente pregunta'}</button></div>`;
+};
+$('qbox').addEventListener('click',e=>{
+ const o=e.target.closest('.opt');
+ if(o&&!answered){answered=true;const q=quiz[qi],k=+o.dataset.k,ok=k===q.a;if(ok)score++;
+  document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('ok');else if(j===k)b.classList.add('bad')});
+  $('fb').innerHTML=`<b style="color:var(${ok?'--ok':'--bad'})">${ok?'Correcto.':'No es esa.'}</b> Lo puedes repasar en: ${esc(q.src)}.`;
+  $('qnext').hidden=false;$('qnext').focus()}
+ if(e.target.id==='qnext'){qi++;drawQ()}
+});
+drawQ();
+
+/* ---------- galería ---------- */
+const pieces=[['img/afiche-principal.webp','Afiche principal'],['img/afiche-conferencistas.webp','Afiche de conferencistas'],['img/certificado.webp','Certificado de participación']];
+$('gallery').innerHTML=pieces.map(([src,cap],i)=>`<figure><button type="button" data-i="${i}" aria-label="Ver en grande: ${esc(cap)}"><img src="${src}" alt="${esc(cap)}" loading="lazy"></button><figcaption>${esc(cap)}</figcaption></figure>`).join('');
+const dlg=$('viewer');let gi=0;
+function openList(l,i){LIST=l;openG(i)}
+const openG=i=>{const P=LIST||pieces;gi=(i+P.length)%P.length;$('big').src=P[gi][0];$('big').alt=P[gi][1];$('bigcap').textContent=P[gi][1]+' · '+(gi+1)+' de '+P.length;if(!dlg.open){try{dlg.showModal()}catch(err){dlg.setAttribute('open','')}}};
+$('gallery').addEventListener('click',e=>{const b=e.target.closest('button');if(b)openList(pieces,+b.dataset.i)});
+const MOM=[['img/evento/entrada.jpg','Entrada al Auditorio Ciencias de la Salud','t'],['img/evento/cuadro-1.jpg','1.º semestre · Raíces de la medicina tradicional','t'],['img/evento/cuadro-2a.jpg','2.º semestre · Botica de ayer','w'],['img/evento/espacio-fotos.jpg','Espacio para fotos: de la tradición a la farmacia de hoy','t'],['img/evento/cuadro-3.jpg','3.º semestre · Raíces que sanan, ciencia que transforma','t'],['img/evento/cuadro-2b.jpg','La botica de 2.º semestre, lista para recibir al público','w'],['img/evento/cuadro-5.jpg','5.º semestre · La Farmacia de hoy','w']];
+$('mosaic').innerHTML=MOM.map(([src,cap,sh],i)=>`<figure class="${sh}"><button type="button" data-i="${i}" aria-label="Ver en grande: ${esc(cap)}"><img src="${src}" alt="${esc(cap)}" loading="lazy"></button><figcaption>${esc(cap)}</figcaption></figure>`).join('');
+$('mosaic').addEventListener('click',e=>{const b=e.target.closest('button');if(b)openList(MOM,+b.dataset.i)});
+$('dclose').onclick=()=>dlg.close();$('dprev').onclick=()=>openG(gi-1);$('dnext').onclick=()=>openG(gi+1);
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+dlg.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')openG(gi-1);if(e.key==='ArrowRight')openG(gi+1)});
+
+/* ---------- música de fondo que responde a lo que se toca ---------- */
+const MUSIC=(()=>{
+ let ctx=null,bus,rev,noiseBuf,timer=0,step=0,nextT=0,th=null,thKey='inicio',deg=3,on=false,sr=3,swap=0;
+ const r=()=>(sr=sr*16807%2147483647)/2147483647;
+ const TH={
+  inicio:{name:'Para Elisa · Beethoven',bpm:88,seq:1},
+  serpiente:{name:'La serpiente · misterio',bpm:58,root:57,scale:[0,1,4,5,7,8,10],chords:[[0,7,12],[1,8,13],[0,7,12],[-2,5,10]],lead:'flute',steps:[0,6,8,12],prob:.85,drone:1,dur:1.1},
+  mortero:{name:'El mortero · el oficio',bpm:92,root:55,scale:[0,2,3,5,7,8,10],chords:[[0,7,15],[-4,3,8],[-2,5,10],[0,7,15]],lead:'pluck',steps:[0,2,4,7,10,12,14],prob:.5,drums:{k:'x.......x.......',w:'..x..x....x..x..',s:'....x.......x...'}},
+  hojas:{name:'Las hojas · gaita y maraca',bpm:96,root:62,scale:[0,2,4,7,9],chords:[[0,7,16],[5,12,17],[7,14,19],[0,7,16]],lead:'flute',steps:[0,2,3,6,8,10,11,14],prob:.75,dur:.32,drums:{s:'x.x.x.x.x.x.x.x.',k:'x.....x...x.....'}},
+  capsula:{name:'La cápsula · ciencia',bpm:84,root:65,scale:[0,2,4,6,7,9,11],chords:[[0,7,16,23],[2,9,14,18],[4,11,16,19],[-1,6,11,14]],lead:'bell',steps:[0,3,6,9,12],prob:.8},
+  molecula:{name:'La molécula · laboratorio',bpm:108,root:64,scale:[0,2,4,7,9,11],chords:[[0,7,11,16],[-3,4,9,14],[5,12,16,21],[2,9,14,18]],lead:'pluck',steps:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],prob:.7,arp:1,lv:.12},
+  matimba:{name:'La Matimba · tambor de la región',bpm:100,root:60,scale:[0,2,4,5,7,9,10],chords:[[0,7,16],[5,12,17],[7,14,17],[0,7,16]],lead:'pluck',steps:[0,3,6,10,12],prob:.6,drums:{k:'x..x..x...x..x..',t:'..x...x.x...x..x',s:'x.xxx.xxx.xxx.xx'}},
+  botica:{name:'Luz de botica · nocturno',bpm:54,root:50,scale:[0,2,3,5,7,8,10],chords:[[0,7,15],[-4,3,8],[-7,0,5],[-5,2,7]],lead:'bell',steps:[0,8],prob:.55,drone:1}
+ };
+ const mtof=m=>440*Math.pow(2,(m-69)/12);
+ const out=(node,wet)=>{node.connect(bus);const s=ctx.createGain();s.gain.value=wet;node.connect(s);s.connect(rev)};
+ const env=(g,t,a,peak,d)=>{g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d)};
+const NM={C:0,'C#':1,D:2,'D#':3,E:4,F:5,'F#':6,G:7,'G#':8,A:9,'A#':10,B:11},mid=n=>{const m=/^([A-G]#?)(\d)$/.exec(n);return NM[m[1]]+12*(+m[2]+1)};
+ const bar=a=>a.map(x=>x||[]);
+ const A1=bar([['E5'],['D#5'],['E5'],['B4'],['D5'],['C5']]),A2=bar([['A4','A2'],[0,'E3'],[0,'A3'],['C4'],['E4'],['A4']]),A3=bar([['B4','E2'],[0,'E3'],[0,'G#3'],['E4'],['G#4'],['B4']]),
+  A4=bar([['C5','A2'],[0,'E3'],[0,'A3'],['E4'],['E5'],['D#5']]),A7=bar([['B4','E2'],[0,'E3'],[0,'G#3'],['E4'],['C5'],['B4']]),
+  A8a=bar([['A4','A2'],[0,'E3'],[0,'A3'],[],['E5'],['D#5']]),A8b=bar([['A4','A2'],[0,'E3'],[0,'A3'],['B4'],['C5'],['D5']]),
+  B1=bar([['E5','C3'],[0,'G3'],[0,'C4'],['G4'],['F5'],['E5']]),B2=bar([['D5','G2'],[0,'G3'],[0,'B3'],['F4'],['E5'],['D5']]),
+  B3=bar([['C5','A2'],[0,'E3'],[0,'A3'],['E4'],['D5'],['C5']]),B4=bar([['B4','E2'],[0,'E3'],[0,'G#3'],[],['E5'],['D#5']]);
+ const ELISE=[['E5'],['D#5']].concat(A1,A2,A3,A4,A1,A2,A7,A8a,A1,A2,A3,A4,A1,A2,A7,A8b,B1,B2,B3,B4);
+ const V={
+  piano:(t,f,v,d)=>{const g=ctx.createGain(),lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(Math.min(9000,f*9),t);lp.frequency.exponentialRampToValueAtTime(Math.max(500,f*2.2),t+1.1);lp.connect(g);
+   [[1,.62,0,'triangle'],[2,.24,1.6,'sine'],[3,.1,-1.3,'sine'],[4,.05,.9,'sine']].forEach(([h,a,dt,ty])=>{const o=ctx.createOscillator(),og=ctx.createGain();o.type=ty;o.frequency.value=f*h;o.detune.value=dt;og.gain.value=a;o.connect(og);og.connect(lp);o.start(t);o.stop(t+d+1.9)});
+   g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(v*.32,t+.32);g.gain.exponentialRampToValueAtTime(.0001,t+d+1.7);out(g,.42)},
+  pluck:(t,f,v)=>{const o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),g2=ctx.createGain();o.frequency.value=f;o2.frequency.value=f*4.01;g2.gain.value=.12;o2.connect(g2);g2.connect(g);o.connect(g);env(g,t,.005,v,1.3);out(g,.35);o.start(t);o2.start(t);o.stop(t+1.5);o2.stop(t+1.5)},
+  bell:(t,f,v)=>{const c=ctx.createOscillator(),m=ctx.createOscillator(),mg=ctx.createGain(),g=ctx.createGain();c.frequency.value=f;m.frequency.value=f*3.5;mg.gain.setValueAtTime(f*2,t);mg.gain.exponentialRampToValueAtTime(1,t+1.8);m.connect(mg);mg.connect(c.frequency);c.connect(g);env(g,t,.004,v*.6,2.6);out(g,.5);c.start(t);m.start(t);c.stop(t+2.8);m.stop(t+2.8)},
+  flute:(t,f,v,d)=>{const o=ctx.createOscillator(),l=ctx.createOscillator(),lg=ctx.createGain(),g=ctx.createGain(),lp=ctx.createBiquadFilter();o.type='triangle';o.frequency.value=f;l.frequency.value=5.2;lg.gain.value=f*.012;l.connect(lg);lg.connect(o.frequency);lp.type='lowpass';lp.frequency.value=f*4;o.connect(lp);lp.connect(g);
+   g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v*.7,t+.08);g.gain.setValueAtTime(v*.55,t+d*.7);g.gain.exponentialRampToValueAtTime(.0001,t+d+.25);
+   const n=ctx.createBufferSource(),bp=ctx.createBiquadFilter(),ng=ctx.createGain();n.buffer=noiseBuf;bp.type='bandpass';bp.frequency.value=f*2;bp.Q.value=2;ng.gain.setValueAtTime(v*.25,t);ng.gain.exponentialRampToValueAtTime(.0001,t+.18);n.connect(bp);bp.connect(ng);ng.connect(g);
+   out(g,.45);o.start(t);l.start(t);n.start(t);o.stop(t+d+.3);l.stop(t+d+.3);n.stop(t+.2)}
+ };
+ const pad=(t,notes,dur,v)=>notes.forEach(m=>[-7,7].forEach(dt=>{const o=ctx.createOscillator(),g=ctx.createGain(),lp=ctx.createBiquadFilter();o.type='sawtooth';o.frequency.value=mtof(m);o.detune.value=dt;lp.type='lowpass';lp.frequency.value=850;o.connect(lp);lp.connect(g);
+  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+dur*.35);g.gain.linearRampToValueAtTime(v*.8,t+dur*.85);g.gain.linearRampToValueAtTime(.0001,t+dur+1.2);out(g,.6);o.start(t);o.stop(t+dur+1.3)}));
+ const drone=(t,m,dur)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=mtof(m);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.06,t+1.5);g.gain.linearRampToValueAtTime(.0001,t+dur+1);o.connect(g);out(g,.4);o.start(t);o.stop(t+dur+1.1)};
+ const noise=(t,type,freq,q,peak,dec)=>{const n=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();n.buffer=noiseBuf;f.type=type;f.frequency.value=freq;f.Q.value=q;n.connect(f);f.connect(g);env(g,t,.002,peak,dec);out(g,.12);n.start(t,r()*.5);n.stop(t+dec+.05)};
+ const tone=(t,f0,f1,peak,dec)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dec*.8);o.connect(g);env(g,t,.003,peak,dec);out(g,.1);o.start(t);o.stop(t+dec+.05)};
+ const hit=(t,k)=>{if(k==='k')tone(t,115,42,.55,.38);if(k==='t')tone(t,210,120,.32,.22);if(k==='w')noise(t,'bandpass',1700,6,.5,.06);if(k==='s')noise(t,'highpass',6500,.7,.1+r()*.1,.05)};
+ const sdeg=(sc,d)=>{const L=sc.length,o=Math.floor(d/L);return sc[((d%L)+L)%L]+12*o};
+ const play=(s,t)=>{const T=th,bar=Math.floor(s/16)%4,st=s%16,six=60/T.bpm/4;
+  if(T.seq){const L=ELISE.length,i=s<L?s:2+(s-2)%(L-2),[rh,lh]=ELISE[i],next=ELISE[(i+1)%L];const sw=t+(r()-.5)*.008;
+   if(rh){const held=!next[0];V.piano(sw,mtof(mid(rh)),.2,held?.5:.26)}if(lh)V.piano(t,mtof(mid(lh)),.12,.6);return}
+  if(st===0){pad(t,T.chords[bar].map(x=>T.root-12+x),16*six,.016);if(T.drone)drone(t,T.root-24,16*six)}
+  if(T.drums)for(const k in T.drums)if(T.drums[k][st]==='x')hit(t,k);
+  if(T.steps.includes(st)&&r()<T.prob){let m;if(T.arp){const ch=T.chords[bar];m=T.root+12+ch[st%ch.length]+(st>=8?12:0)}else{deg+=[-2,-1,-1,1,1,2][r()*6|0];deg=Math.max(-2,Math.min(9,deg));m=T.root+12+sdeg(T.scale,deg)}
+   V[T.lead](t,mtof(m),T.lv||.2,T.dur||.5)}};
+ const tick=()=>{if(!th)return;while(nextT<ctx.currentTime+.15){play(step,nextT);nextT+=60/th.bpm/4;step++}};
+ const btn=()=>$('musicBtn'),ui=()=>{const b=btn();if(!b)return;b.setAttribute('aria-pressed',String(on));b.classList.toggle('on',on);$('mlabel').textContent=on?TH[thKey].name:'Activar música'};
+ const init=()=>{const AC=window.AudioContext||window.webkitAudioContext;ctx=new AC();bus=ctx.createGain();bus.gain.value=0;const comp=ctx.createDynamicsCompressor();bus.connect(comp);comp.connect(ctx.destination);
+  const len=ctx.sampleRate*2.8,ir=ctx.createBuffer(2,len,ctx.sampleRate);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}
+  rev=ctx.createConvolver();rev.buffer=ir;const rg=ctx.createGain();rg.gain.value=.7;rev.connect(rg);rg.connect(comp);
+  noiseBuf=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);const nd=noiseBuf.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1};
+ const toggle=()=>{try{if(!ctx)init()}catch(e){$('mlabel').textContent='Tu navegador no permite audio';return}
+  on=!on;const now=ctx.currentTime;
+  if(on){ctx.resume();th=TH[thKey];nextT=now+.08;step=0;clearInterval(timer);timer=setInterval(tick,25);bus.gain.cancelScheduledValues(now);bus.gain.setTargetAtTime(.85,now,.6)}
+  else{bus.gain.cancelScheduledValues(now);bus.gain.setTargetAtTime(0,now,.25);setTimeout(()=>{if(!on){clearInterval(timer);ctx.suspend()}},900)}
+  ui()};
+ const react=k=>{const night=!!document.querySelector('.medal.night'),key=k&&TH[k]?k:(night?'botica':'inicio');if(key===thKey)return;thKey=key;ui();if(!on||!ctx)return;
+  const now=ctx.currentTime;bus.gain.cancelScheduledValues(now);bus.gain.setTargetAtTime(0,now,.22);clearTimeout(swap);
+  swap=setTimeout(()=>{th=TH[thKey];step=0;deg=3;nextT=ctx.currentTime+.05;bus.gain.setTargetAtTime(.85,ctx.currentTime,.45)},650)};
+ document.addEventListener('visibilitychange',()=>{if(!ctx||!on)return;document.hidden?ctx.suspend():ctx.resume()});
+ return{toggle,react,ui};
+})();
+$('musicBtn').addEventListener('click',()=>MUSIC.toggle());
+
+/* ---------- significados ---------- */
+const MEAN={
+ serpiente:['La serpiente','Símbolo de la farmacia: renueva su piel y recuerda que una sustancia puede sanar o dañar según la dosis.','Es el símbolo histórico de la farmacia: la serpiente de Higía, enroscada en su copa. Como muda la piel, habla de renovación y curación. Y recuerda la idea central del simposio: una misma sustancia puede sanar o dañar según la dosis, porque lo natural no siempre es sinónimo de seguro.'],
+ mortero:['El mortero','La herramienta del boticario: el oficio de transformar la planta en remedio, con técnica.','Es la herramienta del boticario y el corazón del emblema. Representa el oficio del regente de farmacia: preparar, transformar la planta en remedio con técnica y cuidado, y orientar su uso seguro.'],
+ hojas:['Las hojas','El saber tradicional: las plantas medicinales que las comunidades conocen y transmiten.','Son las plantas medicinales y el saber tradicional de las comunidades, como las más de 30 especies que los semilleros registraron en los patios de Chochó y que se transmiten de forma oral en la familia.'],
+ capsula:['La cápsula','El medicamento moderno: lo que llega cuando el saber se estudia con rigor.','Representa el medicamento moderno y la medicina basada en la evidencia: el punto de llegada cuando un saber tradicional se investiga con rigor y ética.'],
+ molecula:['La molécula','La química de la planta: los principios activos que el laboratorio busca.','Es la química de las plantas: los principios activos que busca el análisis fitoquímico, como los alcaloides y taninos hallados en el estudio de San Gregorio y Matimba.'],
+ matimba:['El fruto de Matimba','La investigación local: una especie de la región analizada en la Universidad de Sucre.','Representa la investigación local: la Matimba es una de las dos especies de la región que el grupo de productos naturales de la Universidad de Sucre analizó en su laboratorio.']
+};
+const tip=$('tip3d');
+const showTip=k=>{tip.querySelector('b').textContent=MEAN[k][0];tip.querySelector('p').textContent=MEAN[k][1];tip.hidden=false;$('hint3d').hidden=true};
+const hideTip=()=>{tip.hidden=true;$('hint3d').hidden=false};
+let select3D=k=>{};
+
+/* ---------- escena 3D ---------- */
+const cv=$('c3d');
+const start3D=()=>{
+ if(!window.THREE)throw new Error('sin three');
+ const T=THREE,R=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+ R.setPixelRatio(Math.min(devicePixelRatio||1,2));R.outputEncoding=T.sRGBEncoding;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=.86;
+ R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;
+ const S=new T.Scene(),cam=new T.PerspectiveCamera(32,1,.1,60),LOOK=new T.Vector3(0,.9,0);
+ const V=(x,y)=>new T.Vector2(x,y),upv=new T.Vector3(0,1,0);
+ const tag=(o,k)=>{o.userData.key=k;return o};
+ let sd=11;const rn=()=>(sd=sd*16807%2147483647)/2147483647;
+ const cnv=(w,h,fn)=>{const c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);return c};
+ const maxA=R.capabilities.getMaxAnisotropy();
+ const tx=(c,rx,ry,srgb)=>{const t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;t.repeat.set(rx||1,ry||1);if(srgb)t.encoding=T.sRGBEncoding;t.anisotropy=maxA;return t};
+ const speck=(g,w,h,n,cols,rmax)=>{for(let i=0;i<n;i++){g.fillStyle=cols[i%cols.length];g.globalAlpha=.15+rn()*.5;g.beginPath();g.arc(rn()*w,rn()*h,.4+rn()*rmax,0,7);g.fill()}g.globalAlpha=1};
+ const crackle=(g,w,h,n,col,alpha)=>{g.strokeStyle=col;g.globalAlpha=alpha;g.lineWidth=.8;for(let i=0;i<n;i++){let x=rn()*w,y=rn()*h;g.beginPath();g.moveTo(x,y);for(let k=0;k<6;k++){x+=(rn()-.5)*40;y+=(rn()-.5)*40;g.lineTo(x,y)}g.stroke()}g.globalAlpha=1};
+
+ /* luz de estudio para reflejos reales */
+ const pmg=new T.PMREMGenerator(R);
+ if(T.RoomEnvironment){S.environment=pmg.fromScene(new T.RoomEnvironment(),.04).texture}
+ else{const envC=cnv(512,256,(g,w,h)=>{const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#fffaf0');gr.addColorStop(.5,'#f3ead6');gr.addColorStop(1,'#6f6247');g.fillStyle=gr;g.fillRect(0,0,w,h);g.fillStyle='#fff';g.fillRect(70,38,130,54);g.fillRect(330,30,80,76)});
+  const envT=new T.CanvasTexture(envC);envT.mapping=T.EquirectangularReflectionMapping;envT.encoding=T.sRGBEncoding;S.environment=pmg.fromEquirectangular(envT).texture;envT.dispose()}
+ pmg.dispose();
+ const hemi=new T.HemisphereLight(0xfffaf0,0xcdbb92,.3);S.add(hemi);
+ const key=new T.DirectionalLight(0xfff1d2,1.05);key.position.set(3,5,4);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.radius=8;key.shadow.bias=-.0004;
+ Object.assign(key.shadow.camera,{left:-3,right:3,top:3,bottom:-3});S.add(key);
+ const rim=new T.PointLight(0xe6c27a,.6,12);rim.position.set(-3,2.4,-2.5);S.add(rim);
+ const candle=new T.PointLight(0xff9a3c,0,7,2);candle.position.set(-1.7,1.5,1.7);S.add(candle);
+ const flame=new T.Mesh(new T.SphereGeometry(.05,16,12),new T.MeshBasicMaterial({color:0xffc26a}));flame.scale.set(1,1.8,1);flame.position.copy(candle.position);flame.visible=false;S.add(flame);
+ const world=new T.Group();S.add(world);
+
+ /* texturas */
+ const glazeC=cnv(1024,512,(g,w,h)=>{const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#2f9a72');gr.addColorStop(.08,'#147054');gr.addColorStop(.6,'#0f5a42');gr.addColorStop(.86,'#0a4532');gr.addColorStop(.9,'#7d6b4c');gr.addColorStop(1,'#c9b79a');g.fillStyle=gr;g.fillRect(0,0,w,h);
+  for(let i=0;i<70;i++){const x=rn()*w,l=60+rn()*240,gx=g.createLinearGradient(0,0,0,l);gx.addColorStop(0,'rgba(60,170,128,.35)');gx.addColorStop(1,'rgba(60,170,128,0)');g.fillStyle=gx;g.fillRect(x,0,3+rn()*7,l)}
+  speck(g,w,h*.88,1800,['#0a3d2c','#3aa57c','#06281f'],1.3);crackle(g,w,h*.86,260,'#062c20',.22);speck(g,w,h,500,['#a8916b','#e2d4b6'],1.1)});
+ const glazeB=cnv(1024,512,(g,w,h)=>{g.fillStyle='#808080';g.fillRect(0,0,w,h);crackle(g,w,h*.86,260,'#303030',.8);speck(g,w,h,900,['#5a5a5a','#a0a0a0'],1)});
+ const stoneC=cnv(512,512,(g,w,h)=>{g.fillStyle='#bdb29a';g.fillRect(0,0,w,h);speck(g,w,h,5200,['#8a8170','#f4efe3','#5f584c','#b8ab90'],1.6)});
+ const stoneB=cnv(512,512,(g,w,h)=>{g.fillStyle='#777';g.fillRect(0,0,w,h);speck(g,w,h,4000,['#333','#bbb'],1.6)});
+ const marbleC=cnv(512,512,(g,w,h)=>{g.fillStyle='#f3efe6';g.fillRect(0,0,w,h);for(let k=0;k<14;k++){g.strokeStyle=k%3?'rgba(160,146,118,.35)':'rgba(120,108,88,.45)';g.lineWidth=.6+rn()*1.6;g.beginPath();let y=rn()*h;g.moveTo(0,y);for(let x=0;x<=w;x+=16){y+=(rn()-.5)*14;g.lineTo(x,y)}g.stroke()}speck(g,w,h,400,['#d9d0bd'],1)});
+ const outerMat=new T.MeshPhysicalMaterial({map:tx(glazeC,1,1,1),bumpMap:tx(glazeB),bumpScale:.0035,roughness:.24,clearcoat:1,clearcoatRoughness:.08});
+ const innerMat=new T.MeshStandardMaterial({map:tx(stoneC,3,1,1),bumpMap:tx(stoneB,3,1),bumpScale:.008,roughness:.92});
+ const gold=new T.MeshPhysicalMaterial({color:0xd8b25e,metalness:1,roughness:.22,clearcoat:.4});
+
+ /* mortero y mano */
+ const mortarG=tag(new T.Group(),'mortero');world.add(mortarG);
+ const outer=new T.Mesh(new T.LatheGeometry([V(0,0),V(.75,0),V(.8,.06),V(.78,.14),V(.95,.35),V(1.12,.7),V(1.2,1),V(1.22,1.12),V(1.16,1.16)],96),outerMat);
+ const inner=new T.Mesh(new T.LatheGeometry([V(1.16,1.16),V(1.08,1.1),V(1,.85),V(.8,.55),V(.5,.42),V(0,.38)],96),innerMat);
+ [outer,inner].forEach(m=>{m.castShadow=true;m.receiveShadow=true;mortarG.add(m)});
+ const ring=new T.Mesh(new T.TorusGeometry(1.19,.032,20,128),gold);ring.rotation.x=Math.PI/2;ring.position.y=1.14;ring.castShadow=true;mortarG.add(ring);
+ const powderMat=new T.MeshStandardMaterial({map:tx(cnv(256,256,(g,w,h)=>{g.fillStyle='#6f8a4a';g.fillRect(0,0,w,h);speck(g,w,h,2600,['#4d6a32','#93a865','#3b5426','#b5b07a'],1.6)}),1,1,1),roughness:1});
+ const powder=new T.Mesh(new T.CircleGeometry(.62,48),powderMat);powder.rotation.x=-Math.PI/2;powder.position.y=.5;powder.receiveShadow=true;mortarG.add(powder);
+ const pestle=new T.Mesh(new T.LatheGeometry([V(0,0),V(.15,.02),V(.2,.12),V(.18,.3),V(.11,.6),V(.09,1.45),V(.12,1.55),V(.1,1.62),V(0,1.66)],64),new T.MeshPhysicalMaterial({map:tx(marbleC,2,1,1),roughness:.4,clearcoat:.25,clearcoatRoughness:.3}));
+ pestle.castShadow=true;pestle.receiveShadow=true;mortarG.add(pestle);
+ const posePestle=phi=>{const dir=new T.Vector3(Math.cos(phi)*.55,1,Math.sin(phi)*.55).normalize();pestle.quaternion.setFromUnitVectors(upv,dir);pestle.position.set(Math.cos(phi)*.16,.46,Math.sin(phi)*.16)};
+ let pPhi=2.6;posePestle(pPhi);
+
+ /* hojas */
+ const leafTex=(base,edge,vein,mid)=>tx(cnv(512,256,(g,w,h)=>{g.translate(10,128);const L=490,W=112,p=new Path2D(shapes.lan(L,W)[0]);
+  const gr=g.createLinearGradient(0,-W,0,W);gr.addColorStop(0,edge);gr.addColorStop(.5,base);gr.addColorStop(1,edge);g.fillStyle=gr;g.fill(p);
+  g.save();g.clip(p);g.translate(0,-W);speck(g,L,W*2,500,['rgba(255,255,255,.22)','rgba(0,0,0,.18)'],2);g.restore();
+  g.strokeStyle=vein;g.lineWidth=2;for(let k=1;k<=9;k++){const x0=L*k/10,hh=W*.7*Math.sin(Math.PI*k/10);g.beginPath();g.moveTo(x0,0);g.quadraticCurveTo(x0+L*.06,-hh*.5,x0+L*.13,-hh);g.moveTo(x0,0);g.quadraticCurveTo(x0+L*.06,hh*.5,x0+L*.13,hh);g.stroke()}
+  g.strokeStyle=mid;g.lineWidth=5;g.beginPath();g.moveTo(0,0);g.lineTo(L*.97,0);g.stroke()}),1,1,1);
+ const leafG=new T.PlaneGeometry(1,.46,20,8);leafG.translate(.5,0,0);{const p=leafG.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i);p.setZ(i,-.22*x*x+.9*y*y+.03*Math.sin(x*9))}leafG.computeVertexNormals()}
+ const leafMats=[leafTex('#2f6b45','#1f4f33','#7fa874','#a34a5e'),leafTex('#3f7d3a','#2c5e2a','#9cc48a','#b9cf8f'),leafTex('#567f3f','#3d6230','#c4d9a6','#d5e2b5')].map(m=>new T.MeshStandardMaterial({map:m,alphaTest:.5,side:T.DoubleSide,roughness:.55}));
+ const mk=(i,s)=>{const m=tag(new T.Mesh(leafG,leafMats[i%3]),'hojas');m.scale.setScalar(s);m.castShadow=true;return m};
+ const herbs=tag(new T.Group(),'hojas'),herbList=[];
+ [[.1,.5,.1,.3,1.25,0],[.35,.5,-.15,2.1,1.0,1],[.2,.5,.35,1.2,.9,2],[.05,.5,-.35,5.4,.95,0],[-.3,.5,.2,3.6,1.15,1]].forEach(([x,y,z,ry,rz,c])=>{const m=mk(c,.75);m.position.set(x,y,z);m.rotation.set(0,ry,rz);m.userData.rz=rz;herbs.add(m);herbList.push(m)});
+ world.add(herbs);
+
+ /* serpiente */
+ const prof=[[0,.75],[.06,.8],[.14,.78],[.35,.95],[.7,1.12],[1,1.2],[1.12,1.22]];
+ const rp=y=>{for(let i=1;i<prof.length;i++)if(y<=prof[i][0]){const [y0,r0]=prof[i-1],[y1,r1]=prof[i];return r0+(r1-r0)*(y-y0)/(y1-y0)}return 1.22};
+ const pts=[];let aE=0;
+ for(let i=0;i<=48;i++){const t=i/48,y=.08+t*1.04,a=t*Math.PI*2*1.6;aE=a;const r=rp(y)+.085;pts.push(new T.Vector3(Math.cos(a)*r,y,Math.sin(a)*r))}
+ [[1.31,.28,1.27],[1.27,.5,1.47],[1.16,.64,1.63],[1.02,.72,1.72],[.9,.76,1.75]].forEach(([r,da,y])=>pts.push(new T.Vector3(Math.cos(aE+da)*r,y,Math.sin(aE+da)*r)));
+ const curve=new T.CatmullRomCurve3(pts),SEG=480,RS=18,tg=new T.TubeGeometry(curve,SEG,.078,RS,false),tp=tg.attributes.position,cc=new T.Vector3();
+ for(let i=0;i<=SEG;i++){const t=i/SEG,k=(t<.15?.15+.85*(t/.15):1)*(1+.06*Math.sin(t*90));curve.getPointAt(t,cc);for(let j=0;j<=RS;j++){const q=i*(RS+1)+j;tp.setXYZ(q,cc.x+(tp.getX(q)-cc.x)*k,cc.y+(tp.getY(q)-cc.y)*k,cc.z+(tp.getZ(q)-cc.z)*k)}}
+ tg.computeVertexNormals();
+ const scales=bump=>cnv(512,256,(g,w,h)=>{g.fillStyle=bump?'#404040':'#0f4a30';g.fillRect(0,0,w,h);const sw=32,sh=22;
+  for(let row=-1;row<h/sh*2+2;row++)for(let col=-1;col<w/sw+2;col++){const x=col*sw+(row%2?sw/2:0),y=row*sh/2,v=y/h;
+   let base;if(bump)base='#d0d0d0';else{const band=Math.sin(x/w*Math.PI*2*2)>.55,belly=v<.08||v>.92;base=belly?'#5f7f45':band?'#124f33':'#1c7449'}
+   const gr=g.createRadialGradient(x,y-3,1,x,y,sw*.62);gr.addColorStop(0,bump?'#ffffff':base);gr.addColorStop(.7,bump?'#9a9a9a':base);gr.addColorStop(1,bump?'#202020':'#06281a');
+   g.fillStyle=gr;g.beginPath();g.moveTo(x-sw/2,y);g.quadraticCurveTo(x,y-sh*.9,x+sw/2,y);g.quadraticCurveTo(x,y+sh*.9,x-sw/2,y);g.fill();
+   if(!bump){g.strokeStyle='rgba(6,30,20,.6)';g.lineWidth=1;g.stroke()}}
+  if(!bump){g.fillStyle='rgba(217,180,94,.85)';g.fillRect(0,h*.47,w,h*.06)}});
+ const snakeMat=new T.MeshPhysicalMaterial({map:tx(scales(false),30,1,1),bumpMap:tx(scales(true),30,1),bumpScale:.006,roughness:.38,clearcoat:.7,clearcoatRoughness:.22});
+ const snake=tag(new T.Group(),'serpiente'),body=new T.Mesh(tg,snakeMat);body.castShadow=true;body.receiveShadow=true;snake.add(body);
+ const end=curve.getPointAt(1),tan=curve.getTangentAt(1).normalize();
+ const side=new T.Vector3().crossVectors(tan,upv).normalize(),up2=new T.Vector3().crossVectors(side,tan).normalize();
+ const headG=new T.Group();headG.position.copy(end);snake.add(headG);
+ const hg=new T.SphereGeometry(.1,40,28);{const p=hg.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i);p.setY(i,y*(x>0?1-.35*(x/.1):1))}hg.computeVertexNormals()}
+ const head=new T.Mesh(hg,new T.MeshPhysicalMaterial({map:tx(scales(false),2,2,1),bumpMap:tx(scales(true),2,2),bumpScale:.004,roughness:.36,clearcoat:.7}));
+ head.scale.set(1.75,.8,1.15);head.quaternion.setFromUnitVectors(new T.Vector3(1,0,0),tan);head.position.copy(tan).multiplyScalar(.06);head.castShadow=true;headG.add(head);
+ const iris=new T.MeshPhysicalMaterial({color:0xd9a53a,roughness:.12,clearcoat:1,emissive:0x2a1a00}),pupil=new T.MeshBasicMaterial({color:0x050505});
+ [-1,1].forEach(s=>{const c=head.position.clone().addScaledVector(tan,.07).addScaledVector(up2,.035).addScaledVector(side,s*.072);const e=new T.Mesh(new T.SphereGeometry(.024,20,14),iris);e.position.copy(c);headG.add(e);
+  const pu=new T.Mesh(new T.SphereGeometry(.012,12,10),pupil);pu.scale.set(.45,1.6,.45);pu.quaternion.setFromUnitVectors(upv,up2);pu.position.copy(c).addScaledVector(side,s*.014);headG.add(pu)});
+ const tm=new T.MeshStandardMaterial({color:0xa3203a,roughness:.4}),tongue=new T.Group();tongue.position.copy(head.position).addScaledVector(tan,.15);headG.add(tongue);
+ {const st=new T.Mesh(new T.CylinderGeometry(.007,.007,.1,6),tm);st.quaternion.setFromUnitVectors(upv,tan);st.position.copy(tan).multiplyScalar(.05);tongue.add(st);
+  [-1,1].forEach(s=>{const dir=tan.clone().addScaledVector(side,s*.4).normalize(),m=new T.Mesh(new T.CylinderGeometry(.006,.004,.07,6),tm);m.quaternion.setFromUnitVectors(upv,dir);m.position.copy(tan).multiplyScalar(.1).addScaledVector(dir,.035);tongue.add(m)})}
+ tongue.scale.setScalar(.01);
+ world.add(snake);
+
+ /* cápsula, fruto, molécula */
+ const cap=tag(new T.Group(),'capsula'),pm=new T.MeshPhysicalMaterial({color:0x6a2788,roughness:.16,clearcoat:1,clearcoatRoughness:.05}),wm=new T.MeshPhysicalMaterial({color:0xf8f5ee,roughness:.2,clearcoat:1,clearcoatRoughness:.06});
+ const capTop=new T.Group(),capBot=new T.Group();cap.add(capTop,capBot);
+ [[capTop,new T.CylinderGeometry(.13,.13,.22,40),pm,.11],[capTop,new T.SphereGeometry(.13,40,20,0,Math.PI*2,0,Math.PI/2),pm,.22],[capBot,new T.CylinderGeometry(.137,.137,.2,40),wm,-.08],[capBot,new T.SphereGeometry(.137,40,20,0,Math.PI*2,Math.PI/2,Math.PI/2),wm,-.18]].forEach(([gr,gg,m,y])=>{const o=new T.Mesh(gg,m);o.position.y=y;o.castShadow=true;gr.add(o)});
+ const fruit=tag(new T.Group(),'matimba');
+ const fb=new T.Mesh(new T.SphereGeometry(.28,48,32),new T.MeshStandardMaterial({map:tx(cnv(256,256,(g,w,h)=>{g.fillStyle='#5e3614';g.fillRect(0,0,w,h);speck(g,w,h,1800,['#3e220b','#7f4f22','#9a6634'],2.2)}),2,1,1),roughness:.75}));fb.castShadow=true;fruit.add(fb);
+ const N=180,cone=new T.ConeGeometry(.042,.11,8);cone.translate(0,.05,0);
+ const im=new T.InstancedMesh(cone,new T.MeshStandardMaterial({color:0xffffff,roughness:.6}),N),d=new T.Object3D(),col=new T.Color();
+ for(let i=0;i<N;i++){const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),th=i*2.39996,n=new T.Vector3(Math.cos(th)*r,y,Math.sin(th)*r);d.position.copy(n).multiplyScalar(.265);d.quaternion.setFromUnitVectors(upv,n);d.scale.setScalar(.8+rn()*.4);d.updateMatrix();im.setMatrixAt(i,d.matrix);col.setHSL(.07+rn()*.02,.6,.1+rn()*.08);im.setColorAt(i,col)}
+ im.castShadow=true;fruit.add(im);
+ const fstem=new T.Mesh(new T.CylinderGeometry(.018,.025,.14,8),new T.MeshStandardMaterial({color:0x4a3018,roughness:.8}));fstem.position.y=.32;fruit.add(fstem);
+ const mol=tag(new T.Group(),'molecula'),am=[new T.MeshPhysicalMaterial({color:0x0f5a42,roughness:.18,clearcoat:1}),new T.MeshPhysicalMaterial({color:0x6a2788,roughness:.18,clearcoat:1}),new T.MeshPhysicalMaterial({color:0xf8f5ee,roughness:.18,clearcoat:1})];
+ const atoms=[];for(let i=0;i<6;i++){const a=i*Math.PI/3;atoms.push([Math.cos(a)*.2,Math.sin(a)*.2,0])}atoms.push([.4,0,0],[-.38,.2,.05],[.55,.16,.06]);
+ [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,6],[3,7],[6,8]].forEach(([a,b])=>{const A=new T.Vector3(...atoms[a]),B=new T.Vector3(...atoms[b]),m=new T.Mesh(new T.CylinderGeometry(.016,.016,A.distanceTo(B),12),gold);m.position.copy(A).add(B).multiplyScalar(.5);m.quaternion.setFromUnitVectors(upv,B.clone().sub(A).normalize());mol.add(m)});
+ atoms.forEach((p,i)=>{const m=new T.Mesh(new T.SphereGeometry(i<6?.058:.048,24,16),am[i<6?0:i===6?1:2]);m.position.set(...p);m.castShadow=true;mol.add(m)});
+ mol.scale.setScalar(1.25);
+ const floatLeaves=[mk(0,.95),mk(2,.8)];
+ const orbit=[{o:cap,r:1.75,y:1.95,s:.28,p:0,sp:[.9,.6,0]},{o:fruit,r:1.8,y:.45,s:.28,p:2.1,sp:[0,.4,0]},{o:mol,r:1.75,y:1.35,s:.28,p:4.2,sp:[.2,.7,.3]},{o:floatLeaves[0],r:1.65,y:2.25,s:.28,p:3.1,sp:[.3,.8,.2]},{o:floatLeaves[1],r:1.85,y:.15,s:.28,p:5.2,sp:[.5,.3,.6]}];
+ orbit.forEach(e=>{e.spin=0;world.add(e.o)});
+
+ /* suelo */
+ const gnd=new T.Mesh(new T.PlaneGeometry(9,9),new T.ShadowMaterial({opacity:.2}));gnd.rotation.x=-Math.PI/2;gnd.receiveShadow=true;S.add(gnd);
+ const ao=new T.Mesh(new T.PlaneGeometry(3.4,3.4),new T.MeshBasicMaterial({map:tx(cnv(256,256,(g,w,h)=>{const gr=g.createRadialGradient(128,128,10,128,128,128);gr.addColorStop(0,'rgba(40,30,10,.55)');gr.addColorStop(.45,'rgba(40,30,10,.22)');gr.addColorStop(1,'rgba(40,30,10,0)');g.fillStyle=gr;g.fillRect(0,0,w,h)})),transparent:true,depthWrite:false}));
+ ao.rotation.x=-Math.PI/2;ao.position.y=.003;world.add(ao);
+
+ /* partículas: polen, polvo de hierbas y destellos */
+ const dot=tx(cnv(64,64,(g)=>{const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.4,'rgba(255,255,255,.6)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,64,64)}));
+ const system=(n,color,size,parent)=>{const g=new T.BufferGeometry(),a=new Float32Array(n*3).fill(-99);g.setAttribute('position',new T.BufferAttribute(a,3));
+  const m=new T.Points(g,new T.PointsMaterial({color,size,map:dot,transparent:true,depthWrite:false,opacity:.9}));parent.add(m);
+  const ps=[...Array(n)].map(()=>({life:0,p:new T.Vector3(),v:new T.Vector3()}));let next=0;
+  return{emit(o,k,spread,up){for(let i=0;i<k;i++){const q=ps[next];next=(next+1)%n;q.life=1;q.p.copy(o);q.v.set((rn()-.5)*spread,up*(.5+rn()),(rn()-.5)*spread)}},
+   step(dt){for(let i=0;i<n;i++){const q=ps[i];if(q.life>0){q.life-=dt*.7;q.v.y-=dt*.25;q.p.addScaledVector(q.v,dt);a[i*3]=q.p.x;a[i*3+1]=q.life>0?q.p.y:-99;a[i*3+2]=q.p.z}}g.attributes.position.needsUpdate=true}}};
+ const dust=system(90,0x7d9a55,.07,mortarG),spark=system(70,0xe6c27a,.06,world);
+ const pg=new T.BufferGeometry(),pa=new Float32Array(240);for(let i=0;i<80;i++){pa[i*3]=(rn()-.5)*5;pa[i*3+1]=rn()*3.2;pa[i*3+2]=(rn()-.5)*4}
+ pg.setAttribute('position',new T.BufferAttribute(pa,3));
+ const pollen=new T.Points(pg,new T.PointsMaterial({color:0xc79a3e,size:.05,map:dot,transparent:true,depthWrite:false,opacity:.7}));S.add(pollen);
+
+ /* estado */
+ const groups={};world.traverse(o=>{if(o.userData.key)(groups[o.userData.key]=groups[o.userData.key]||[]).push(o)});
+ const orig=new Map(),allMats=new Set();S.traverse(o=>{if(o.material)allMats.add(o.material)});allMats.forEach(m=>{if('envMapIntensity' in m)m.envMapIntensity=.7});
+ const mats=k=>{const s=new Set();(groups[k]||[]).forEach(gr=>gr.traverse(o=>{if(o.material)s.add(o.material)}));return [...s]};
+ const glow=(k,v)=>mats(k).forEach(m=>{if(!m.emissive)return;if(!orig.has(m))orig.set(m,[m.emissive.getHex(),m.emissiveIntensity]);if(v==null){const [h,i]=orig.get(m);m.emissive.setHex(h);m.emissiveIntensity=i}else{m.emissive.setHex(0xc9932e);m.emissiveIntensity=v}});
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),medal=cv.closest('.medal'),angIn=$('angIn'),angOut=$('angOut');
+ let selKey=null,hovKey=null,rotY=.9,vel=0,drag=false,lx=0,ly=0,dx0=0,dy0=0,mx=0,my=0,tt=0,ot=0,t0=0,running=false,raf=0,elev=.14,dist=7.27,px=0,lastInt=-1e9,spin=null,pinch0=0,tgt=null,freeze=false,night=false;
+ let grind=0,capOpen=0,capT=0,flick=0,herbFl=0;const ptrs=new Map();
+ const HOME={elev:.14,dist:7.27,look:new T.Vector3(0,.9,0)};
+ const camUpdate=()=>{cam.position.set(LOOK.x+px,LOOK.y+dist*Math.sin(elev),LOOK.z+dist*Math.cos(elev));cam.lookAt(LOOK)};
+ let lastDeg=-1;const syncUI=()=>{const dg=Math.round(((rotY*180/Math.PI)%360+360)%360)%360;if(dg!==lastDeg){lastDeg=dg;angIn.value=dg;angOut.textContent=dg+'°'}};
+ const place=()=>{world.rotation.y=rotY;orbit.forEach((e,i)=>{const a=ot*e.s+e.p;e.o.position.set(Math.cos(a)*e.r,e.y+Math.sin(ot*.9+i)*.08,Math.sin(a)*e.r)})};
+
+ /* puntos dorados sobre cada pieza */
+ const pinsEl=$('pins'),anchors={serpiente:()=>headG.getWorldPosition(new T.Vector3()),mortero:()=>new T.Vector3(0,.55,1.25),hojas:()=>herbs.localToWorld(new T.Vector3(0,1.05,0)),capsula:()=>cap.getWorldPosition(new T.Vector3()),molecula:()=>mol.getWorldPosition(new T.Vector3()),matimba:()=>fruit.getWorldPosition(new T.Vector3())};
+ pinsEl.innerHTML=Object.keys(anchors).map(k=>`<button type="button" class="pin" data-k="${k}" aria-label="${esc(MEAN[k][0])}"><span>${esc(MEAN[k][0])}</span></button>`).join('');
+ const pinEls=[...pinsEl.querySelectorAll('.pin')],center=new T.Vector3(),tmp=new T.Vector3();
+ const updPins=()=>{const w=cv.clientWidth,h=cv.clientHeight;world.updateMatrixWorld();center.set(0,.6,0).applyMatrix4(cam.matrixWorldInverse);
+  pinEls.forEach(el=>{const k=el.dataset.k,p=anchors[k]();tmp.copy(p).applyMatrix4(cam.matrixWorldInverse);const far=tmp.z<center.z-.35;p.project(cam);
+   el.style.transform=`translate(${(p.x+1)/2*w}px,${(1-p.y)/2*h}px)`;el.classList.toggle('far',far);el.classList.toggle('on',k===selKey)})};
+
+ const render=()=>{R.render(S,cam);updPins()};
+ const kick=()=>{if(!running){place();camUpdate();syncUI();render()}};
+ const wrapA=a=>{a=(a+Math.PI)%(2*Math.PI);if(a<0)a+=2*Math.PI;return a-Math.PI};
+
+ /* acciones de cada pieza */
+ const act=k=>{if(k==='mortero')grind=Math.max(grind,3.2);if(k==='capsula'){capT=2.6}if(k==='serpiente')flick=1.4;if(k==='hojas')herbFl=1.6;
+  if(k==='matimba')orbit[1].spin=9;if(k==='molecula')orbit[2].spin=8;if(!running)play(true)};
+ const focus=k=>{const lp=k==='serpiente'?headG.position.clone():k==='mortero'?new T.Vector3(0,.7,0):k==='hojas'?new T.Vector3(0,.75,0):(groups[k][0].position.clone());
+  freeze=true;const phi=Math.atan2(lp.x,lp.z),rt=rotY+wrapA(-phi+.45-rotY),c=Math.cos(rt),s=Math.sin(rt);
+  const near=['capsula','molecula','matimba'].includes(k);
+  tgt={rotY:rt,elev:k==='hojas'||k==='mortero'?.55:.22,dist:near?4.3:k==='serpiente'?4.6:5.6,look:new T.Vector3(lp.x*c+lp.z*s,lp.y,-lp.x*s+lp.z*c).multiplyScalar(near||k==='serpiente'?.85:.4).setY(lp.y)}};
+ select3D=(k,opt)=>{if(selKey)glow(selKey,null);selKey=k&&groups[k]?k:null;
+  if(selKey){glow(selKey,.12);showTip(selKey);$('tipStep').textContent=opt&&opt.step?opt.step:'';focus(selKey);act(selKey)}
+  else{hideTip();freeze=false;tgt={rotY,elev:HOME.elev,dist:HOME.dist,look:HOME.look.clone()};if(tour)stopTour()}
+  lastInt=performance.now();if(!running)play(true);kick()};
+
+ /* recorrido guiado */
+ const ORDER=['serpiente','mortero','hojas','molecula','capsula','matimba'];let tour=null;
+ const stopTour=()=>{if(tour){clearTimeout(tour.t);tour=null;$('bTour').textContent='Recorrido guiado';$('bTour').setAttribute('aria-pressed','false')}};
+ const tourStep=i=>{if(i>=ORDER.length){stopTour();select3D(null);return}select3D(ORDER[i],{step:'Recorrido · '+(i+1)+' de '+ORDER.length});tour={i,t:setTimeout(()=>tourStep(i+1),5200)}};
+ $('bTour').onclick=()=>{if(tour){stopTour();select3D(null)}else{if(!medal.classList.contains('full'))setFull(true);$('bTour').textContent='Detener recorrido';$('bTour').setAttribute('aria-pressed','true');tourStep(0)}};
+
+ /* luz de botica */
+ $('bLight').onclick=()=>{night=!night;medal.classList.toggle('night',night);$('bLight').setAttribute('aria-pressed',String(night));$('bLight').textContent=night?'Luz de día':'Luz de botica';
+  R.toneMappingExposure=night?.85:.86;key.intensity=night?.25:1.05;hemi.intensity=night?.08:.3;rim.intensity=night?.9:.6;flame.visible=night;
+  allMats.forEach(m=>{if('envMapIntensity' in m)m.envMapIntensity=night?.28:.7});lastInt=performance.now();if(!running)play(true);kick()};
+ $('bGrind').onclick=()=>{select3D('mortero')};
+
+ /* animación */
+ const frame=now=>{const dt=Math.min(.05,(now-t0)/1000);t0=now;tt+=dt;if(!freeze)ot+=dt;
+  if(spin){const k=Math.min(1,(now-spin.t0)/spin.dur),ez=k<.5?2*k*k:1-(-2*k+2)**2/2;rotY=spin.a+(spin.b-spin.a)*ez;elev=spin.e0+Math.sin(k*Math.PI)*.35;if(k>=1){spin=null;lastInt=now}}
+  else if(tgt&&!drag){const f=1-Math.exp(-dt*3.2);rotY+=(tgt.rotY-rotY)*f;elev+=(tgt.elev-elev)*f;dist+=(tgt.dist-dist)*f;LOOK.lerp(tgt.look,f);if(Math.abs(tgt.dist-dist)<.01&&LOOK.distanceTo(tgt.look)<.005&&!selKey)tgt=null}
+  else if(!drag){vel*=.94;rotY+=vel+(now-lastInt>3500&&!selKey?dt*.2:0)}
+  place();px+=(mx*(medal.classList.contains('full')?1.2:.6)-px)*.05;camUpdate();syncUI();
+  orbit.forEach(e=>{const m=1+e.spin;e.o.rotation.x+=e.sp[0]*dt*m;e.o.rotation.y+=e.sp[1]*dt*m;e.o.rotation.z+=e.sp[2]*dt*m;e.spin*=Math.pow(.2,dt)});
+  /* serpiente viva: respira, mira y saca la lengua */
+  const look=(selKey==='serpiente'?.35:.15)*Math.sin(tt*.7)+mx*.5;headG.quaternion.setFromAxisAngle(up2,look).multiply(new T.Quaternion().setFromAxisAngle(side,Math.sin(tt*1.3)*.08-(flick>0?.25:0)));
+  body.scale.setScalar(1+Math.sin(tt*1.6)*.006);
+  const fl=flick>0?Math.sin((1.4-flick)/1.4*Math.PI*3):((tt%4)<.35?Math.sin((tt%4)/.35*Math.PI):0);tongue.scale.setScalar(Math.max(.01,Math.abs(fl)));flick=Math.max(0,flick-dt);
+  /* mano de mortero moliendo */
+  if(grind>0){grind-=dt;pPhi+=dt*5.5;posePestle(pPhi);if(rn()<.6)dust.emit(new T.Vector3(Math.cos(pPhi)*.16,.55,Math.sin(pPhi)*.16),2,.6,.9);powder.rotation.z+=dt*.8}
+  dust.step(dt);spark.step(dt);
+  /* hojas que se mecen */
+  herbFl=Math.max(0,herbFl-dt);herbList.forEach((m,i)=>{m.rotation.z=m.userData.rz+Math.sin(tt*1.4+i)*.04+(herbFl>0?Math.sin(tt*14+i)*.12*herbFl:0)});
+  /* cápsula que se abre */
+  if(capT>0){capT-=dt;capOpen+=(1-capOpen)*Math.min(1,dt*6);if(rn()<.5)spark.emit(cap.position,2,.5,.6)}else capOpen+=(0-capOpen)*Math.min(1,dt*4);
+  capTop.position.y=capOpen*.17;capBot.position.y=-capOpen*.12;
+  /* vela de botica */
+  if(night){candle.intensity=1.7+Math.sin(tt*11)*.15+Math.sin(tt*23)*.1;flame.scale.y=1.8+Math.sin(tt*17)*.2}else candle.intensity=0;
+  if(selKey)glow(selKey,.07+.06*Math.sin(tt*4));
+  pollen.rotation.y=tt*.04;render();
+  const busy=!calm||spin||tgt||grind>0||capT>0||capOpen>.01||flick>0||herbFl>0||night;
+  if(running&&busy)raf=requestAnimationFrame(frame);else running=false};
+ const play=f=>{if(running||(calm&&!f)||document.hidden)return;running=true;t0=performance.now();raf=requestAnimationFrame(frame)};
+ const stop=()=>{running=false;cancelAnimationFrame(raf)};
+
+ /* interacción */
+ const ray=new T.Raycaster(),nd=new T.Vector2(),htag=$('htag');
+ const pick=e=>{const r=cv.getBoundingClientRect();nd.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);ray.setFromCamera(nd,cam);const hit=ray.intersectObjects(world.children,true).find(h=>h.object!==ao&&h.object.type!=='Points');let o=hit&&hit.object;while(o&&!o.userData.key)o=o.parent;return o?o.userData.key:null};
+ const hover=(k,e)=>{if(k!==hovKey){if(hovKey&&hovKey!==selKey)glow(hovKey,null);hovKey=k;if(k&&k!==selKey)glow(k,.06);kick()}
+  if(k){const r=medal.getBoundingClientRect();htag.textContent=MEAN[k][0];htag.hidden=false;htag.style.transform=`translate(${e.clientX-r.left+14}px,${e.clientY-r.top+14}px)`}else htag.hidden=true;cv.style.cursor=k?'pointer':'grab'};
+ cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,[e.clientX,e.clientY]);drag=ptrs.size===1;lx=e.clientX;ly=e.clientY;dx0=e.clientX;dy0=e.clientY;spin=null;lastInt=performance.now();
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0=Math.hypot(a[0]-b[0],a[1]-b[1]);drag=false}try{cv.setPointerCapture(e.pointerId)}catch(err){}});
+ cv.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mx=(e.clientX-r.left)/r.width-.5;my=(e.clientY-r.top)/r.height-.5;
+  if(ptrs.has(e.pointerId))ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pinch0&&d){dist=clamp(dist*pinch0/d,3.6,10);if(tgt)tgt.dist=dist;pinch0=d;kick()}return}
+  if(drag&&Math.hypot(e.clientX-dx0,e.clientY-dy0)>4){const dx=e.clientX-lx,dy=e.clientY-ly;lx=e.clientX;ly=e.clientY;tgt=null;vel=calm?0:dx*.006;rotY+=dx*.006;elev=clamp(elev+dy*.005,-.12,1.35);lastInt=performance.now();hover(null,e);kick()}
+  else if(!drag&&e.pointerType==='mouse')hover(pick(e),e)});
+ const upP=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch0=0;if(drag&&e.type==='pointerup'&&Math.hypot(e.clientX-dx0,e.clientY-dy0)<6){vel=0;const k=pick(e);if(tour)stopTour();select3D(k===selKey?null:k)}drag=false};
+ cv.addEventListener('pointerup',upP);cv.addEventListener('pointercancel',upP);cv.addEventListener('pointerleave',e=>{mx=0;my=0;hover(null,e)});
+ pinsEl.addEventListener('click',e=>{const b=e.target.closest('.pin');if(!b)return;if(tour)stopTour();select3D(b.dataset.k===selKey?null:b.dataset.k)});
+ const zoom=d=>{dist=clamp(dist+d,3.6,10);if(tgt)tgt.dist=dist;lastInt=performance.now();kick()};
+ cv.addEventListener('keydown',e=>{const k=e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(k)){e.preventDefault();tgt=null;if(k==='ArrowLeft')rotY-=.26;if(k==='ArrowRight')rotY+=.26;if(k==='ArrowUp')elev=clamp(elev+.12,-.12,1.35);if(k==='ArrowDown')elev=clamp(elev-.12,-.12,1.35);lastInt=performance.now();kick()}
+  if(k==='+'||k==='=')zoom(-.6);if(k==='-')zoom(.6);if(k==='Escape')select3D(null)});
+ cv.addEventListener('wheel',e=>{if(!medal.classList.contains('full'))return;e.preventDefault();zoom(e.deltaY*.004)},{passive:false});
+ $('b360').onclick=()=>{tgt=null;spin={a:rotY,b:rotY+Math.PI*2,e0:elev,t0:performance.now(),dur:4200};vel=0;play(true)};
+ angIn.addEventListener('input',()=>{const base=Math.floor(rotY/(2*Math.PI))*2*Math.PI;rotY=base+angIn.value*Math.PI/180;tgt=null;spin=null;vel=0;lastInt=performance.now();kick()});
+ $('bZoomIn').onclick=()=>zoom(-.7);$('bZoomOut').onclick=()=>zoom(.7);
+ const setFull=on=>{medal.classList.toggle('full',on);document.body.classList.toggle('lock',on);const b=$('bFull');b.setAttribute('aria-label',on?'Cerrar la exploración':'Explorar en grande');b.innerHTML=on?'✕':'⤢ <span>Explorar</span>';if(!on){stopTour();if(dist<6)dist=Math.max(dist,6)}setTimeout(size,40)};
+ $('bFull').onclick=()=>setFull(!medal.classList.contains('full'));
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&medal.classList.contains('full'))setFull(false)});
+ const size=()=>{const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;R.setSize(w,h,false);cam.aspect=w/h;cam.fov=w/h<1?Math.min(58,32/Math.pow(w/h,.85)):32;cam.updateProjectionMatrix();place();camUpdate();syncUI();render()};
+ const ro3=new ResizeObserver(size);ro3.observe(cv);size();
+ const io3=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?play():stop()));io3.observe(cv);
+ document.addEventListener('visibilitychange',()=>document.hidden?stop():play());
+};
+try{start3D()}catch(err){console.error(err);cv.hidden=true;$('disc3d').hidden=false;$('hint3d').hidden=true;document.querySelector('.ctrl3d').hidden=true}
+{const sel0=select3D;select3D=(k,o)=>{sel0(k,o);MUSIC.react(k)}}
+$('bLight').addEventListener('click',()=>MUSIC.react(null));
+$('species').addEventListener('click',e=>{if(e.target.closest('.sp'))MUSIC.react('hojas')});
+tip.querySelector('button').addEventListener('click',()=>select3D(null));
+
+/* ---------- sección del emblema ---------- */
+const meanIcons={
+ serpiente:'<path d="M46 13c-13-7-29 0-25 11s25 8 23 20-18 14-27 8" fill="none" stroke="#1d7a50" stroke-width="7" stroke-linecap="round"/><ellipse cx="47" cy="13" rx="7" ry="5" fill="#1d7a50"/><circle cx="49" cy="11.5" r="1.5" fill="#d4ad55"/><path d="M54 14l5 1m-5-1 4 4" stroke="#b3263d" stroke-width="1.4" stroke-linecap="round"/><path d="M21 24c4 9 22 8 23 20" fill="none" stroke="#d9b45e" stroke-width="1.2"/>',
+ mortero:'<path d="M40 6l6 4-11 20-5-3z" fill="#f1ece0" stroke="#bfb396"/><path d="M8 28h48l-4 17c-2 7-8 10-14 10H26c-6 0-12-3-14-10z" fill="#0f5a42"/><path d="M8 28h48" stroke="#d4ad55" stroke-width="3.5" stroke-linecap="round"/><path d="M14 40h36" stroke="#d4ad55" stroke-width="1.5"/>',
+ hojas:leaf(C,12,54,-55,42,12,'lan','#2a6644','#a6c98c',4)+leaf(C,12,54,-22,36,10,'lan','#3f7d3a','#a6c98c',3)+leaf(C,12,54,-85,30,9,'lan','#22573a','#a6c98c',3),
+ capsula:'<g transform="rotate(-35 32 32)"><rect x="10" y="21" width="44" height="22" rx="11" fill="#f8f5ee" stroke="#c9bfa5"/><path d="M10 32a11 11 0 0 1 11-11h11v22H21a11 11 0 0 1-11-11z" fill="#6a2788"/></g>',
+ molecula:(()=>{const p=[];for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/2;p.push([26+Math.cos(a)*12,34+Math.sin(a)*12])}let s=p.map((q,i)=>{const r=p[(i+1)%6];return `<path d="M${f(q[0])} ${f(q[1])}L${f(r[0])} ${f(r[1])}" stroke="#d4ad55" stroke-width="2.4"/>`}).join('');s+=`<path d="M${f(p[1][0])} ${f(p[1][1])}L50 18M50 18L58 26" stroke="#d4ad55" stroke-width="2.4"/>`;s+=p.map(q=>`<circle cx="${f(q[0])}" cy="${f(q[1])}" r="4.6" fill="#0f5a42"/>`).join('')+'<circle cx="50" cy="18" r="4.2" fill="#6a2788"/><circle cx="58" cy="26" r="3.6" fill="#f8f5ee" stroke="#c9bfa5"/>';return s})(),
+ matimba:(()=>{let s='<circle cx="32" cy="34" r="17" fill="#8a5222"/>';for(let i=0;i<22;i++){const a=i/22*Math.PI*2,x=32+Math.cos(a)*17,y=34+Math.sin(a)*17;s+=`<path d="M${f(x-Math.sin(a)*3)} ${f(y+Math.cos(a)*3)}L${f(32+Math.cos(a)*23)} ${f(34+Math.sin(a)*23)}L${f(x+Math.sin(a)*3)} ${f(y-Math.cos(a)*3)}Z" fill="#6e3e16"/>`}for(let i=0;i<10;i++){const r=9*Math.sqrt((i+.5)/10),a=i*2.4;s+=`<circle cx="${f(32+Math.cos(a)*r)}" cy="${f(34+Math.sin(a)*r)}" r="1.6" fill="#b47a3c"/>`}return s+'<path d="M32 17v-9" stroke="#5a3a22" stroke-width="2.5"/>'})()
+};
+$('means').innerHTML=Object.keys(MEAN).map(k=>`<article class="mean"><div class="ico"><svg viewBox="0 0 64 64" aria-hidden="true">${meanIcons[k]}</svg></div><h3>${esc(MEAN[k][0])}</h3><p>${esc(MEAN[k][2])}</p><button type="button" class="btn ghost" data-k="${k}">Verla en el mortero 3D</button></article>`).join('');
+$('means').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;goTo(null);select3D(b.dataset.k)});
+
+/* ---------- profundidad en tarjetas ---------- */
+if(!calm&&matchMedia('(hover:hover)').matches){
+ const tilt=(sel,max)=>document.querySelectorAll(sel).forEach(el=>{
+  el.classList.add('tilt');
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+   el.style.transform=`perspective(1000px) rotateX(${(-y*max).toFixed(2)}deg) rotateY(${(x*max).toFixed(2)}deg) translateY(-3px)`;el.style.setProperty('--mx',((x+.5)*100).toFixed(1)+'%');el.style.setProperty('--my',((y+.5)*100).toFixed(1)+'%')});
+  el.addEventListener('pointerleave',()=>{el.style.transform=''})});
+ tilt('.sheet',6);tilt('.act',10);tilt('.gallery button',9);tilt('.screen',6);tilt('.box',5);
+}
+
+/* ---------- desplazamiento suave ---------- */
+var lenis=null;
+function goTo(el){const opt={offset:-70,duration:1.35,easing:t=>1-Math.pow(1-t,4)};if(lenis){lenis.scrollTo(el||0,opt);return}if(el)el.scrollIntoView({behavior:calm?'auto':'smooth'});else window.scrollTo({top:0,behavior:calm?'auto':'smooth'})}
+if(!calm&&window.Lenis){try{
+ lenis=new Lenis({lerp:.085,wheelMultiplier:.95,smoothWheel:true,syncTouch:false});
+ document.documentElement.style.scrollBehavior='auto';
+ const raf=t=>{lenis.raf(t);requestAnimationFrame(raf)};requestAnimationFrame(raf);
+ const sync=()=>{(document.body.classList.contains('lock')||document.documentElement.classList.contains('intro-on'))?lenis.stop():lenis.start()};
+ const mo=new MutationObserver(sync);mo.observe(document.body,{attributes:true,attributeFilter:['class']});mo.observe(document.documentElement,{attributes:true,attributeFilter:['class']});sync();
+}catch(err){lenis=null}}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href').slice(1),el=id&&document.getElementById(id);if(!el)return;e.preventDefault();goTo(el);try{history.replaceState(null,'','#'+id)}catch(err){}});
+
+/* ---------- puntos de secciones, botón subir y profundidad ---------- */
+const SECS=[['inicio','Inicio'],['emblema','Emblema'],['programa','Programa'],['herbario','Herbario'],['cuadros','Cuadros vivos'],['personas','Personas'],['quiz','Pon a prueba'],['transmision','Transmisión'],['momentos','Momentos'],['piezas','Afiches']];
+$('dots').innerHTML=SECS.map(([id,l])=>`<a href="#${id}" data-id="${id}"><span>${esc(l)}</span></a>`).join('');
+const dotEls=[...document.querySelectorAll('#dots a')],secEls=SECS.map(([id])=>$(id));
+$('totop').addEventListener('click',()=>goTo(null));
+const artA=document.querySelector('.hero .art.a'),artB=document.querySelector('.hero .art.b');
+let ticking=false;
+const onDeep=()=>{ticking=false;const y=window.scrollY,h=innerHeight;
+ let a=0;secEls.forEach((s,k)=>{if(s&&s.getBoundingClientRect().top<h*.42)a=k});dotEls.forEach((d,k)=>d.classList.toggle('on',k===a));
+ $('totop').classList.toggle('show',y>h*.9);
+ if(!calm&&y<h*1.2){if(artA)artA.style.transform=`translate3d(0,${(y*.18).toFixed(1)}px,0)`;if(artB)artB.style.transform=`translate3d(0,${(-y*.1).toFixed(1)}px,0)`}};
+addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(onDeep)}},{passive:true});onDeep();
+
+/* ---------- aparición suave de las secciones ---------- */
+if(!calm&&'IntersectionObserver' in window){
+ const sel='.head,.mean,.gallery figure,.mosaic figure,.stats .wrap>div,.explorer,.herb .info,.acts-wrap,.roster,.room,.qbox,.qside,.tv>div:first-child,.quote blockquote,footer .wrap>div';
+ const els=[...document.querySelectorAll(sel)].filter(el=>el.getBoundingClientRect().top>innerHeight*.9);
+ els.forEach(el=>{const sib=[...el.parentElement.children].filter(x=>x.matches(sel));el.style.transitionDelay=Math.min(sib.indexOf(el),5)*70+'ms';el.classList.add('rv')});
+ const rio=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');rio.unobserve(en.target)}}),{rootMargin:'0px 0px -8% 0px',threshold:.08});
+ els.forEach(el=>rio.observe(el));
+ setTimeout(()=>els.forEach(el=>el.classList.add('in')),12000);
+}
+
+/* ---------- cifras y navegación ---------- */
+if(!calm&&'IntersectionObserver' in window){
+ const io=new IntersectionObserver(es=>{es.forEach(en=>{if(!en.isIntersecting)return;io.unobserve(en.target);const el=en.target,end=+el.dataset.n,t0=performance.now();
+  const tick=t=>{const p=Math.min(1,(t-t0)/1100);el.textContent=Math.round(end*(1-(1-p)**3));if(p<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)})},{threshold:.6});
+ document.querySelectorAll('[data-n]').forEach(n=>io.observe(n));
+}
+const secs=['emblema','programa','herbario','cuadros','personas','quiz','transmision','momentos','piezas'].map(id=>$(id));
+const links=[...document.querySelectorAll('#links a')];
+const onScroll=()=>{const h=document.documentElement,p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);
+ $('prog-bar').style.width=(p*100)+'%';$('nav').classList.toggle('solid',h.scrollTop>40);
+ let a=-1;secs.forEach((s,k)=>{if(s.getBoundingClientRect().top<130)a=k});links.forEach((l,k)=>l.classList.toggle('on',k===a))};
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+}
+</script>
+</body>
+</html>
