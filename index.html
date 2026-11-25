@@ -864,6 +864,7 @@ setTimeout(done,6250);document.getElementById('iskip').focus({preventScroll:true
 </dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
@@ -1682,7 +1683,7 @@ const VIG=[
    const n=i===2?260:180,pa=new Float32Array(n*3);for(let k=0;k<n;k++){pa[k*3]=rr(-46,46);pa[k*3+1]=rr(.3,i===2?10:6);pa[k*3+2]=rr(-34,30)}
    const pgm=new T.BufferGeometry();pgm.setAttribute('position',new T.BufferAttribute(pa,3));motes=new T.Points(pgm,new T.PointsMaterial({color:E.dust,size:i===2?.5:.22,map:dot,transparent:true,depthWrite:false,opacity:i===2?.35:.85,blending:i===2?T.NormalBlending:T.AdditiveBlending}));W.add(motes);
    hemi.color.set(i===2?0xffe3c8:0xffffff);sun.intensity=i===2?.95:1.25;
-   dress(i);
+   dress(i);gUse(i);
    P.position.copy(SPAWN);heading=Math.PI/2;near=-2;showCard(-1);
    timeEl.querySelectorAll('[data-go]').forEach((b,k)=>b.classList.toggle('on',k===i));$('rcFill').style.width=(i/4*100)+'%';
    ban.innerHTML=`<small>${esc(E.sem)} semestre · mundo ${i+1} de 5</small><b>${esc(E.era)}</b>`;ban.classList.remove('on');void ban.offsetWidth;ban.classList.add('on');
@@ -1759,6 +1760,18 @@ const VIG=[
    hips.position.y=.97+kk*.022*a*(Math.abs(c)-.6);hips.rotation.y=-s*.07*kk;
    chest.rotation.y=s*.12*kk*a;chest.rotation.x=kk*(run?.16:.05);chest.position.y=.04+(1-kk)*Math.sin(tt*1.6)*.004;
    head.rotation.y=(1-kk)*Math.sin(tt*.55)*.35-chest.rotation.y*.6;head.rotation.x=-chest.rotation.x*.6+(1-kk)*Math.sin(tt*.4)*.04};
+  /* personas realistas por época (Ara 3D Gen, CC0): mientras cargan se ve la figura dibujada */
+  const GLB=['ancestral','boticas','transformacion','evidencia','hoy'].map(n=>'modelos/'+n+'.glb'),GM={},TALL=2.7;let GA=null;
+  const gLoad=i=>{if(GM[i]||!T.GLTFLoader)return GM[i];
+   GM[i]=new Promise((ok,ko)=>new T.GLTFLoader().load(GLB[i],g=>{const sc=g.scene;sc.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false}});
+    const bb=new T.Box3().setFromObject(sc),h=(bb.max.y-bb.min.y)||1.75,s=TALL/h,root=new T.Group();sc.scale.setScalar(s);sc.position.y=-bb.min.y*s;root.add(sc);
+    const mx=new T.AnimationMixer(sc),get=n=>{const c=g.animations.find(a=>a.name.toLowerCase()===n);return c?mx.clipAction(c):null};
+    ok({root,mx,s,idle:get('idle'),walk:get('walk'),run:get('run'),cur:null})},undefined,ko)).catch(e=>{console.warn('modelo',GLB[i],e);return null});return GM[i]};
+  const gPlay=(m,n,f)=>{const a=m[n]||m.idle;if(!a||m.cur===a)return;a.reset();a.play();if(m.cur)m.cur.crossFadeTo(a,f,false);m.cur=a};
+  const gUse=i=>{if(GA){P.remove(GA.root);GA=null}const p=gLoad(i);if(!p)return;
+   p.then(m=>{if(!m||cur!==i)return;GA=m;P.add(m.root);if(RG)RG.C.visible=false;m.cur=null;[m.idle,m.walk,m.run].forEach(a=>a&&a.stop());gPlay(m,'idle',0);gLoad((i+1)%5)})};
+  const gAnim=(mv,run,dt)=>{if(!GA)return;const n=mv>.05?(run?'run':'walk'):'idle';gPlay(GA,n,.25);
+   const sp=(run?9.5:4.6)*Math.max(mv,.3)/GA.s;if(GA.walk)GA.walk.timeScale=Math.min(2,Math.max(.6,sp/1.45));if(GA.run)GA.run.timeScale=Math.min(1.8,Math.max(.6,sp/3.9));GA.mx.update(dt)};
   S.add(P);
   const marker=mesh(new T.RingGeometry(.5,.7,30),new T.MeshBasicMaterial({color:0xd4ad55,transparent:true,opacity:.9,side:T.DoubleSide}),0,.08,0,false);marker.rotation.x=-Math.PI/2;marker.visible=false;S.add(marker);
 
@@ -1800,9 +1813,9 @@ const VIG=[
    const sprint=keys.ShiftLeft||keys.ShiftRight;let mv=0;
    if(!warping){if(Math.hypot(ix,iz)>.12){tgt=null;marker.visible=false;tmp.set(ix,0,iz);mv=Math.min(1,tmp.length());tmp.normalize()}
     else if(tgt){tmp.copy(tgt).sub(P.position);tmp.y=0;const d=tmp.length();if(d<.35){tgt=null;marker.visible=false}else{mv=1;tmp.normalize()}}}
-   if(mv>0){const sp=(sprint?12:6.5)*mv;P.position.x=Math.max(-48,Math.min(48,P.position.x+tmp.x*sp*dt));P.position.z=Math.max(-36,Math.min(32,P.position.z+tmp.z*sp*dt));
-    const hd=Math.atan2(tmp.x,tmp.z);let dh=hd-heading;dh=Math.atan2(Math.sin(dh),Math.cos(dh));heading+=dh*Math.min(1,dt*10);phase+=dt*sp*2}
-   P.rotation.y=heading;anim(mv,sprint,dt);
+   if(mv>0){const sp=(sprint?9.5:4.6)*mv;P.position.x=Math.max(-48,Math.min(48,P.position.x+tmp.x*sp*dt));P.position.z=Math.max(-36,Math.min(32,P.position.z+tmp.z*sp*dt));
+    const hd=Math.atan2(tmp.x,tmp.z);let dh=hd-heading;dh=Math.atan2(Math.sin(dh),Math.cos(dh));heading+=dh*Math.min(1,dt*10);phase+=dt*sp*2.6}
+   P.rotation.y=heading;anim(mv,sprint,dt);gAnim(mv,sprint,dt);
    camT.set(P.position.x,7.2,P.position.z+11.5);cam.position.lerp(camT,1-Math.exp(-dt*3.5));cam.lookAt(P.position.x,1.7,P.position.z-1.5);
    /* lo que se interpone entre la cámara y la persona se vuelve translúcido */
    {const ax=cam.position.x,az=cam.position.z,vx=P.position.x-ax,vz=P.position.z-az,L2=vx*vx+vz*vz||1;
