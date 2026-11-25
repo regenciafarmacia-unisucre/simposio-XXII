@@ -257,11 +257,23 @@ footer small{display:block;grid-column:1/-1;border-top:1px solid var(--line);pad
 .tip3d button{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:0;background:none;font-size:20px;color:var(--soft);cursor:pointer}
 .tip3d[hidden]{display:none}
 .means{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.mean{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
-.mean .ico{width:76px;height:76px;border-radius:50%;background:var(--sage);display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--hair)}
-.mean .ico svg{width:52px;height:52px}
-.mean h3{font-size:26px;margin-top:4px}
-.mean p{font-size:15px;color:var(--soft);flex:1}
+.means{align-items:start}
+.mean{background:var(--panel);border:1px solid var(--line);border-radius:20px;transition:box-shadow .25s,border-color .25s}
+.mean[open]{border-color:var(--em2);box-shadow:0 10px 28px rgba(6,40,31,.10)}
+.mean summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:20px}
+.mean summary::-webkit-details-marker{display:none}
+.mean summary:focus-visible{outline:2px solid var(--em2);outline-offset:2px}
+.mean .ico{flex:none;width:58px;height:58px;border-radius:50%;background:var(--sage);display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--hair)}
+.mean .ico svg{width:40px;height:40px}
+.mean .mt{flex:1;min-width:0;display:block}
+.mean h3{font-size:22px;line-height:1.1}
+.mean .ms{display:block;font-size:13.5px;color:var(--soft);line-height:1.4;margin-top:3px}
+.mean .chev{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);position:relative;transition:transform .25s}
+.mean .chev::before{content:"";position:absolute;left:10px;top:8px;width:8px;height:8px;border-right:2px solid var(--em2);border-bottom:2px solid var(--em2);transform:rotate(45deg)}
+.mean[open] .chev{transform:rotate(180deg)}
+.mean .more{margin:0 18px;padding:14px 0 20px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;border-top:1px solid var(--line)}
+.mean .more p{font-size:15px;color:var(--soft);line-height:1.6}
+.mean .more b{color:var(--em2)}
 .together{margin-top:28px;text-align:center;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(22px,2.4vw,28px);color:var(--em2)}
 @media(max-width:960px){.means{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.means{grid-template-columns:minmax(0,1fr)}}
@@ -868,13 +880,14 @@ dlg.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')openG(gi-1);if(e.key==
 
 /* ---------- música de fondo: grabaciones reales de Beethoven ---------- */
 const MUSIC=(()=>{
- const TR={elisa:{name:'Para Elisa · Beethoven',src:'audio/para-elisa.mp3',rate:.9},luna:{name:'Claro de luna · Beethoven',src:'audio/claro-de-luna.mp3',rate:1}};
+ const TR={elisa:{name:'Para Elisa · Beethoven',src:'audio/para-elisa.mp3',rate:.9},luna:{name:'Claro de luna · Beethoven',src:'audio/claro-de-luna.mp3',rate:1,gain:4.4}};
+ /* gain: refuerzo de volumen (la grabación de Claro de luna es ~13 dB más baja que Para Elisa; el silencio inicial ya se recortó del archivo) */
  let ctx=null,on=false,cur='elisa',manual=false;const el={},gn={};
  const mk=k=>{const a=new Audio();a.crossOrigin='anonymous';a.src=TR[k].src;a.loop=true;a.preload='auto';a.defaultPlaybackRate=TR[k].rate;a.playbackRate=TR[k].rate;
   try{a.preservesPitch=true;a.mozPreservesPitch=true;a.webkitPreservesPitch=true}catch(e){}
   el[k]=a;if(ctx){try{const src=ctx.createMediaElementSource(a),g=ctx.createGain();g.gain.value=0;src.connect(g);g.connect(ctx.destination);gn[k]=g}catch(e){}}if(!gn[k])a.volume=0};
  const fade=(k,to,sec)=>{if(gn[k]){const t=ctx.currentTime,g=gn[k].gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(to,t+sec)}else if(el[k]){const a=el[k],from=a.volume,t0=performance.now();const st=()=>{const q=Math.min(1,(performance.now()-t0)/(sec*1000));a.volume=from+(to-from)*q;if(q<1)requestAnimationFrame(st)};st()}};
- const start=k=>{if(!el[k])mk(k);const a=el[k];a.playbackRate=TR[k].rate;const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{});fade(k,.6,1.6)};
+ const start=k=>{if(!el[k])mk(k);const a=el[k];a.playbackRate=TR[k].rate;const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{});const v=0.6*(TR[k].gain||1);fade(k,gn[k] ? v : Math.min(1,v),1.6)};
  const halt=k=>{if(!el[k])return;fade(k,0,1.2);setTimeout(()=>{if(!(on&&cur===k))el[k].pause()},1300)};
  const ui=()=>{const b=$('musicBtn');if(!b)return;b.setAttribute('aria-pressed',String(on));b.classList.toggle('on',on);$('mlabel').textContent=on?TR[cur].name:'Activar música';
   const mp=$('mpick');mp.hidden=!on;mp.querySelectorAll('[data-t]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.t===cur)))};
@@ -896,6 +909,15 @@ const MEAN={
  capsula:['La cápsula','El medicamento moderno: lo que llega cuando el saber se estudia con rigor.','Representa el medicamento moderno y la medicina basada en la evidencia: el punto de llegada cuando un saber tradicional se investiga con rigor y ética.'],
  molecula:['La molécula','La química de la planta: los principios activos que el laboratorio busca.','Es la química de las plantas: los principios activos que busca el análisis fitoquímico, como los alcaloides y taninos hallados en el estudio de San Gregorio y Matimba.'],
  matimba:['El fruto de Matimba','La investigación local: una especie de la región analizada en la Universidad de Sucre.','Representa la investigación local: la Matimba es una de las dos especies de la región que el grupo de productos naturales de la Universidad de Sucre analizó en su laboratorio.']
+};
+/* explicación detallada que se despliega en "Lo que significa el emblema" */
+const MEAN_MORE={
+ serpiente:['La serpiente enroscada en una copa es la <b>copa de Higía</b>, el símbolo universal de la farmacia. Higía era, en la mitología griega, la diosa de la salud y la prevención (de su nombre viene la palabra «higiene»), hija de Asclepio, el dios de la medicina.','No hay que confundirla con la <b>vara de Asclepio</b> (una serpiente en un bastón, símbolo de la medicina) ni con el <b>caduceo</b> de Hermes (dos serpientes y alas, símbolo del comercio).','La serpiente muda su piel, por eso se asocia con la renovación y la curación. Y su veneno, que puede matar, también se ha usado para fabricar medicamentos. Es la idea que Paracelso resumió así: <i>«la dosis hace el veneno»</i>. Es el mensaje del simposio: una planta medicinal no es inofensiva solo por ser natural.'],
+ mortero:['El mortero y su mano (el pistilo) son de las herramientas más antiguas de la botica. Con ellos se tritura, se pulveriza y se mezclan las materias primas para preparar fórmulas.','En el emblema es el recipiente donde se unen todos los demás símbolos: el lugar donde la planta se transforma en remedio.','Representa el oficio del regente de farmacia: preparar, almacenar y dispensar con técnica, y sobre todo orientar a las personas para que usen bien los medicamentos y los productos naturales.'],
+ hojas:['Las hojas son las plantas medicinales y el conocimiento tradicional de las comunidades: qué planta se usa, qué parte, cómo se prepara y para qué.','Ese saber casi nunca está escrito. Se aprende en casa, de abuelos a nietos, como las más de 30 especies que los semilleros registraron en los patios de Chochó.','Valorarlo también es cuidarlo: identificar bien cada planta (un mismo nombre común puede referirse a especies distintas), respetar a quienes lo conservan y estudiarlo para saber cuándo es seguro y cuándo no.'],
+ capsula:['La cápsula representa el medicamento moderno: una dosis exacta, una calidad controlada y un efecto comprobado.','Muchos medicamentos nacieron de las plantas. La aspirina viene de una sustancia del sauce, la morfina de la amapola y la digoxina de la digitalis.','Para llegar ahí, un saber tradicional pasa por estudios de laboratorio, ensayos clínicos y la aprobación de la autoridad sanitaria. Es el camino de la medicina basada en la evidencia, que une la tradición con la ciencia, con rigor y con ética.'],
+ molecula:['La molécula es la química de la planta. Sus efectos se deben a sustancias llamadas <b>principios activos</b>, como los alcaloides, los taninos o los flavonoides.','El análisis fitoquímico busca e identifica esas sustancias. En el estudio de San Gregorio y Matimba se encontraron alcaloides y taninos.','Conocer la molécula permite entender por qué una planta funciona, qué dosis es segura y con qué medicamentos puede interactuar. La misma molécula que alivia puede intoxicar si se usa mal.'],
+ matimba:['El fruto de Matimba representa la investigación que nace en la región.','La Matimba es una de las dos especies de la zona que el grupo de productos naturales de la Universidad de Sucre analizó en su laboratorio.','Ponerla en el emblema dice que el conocimiento también se produce aquí: las plantas de nuestros patios merecen ser estudiadas por la universidad, junto con las comunidades que las conocen.']
 };
 const tip=$('tip3d');
 const showTip=k=>{tip.querySelector('b').textContent=MEAN[k][0];tip.querySelector('p').textContent=MEAN[k][1];tip.hidden=false;$('hint3d').hidden=true};
@@ -1163,7 +1185,7 @@ const meanIcons={
  molecula:(()=>{const p=[];for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/2;p.push([26+Math.cos(a)*12,34+Math.sin(a)*12])}let s=p.map((q,i)=>{const r=p[(i+1)%6];return `<path d="M${f(q[0])} ${f(q[1])}L${f(r[0])} ${f(r[1])}" stroke="#d4ad55" stroke-width="2.4"/>`}).join('');s+=`<path d="M${f(p[1][0])} ${f(p[1][1])}L50 18M50 18L58 26" stroke="#d4ad55" stroke-width="2.4"/>`;s+=p.map(q=>`<circle cx="${f(q[0])}" cy="${f(q[1])}" r="4.6" fill="#0f5a42"/>`).join('')+'<circle cx="50" cy="18" r="4.2" fill="#6a2788"/><circle cx="58" cy="26" r="3.6" fill="#f8f5ee" stroke="#c9bfa5"/>';return s})(),
  matimba:(()=>{let s='<circle cx="32" cy="34" r="17" fill="#8a5222"/>';for(let i=0;i<22;i++){const a=i/22*Math.PI*2,x=32+Math.cos(a)*17,y=34+Math.sin(a)*17;s+=`<path d="M${f(x-Math.sin(a)*3)} ${f(y+Math.cos(a)*3)}L${f(32+Math.cos(a)*23)} ${f(34+Math.sin(a)*23)}L${f(x+Math.sin(a)*3)} ${f(y-Math.cos(a)*3)}Z" fill="#6e3e16"/>`}for(let i=0;i<10;i++){const r=9*Math.sqrt((i+.5)/10),a=i*2.4;s+=`<circle cx="${f(32+Math.cos(a)*r)}" cy="${f(34+Math.sin(a)*r)}" r="1.6" fill="#b47a3c"/>`}return s+'<path d="M32 17v-9" stroke="#5a3a22" stroke-width="2.5"/>'})()
 };
-$('means').innerHTML=Object.keys(MEAN).map(k=>`<article class="mean"><div class="ico"><svg viewBox="0 0 64 64" aria-hidden="true">${meanIcons[k]}</svg></div><h3>${esc(MEAN[k][0])}</h3><p>${esc(MEAN[k][2])}</p><button type="button" class="btn ghost" data-k="${k}">Verla en el mortero 3D</button></article>`).join('');
+$('means').innerHTML=Object.keys(MEAN).map(k=>`<details class="mean"><summary><span class="ico"><svg viewBox="0 0 64 64" aria-hidden="true">${meanIcons[k]}</svg></span><span class="mt"><h3>${esc(MEAN[k][0])}</h3><span class="ms">${esc(MEAN[k][1])}</span></span><span class="chev" aria-hidden="true"></span></summary><div class="more">${MEAN_MORE[k].map(p=>`<p>${p}</p>`).join('')}<button type="button" class="btn ghost" data-k="${k}">Verla en el mortero 3D</button></div></details>`).join('');
 $('means').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;goTo(null);select3D(b.dataset.k)});
 
 /* ---------- profundidad en tarjetas ---------- */
